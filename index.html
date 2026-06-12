@@ -27,18 +27,17 @@ body::after{ /* vinheta sutil */
 .screen{position:fixed;inset:0;z-index:2;display:none;flex-direction:column;align-items:center;overflow-y:auto}
 .screen.on{display:flex}
 
-/* ---------- MENU (hero em duas colunas) ---------- */
+/* ---------- MENU (coluna central equilibrada) ---------- */
 #menu{justify-content:center;padding:0}
 .menu-hero{
-  width:100%;min-height:100%;display:grid;
-  grid-template-columns:1.1fr 1fr;align-items:center;gap:24px;
-  padding:32px clamp(20px,6vw,90px);
+  width:100%;min-height:100%;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:20px;
+  padding:30px 20px;
 }
-.menu-left{display:flex;flex-direction:column;gap:18px;align-items:flex-start}
 .logo{
-  text-align:left;line-height:.92;letter-spacing:-1px;
+  text-align:center;line-height:.92;letter-spacing:-1px;
   font-weight:900;text-transform:uppercase;
-  font-size:clamp(44px,7.5vw,104px);
+  font-size:clamp(42px,7vw,92px);
   color:var(--gold);
   text-shadow:0 3px 0 #7a4e00, 0 6px 0 #3c2600, 0 12px 30px rgba(0,0,0,.6);
   transform:rotate(-2deg);
@@ -46,44 +45,75 @@ body::after{ /* vinheta sutil */
 }
 @keyframes logosway{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(-.5deg) translateY(-4px)}}
 .logo .sub{
-  display:block;font-size:clamp(20px,3.4vw,44px);color:#fff;
+  display:block;font-size:clamp(19px,3.2vw,40px);color:#fff;
   text-shadow:0 3px 0 var(--blue), 0 6px 18px rgba(0,0,0,.6);
   letter-spacing:6px;
 }
-.tagline{color:#c8cfd8;font-style:italic;opacity:.85;text-align:left;font-size:clamp(13px,1.6vw,18px);max-width:420px}
-.menu-stats{display:flex;gap:10px;flex-wrap:wrap}
+.tagline{color:#c8cfd8;font-style:italic;opacity:.85;text-align:center;font-size:clamp(13px,1.5vw,17px)}
+.menu-stats{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
 .stat-pill{
   font-size:15px;font-weight:900;background:rgba(0,0,0,.45);
   padding:9px 16px;border-radius:999px;border:1px solid rgba(255,201,51,.4);
+  text-align:center;
 }
 .stat-pill small{display:block;font-weight:700;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;opacity:.6}
-.menu-right{display:flex;flex-direction:column;gap:12px;width:100%;max-width:440px;justify-self:center}
+.menu-primary{display:flex;gap:12px;width:min(560px,94vw)}
+.menu-primary .menu-btn{flex:1;justify-content:center;text-align:center;font-size:21px;padding:19px 16px}
+.menu-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;width:min(560px,94vw)}
+.menu-foot{display:flex;gap:10px;width:min(560px,94vw)}
+.menu-foot .menu-btn{flex:1;justify-content:center;text-align:center}
 .menu-btn{
-  width:100%;padding:17px 22px;border:0;border-radius:14px;cursor:pointer;
-  font:900 20px/1 inherit;text-transform:uppercase;letter-spacing:1px;
+  padding:15px 20px;border:0;border-radius:14px;cursor:pointer;
+  font:900 17px/1 inherit;text-transform:uppercase;letter-spacing:1px;
   background:linear-gradient(180deg,#ffd95e,#f5a700);color:#3c2600;
   box-shadow:0 5px 0 #8a5a00, var(--shadow);
-  transition:transform .1s, filter .1s;text-align:left;
-  display:flex;align-items:center;gap:12px;
+  transition:transform .1s, filter .1s;
+  display:flex;align-items:center;justify-content:center;gap:10px;
 }
-.menu-btn:hover{transform:translateX(6px);filter:brightness(1.08)}
+.menu-btn:hover{transform:translateY(-3px);filter:brightness(1.1)}
 .menu-btn.secondary{background:linear-gradient(180deg,#2bd9a4,#0e9c74);color:#03251a;box-shadow:0 5px 0 #06513c,var(--shadow)}
-.menu-btn.ghost{background:rgba(255,255,255,.08);color:var(--paper);box-shadow:0 5px 0 rgba(0,0,0,.4);font-size:16px;padding:13px 22px}
+.menu-btn.copa{background:linear-gradient(180deg,#b06eff,#6e2bd9);color:#fff;box-shadow:0 5px 0 #3a1080,var(--shadow);text-shadow:0 1px 3px #000}
+.menu-btn.ghost{background:rgba(255,255,255,.08);color:var(--paper);box-shadow:0 5px 0 rgba(0,0,0,.4);font-size:14px;padding:12px 16px}
 .menu-btn:active{transform:translateY(4px)}
-.menu-row{display:flex;gap:10px}
-.menu-row .menu-btn{flex:1}
-@media (max-width:780px){
-  .menu-hero{grid-template-columns:1fr;gap:18px;padding:24px}
-  .menu-left{align-items:center}
-  .logo,.tagline{text-align:center}
+@media (max-width:520px){.menu-primary{flex-direction:column}}
+
+/* ---------- LOJA ---------- */
+.coin{color:#ffd95e;font-weight:900}
+.shop-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:14px;margin-top:8px}
+.shop-item{position:relative;display:flex;flex-direction:column;gap:6px}
+.buy-btn{
+  border:0;border-radius:10px;padding:9px 8px;cursor:pointer;
+  font:900 13px/1 inherit;letter-spacing:.5px;
+  background:linear-gradient(180deg,#ffd95e,#f5a700);color:#3c2600;
+  box-shadow:0 3px 0 #8a5a00;transition:transform .07s;
 }
+.buy-btn:active{transform:translateY(2px)}
+.buy-btn:disabled{filter:grayscale(1) brightness(.6);pointer-events:none}
+.shop-owned{
+  text-align:center;font-size:12px;font-weight:900;color:#7dffa8;
+  padding:9px 0;letter-spacing:1px;
+}
+.shop-skin-back{position:relative;width:100%;aspect-ratio:5/7;border-radius:9px}
+.shop-skin-back .gcard{position:absolute;inset:0}
 
 /* ---------- ROADMAP DE DESBLOQUEIO (faixa central) ---------- */
 #road{justify-content:center;padding-top:0;overflow:hidden}
 #roadPanel{
   width:100vw;max-width:none;border-radius:0;border-left:0;border-right:0;
-  margin:0;min-height:34vh;display:flex;flex-direction:column;justify-content:center;
+  margin:0;min-height:56vh;display:flex;flex-direction:column;justify-content:center;
 }
+/* barra de progresso até o próximo marco */
+#roadBar{
+  width:min(560px,90vw);height:14px;border-radius:999px;margin:6px 0 2px;
+  background:rgba(255,255,255,.1);overflow:hidden;border:1px solid rgba(255,255,255,.15);
+}
+#roadBarFill{
+  height:100%;border-radius:999px;width:0;
+  background:linear-gradient(90deg,#ffd95e,#f5a700);
+  box-shadow:0 0 12px rgba(255,201,51,.6);
+  transition:width 1.6s cubic-bezier(.3,.9,.3,1);
+}
+#roadBarTxt{font-size:12px;color:#9aa6b4;margin-bottom:6px}
 #roadHead{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:4px}
 #roadHead h2{margin-bottom:0}
 #roadHead small{color:#9aa6b4;font-size:13px}
@@ -104,9 +134,9 @@ body::after{ /* vinheta sutil */
   animation:firstglow 1.6s ease-in-out infinite;
 }
 .road-item{
-  flex:0 0 auto;width:118px;position:relative;
-  display:flex;flex-direction:column;align-items:center;gap:8px;
-  padding:24px 8px 4px;text-align:center;
+  flex:0 0 auto;width:152px;position:relative;
+  display:flex;flex-direction:column;align-items:center;gap:9px;
+  padding:24px 10px 4px;text-align:center;
 }
 .road-item::before{ /* trilho horizontal */
   content:"";position:absolute;top:39px;left:0;right:0;height:3px;
@@ -123,8 +153,8 @@ body::after{ /* vinheta sutil */
   background:linear-gradient(180deg,#ffd95e,#f5a700);border-color:#ffe9a0;color:#3c2600;
   box-shadow:0 0 14px rgba(255,201,51,.55);
 }
-.road-card{width:72px;position:relative}
-.road-card .bcard{font-size:8px}
+.road-card{width:98px;position:relative}
+.road-card .bcard{font-size:9.5px}
 .road-info b{font-size:13px;display:block}
 .road-info small{display:block;font-size:10.5px;opacity:.65;margin-top:2px;line-height:1.25}
 /* carta misteriosa */
@@ -219,6 +249,12 @@ body::after{ /* vinheta sutil */
     linear-gradient(120deg,rgba(255,94,200,.25),rgba(94,220,255,.25),rgba(255,243,94,.25)),
     repeating-linear-gradient(135deg,#1c1430,#1c1430 6px,#120c22 6px,#120c22 12px);
   border-color:#5a3e8a;
+}
+.gcard.back.skin-rival{
+  background:
+    radial-gradient(60% 50% at 50% 50%, rgba(214,40,40,.3), transparent 70%),
+    repeating-linear-gradient(135deg,#301014,#301014 6px,#1d080a 6px,#1d080a 12px);
+  border-color:#6e1c24;
 }
 .gcard.back.skin-canarinho{
   background:
@@ -354,14 +390,28 @@ body::after{ /* vinheta sutil */
 }
 .firstdot.on{display:inline-flex}
 
-/* botão fullscreen */
-#btnFull{
-  position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:20;
-  width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,.25);
-  background:rgba(255,255,255,.07);color:#cfd6dd;font-size:17px;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
+/* mini-configurações sob o card do usuário */
+#miniCfg{display:flex;gap:6px}
+#miniCfg button{
+  width:32px;height:32px;border-radius:9px;border:1px solid rgba(255,255,255,.22);
+  background:rgba(0,0,0,.5);color:#cfd6dd;font-size:15px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:transform .08s;
 }
-#btnFull:hover{background:rgba(255,255,255,.16)}
+#miniCfg button:hover{background:rgba(255,255,255,.15);transform:scale(1.08)}
+
+/* brilho do local ativando efeito */
+.loc.fxloc{animation:fxloc .9s ease-in-out}
+@keyframes fxloc{
+  0%,100%{box-shadow:inset 0 0 0 3px rgba(175,205,245,.6), inset 0 0 0 5px rgba(0,0,0,.55)}
+  30%,70%{box-shadow:inset 0 0 0 4px rgba(94,220,255,1), inset 0 0 22px rgba(94,220,255,.7);filter:brightness(1.6)}
+  50%{box-shadow:inset 0 0 0 4px rgba(255,243,94,1), inset 0 0 26px rgba(255,243,94,.7);filter:brightness(1.8)}
+}
+
+/* valor da mala */
+#stakeWorth{
+  font-size:11px;font-weight:900;color:var(--gold);text-shadow:0 1px 3px #000;
+  letter-spacing:.5px;
+}
 
 /* construtor: layout com barra lateral */
 .builder-wrap{display:flex;gap:14px;align-items:flex-start}
@@ -399,11 +449,41 @@ body::after{ /* vinheta sutil */
 }
 
 #stakeCube{
-  position:fixed;right:14px;top:42%;transform:translateY(-50%);z-index:20;
+  position:fixed;right:clamp(10px,calc(25vw - 180px),22vw);top:calc(50% - 70px);z-index:20;
   display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;
   transition:transform .12s;
 }
-#stakeCube:hover{transform:translateY(-50%) scale(1.07)}
+#stakeCube:hover{transform:scale(1.07)}
+
+/* impacto da Mala Branca */
+#snapFx{
+  position:fixed;inset:0;z-index:80;pointer-events:none;display:none;
+  align-items:center;justify-content:center;
+}
+#snapFx.on{display:flex}
+#snapFx .flash{
+  position:absolute;inset:0;
+  background:radial-gradient(circle at 50% 50%, rgba(255,220,150,.85), rgba(214,40,40,.45) 45%, transparent 75%);
+  animation:snapflash .9s ease-out forwards;
+}
+#snapFx .wave{
+  position:absolute;width:120px;height:120px;border-radius:50%;
+  border:6px solid rgba(255,201,51,.9);
+  animation:snapwave .9s ease-out forwards;
+}
+#snapFx .case{
+  font-size:110px;filter:drop-shadow(0 10px 30px #000);
+  animation:snapcase .9s cubic-bezier(.2,1.5,.4,1) forwards;
+}
+@keyframes snapflash{0%{opacity:0}12%{opacity:1}100%{opacity:0}}
+@keyframes snapwave{0%{transform:scale(.2);opacity:1}100%{transform:scale(9);opacity:0;border-width:1px}}
+@keyframes snapcase{
+  0%{transform:translateY(-70vh) rotate(-25deg) scale(.6);opacity:0}
+  35%{transform:translateY(0) rotate(4deg) scale(1.25);opacity:1}
+  55%{transform:translateY(-22px) rotate(-3deg) scale(1.1)}
+  75%{transform:translateY(0) rotate(0) scale(1.15)}
+  100%{transform:translateY(6px) scale(1);opacity:0}
+}
 #stakeCube.done{cursor:default;filter:saturate(.6)}
 #stakeCube .cubeface{
   width:78px;height:78px;display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -495,6 +575,12 @@ body::after{ /* vinheta sutil */
 .fpower.foe.leading{
   background:linear-gradient(165deg,#ff9a6e,#c93a18 55%,#6e1505);
   filter:drop-shadow(0 0 9px rgba(255,100,70,.7));
+}
+/* pulso do placar vencedor no fim da partida */
+.fpower.endpulse{animation:endpulse 1s ease-in-out infinite;z-index:8}
+@keyframes endpulse{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.45);filter:drop-shadow(0 0 18px rgba(255,201,51,1)) brightness(1.4)}
 }
 
 #firstPill b{color:var(--teal)}
@@ -841,29 +927,58 @@ body::after{ /* vinheta sutil */
 <!-- MENU -->
 <div id="menu" class="screen on">
   <div class="menu-hero">
-    <div class="menu-left">
-      <div class="logo">Brasileirão<span class="sub">⚽ CLASH ⚽</span></div>
-      <div class="tagline">Junte as figurinhas, ponha a mala na mesa e prove que você é mito.</div>
-      <div class="menu-stats">
-        <span class="stat-pill"><small>Taças</small>🏆 <b id="tacasMenu">0</b></span>
-        <span class="stat-pill"><small>Recorde</small>📈 <b id="recordMenu">0</b></span>
-        <span class="stat-pill"><small>Baralho ativo</small>🃏 <b id="deckMenu">Seleção Padrão</b></span>
-      </div>
+    <div class="logo">Brasileirão<span class="sub">⚽ CLASH ⚽</span></div>
+    <div class="tagline">Junte as figurinhas, ponha a mala na mesa e prove que você é mito.</div>
+    <div class="menu-stats">
+      <span class="stat-pill"><small>Taças</small>🏆 <b id="tacasMenu">0</b></span>
+      <span class="stat-pill"><small>Recorde</small>📈 <b id="recordMenu">0</b></span>
+      <span class="stat-pill"><small>Moedas</small>🪙 <b id="coinsMenu">0</b></span>
+      <span class="stat-pill"><small>Baralho</small>🃏 <b id="deckMenu">Seleção Padrão</b></span>
     </div>
-    <div class="menu-right">
+    <div class="menu-primary">
       <button class="menu-btn" onclick="UI.show('botpick')">▶ Jogar</button>
-      <button class="menu-btn secondary" onclick="Decks.openList()">🃏 Meus Baralhos</button>
-      <div class="menu-row">
-        <button class="menu-btn secondary" onclick="UI.openAlbum()">📒 Coleção</button>
-        <button class="menu-btn secondary" onclick="UI.openRoad()">🗺️ Jornada</button>
-      </div>
+      <button class="menu-btn copa" onclick="Copa.start()">🏆 Modo Copa</button>
+    </div>
+    <div class="menu-grid">
+      <button class="menu-btn secondary" onclick="Decks.openBuilder()">🃏 Baralhos</button>
+      <button class="menu-btn secondary" onclick="UI.openShop()">🛒 Loja</button>
+      <button class="menu-btn secondary" onclick="UI.openAlbum()">📒 Coleção</button>
+      <button class="menu-btn secondary" onclick="UI.openRoad()">🗺️ Jornada</button>
+    </div>
+    <div class="menu-foot">
       <button class="menu-btn ghost" onclick="UI.show('help')">📖 Como Jogar</button>
-      <div class="menu-row">
-        <button class="menu-btn ghost" id="btnSound" onclick="UI.toggleSound()">🔊 Som: ON</button>
-        <button class="menu-btn ghost" onclick="toggleFull()">⛶ Tela Cheia</button>
-      </div>
+      <button class="menu-btn ghost" id="btnSound" onclick="UI.toggleSound()">🔊 Som: ON</button>
+      <button class="menu-btn ghost" onclick="toggleFull()">⛶ Tela Cheia</button>
     </div>
   </div>
+</div>
+
+<!-- COPA INTRO -->
+<div id="copaintro" class="screen" style="justify-content:center">
+  <div class="panel" style="max-width:520px;text-align:center">
+    <h2 style="font-size:26px">🏆 Modo Copa</h2>
+    <p style="margin-top:10px">Vença <b>7 partidas seguidas</b> para levantar o caneco:</p>
+    <p style="font-size:18px;line-height:2">
+      🍺 Seu Zé <b>×2</b> → 🎩 Mister <b>×2</b> → 💼 Presidente <b>×3</b>
+    </p>
+    <p>⚠️ <b>Uma derrota (ou amarelar) elimina você</b> e a Copa acaba na hora.</p>
+    <p>🪙 Prêmio do campeão: <b class="coin">+300 moedas</b>, além das recompensas normais de cada partida.</p>
+    <button class="menu-btn copa" style="margin-top:14px" onclick="Copa.begin()">⚽ Começar a Copa</button>
+  </div>
+  <button class="menu-btn ghost backbtn" onclick="UI.show('menu')">← Voltar</button>
+</div>
+
+<!-- LOJA -->
+<div id="shop" class="screen">
+  <div class="panel">
+    <h2>🛒 Loja do Cartola <span style="float:right;font-size:15px" class="coin">🪙 <span id="coinsShop">0</span></span></h2>
+    <p>Ganhe moedas jogando partidas e compre figurinhas e versos sem esperar a Jornada.</p>
+    <h2 style="font-size:15px;margin-top:10px">⚽ Figurinhas</h2>
+    <div class="shop-grid" id="shopCards"></div>
+    <h2 style="font-size:15px;margin-top:18px">🂠 Versos</h2>
+    <div class="shop-grid" id="shopSkins"></div>
+  </div>
+  <button class="menu-btn ghost backbtn" onclick="UI.show('menu')">← Voltar</button>
 </div>
 
 <!-- ROADMAP -->
@@ -873,6 +988,8 @@ body::after{ /* vinheta sutil */
       <h2>🗺️ Jornada do Cartola</h2>
       <small id="roadProg"></small>
     </div>
+    <div id="roadBar"><div id="roadBarFill"></div></div>
+    <div id="roadBarTxt"></div>
     <p>Acumule Taças 🏆 para desbloquear novas figurinhas. As próximas são um mistério...</p>
     <div class="road" id="roadList"></div>
   </div>
@@ -926,21 +1043,7 @@ body::after{ /* vinheta sutil */
   <div class="panel">
     <h2>📒 Álbum de Figurinhas</h2>
     <p>Toda a coleção — atuais e lendas. As holográficas são as Lendárias. ✨</p>
-    <h2 style="font-size:15px;margin-top:14px">🂠 Verso das cartas</h2>
-    <div class="skin-row" id="skinRow"></div>
-    <br>
     <div class="album-grid" id="albumGrid"></div>
-  </div>
-  <button class="menu-btn ghost backbtn" onclick="UI.show('menu')">← Voltar</button>
-</div>
-
-<!-- DECK LIST -->
-<div id="decks" class="screen">
-  <div class="panel">
-    <h2>🃏 Meus Baralhos</h2>
-    <p>Monte baralhos de 12 cartas. O baralho <span style="color:var(--teal)">ativo</span> é usado nas partidas.</p>
-    <div id="deckList"></div>
-    <button class="menu-btn secondary" style="width:100%;margin-top:6px" onclick="Decks.newDeck()">＋ Novo Baralho</button>
   </div>
   <button class="menu-btn ghost backbtn" onclick="UI.show('menu')">← Voltar</button>
 </div>
@@ -978,24 +1081,38 @@ body::after{ /* vinheta sutil */
         <option value="name-d">Nome Z→A</option>
       </select>
     </div>
+    <h2 style="font-size:14px;margin:2px 0 0">🂠 Verso das suas cartas</h2>
+    <div class="skin-row" id="skinRow" style="margin-bottom:18px"></div>
     <div class="builder-wrap">
       <div class="builder-grid" id="builderGrid"></div>
-      <div id="deckSide"><h3>Escalação</h3><div id="deckSideList"></div></div>
+      <div id="deckSide">
+        <h3>📚 Meus baralhos</h3>
+        <div id="myDecks"></div>
+        <button class="mini-btn use" style="width:100%;margin:6px 0 14px" onclick="Decks.newDeck()">＋ Novo baralho</button>
+        <h3>Escalação</h3>
+        <div id="deckSideList"></div>
+      </div>
     </div>
   </div>
-  <button class="menu-btn ghost backbtn" onclick="Decks.openList()">← Voltar</button>
+  <button class="menu-btn ghost backbtn" onclick="UI.show('menu')">← Voltar</button>
 </div>
 
 <!-- MATCH -->
 <div id="match" class="screen">
   <div id="hudTop">
-    <div class="nameplate me" id="plateMe" title="Ver vestiário"><span class="pavatar" id="meAvatar">😎</span><span><b>Você</b><br><small>Turno <span id="turnVal">1</span>/6</small></span><span class="firstdot" id="firstMe">🎲 1º</span></div>
+    <div style="display:flex;flex-direction:column;gap:5px;align-items:flex-start">
+      <div class="nameplate me" id="plateMe" title="Ver vestiário"><span class="pavatar" id="meAvatar">😎</span><span><b>Você</b><br><small>Turno <span id="turnVal">1</span>/6</small></span><span class="firstdot" id="firstMe">🎲 1º</span></div>
+      <div id="miniCfg">
+        <button title="Tela cheia" onclick="toggleFull()">⛶</button>
+        <button title="Som" id="miniSound" onclick="UI.toggleSound()">🔊</button>
+      </div>
+    </div>
     <div class="nameplate foe" id="plateFoe" title="Ver vestiário"><span class="firstdot" id="firstFoe">🎲 1º</span><span style="text-align:right"><b id="botName"></b><br><small id="botHand"></small></span><span class="pavatar" id="botAvatar">🤖</span></div>
   </div>
-  <button id="btnFull" title="Tela cheia" onclick="toggleFull()">⛶</button>
   <div id="fields"></div>
   <div id="stakeCube" title="Tocar para Pôr na Mesa 💼">
     <div class="cubeface"><span>🏆</span><b id="stakesVal">1</b></div>
+    <small id="stakeWorth">valendo 1 🏆</small>
     <small id="stakeHint">toque = MALA 💼</small>
   </div>
   <div id="blurback"></div>
@@ -1007,6 +1124,7 @@ body::after{ /* vinheta sutil */
   <button class="ctl corner" id="btnUndo">↩ Desfazer</button>
   <button class="ctl corner" id="btnEnd">Encerrar ▶</button>
   <div id="timerWrap"><span id="timerTxt">30s</span><div id="timerBar"><div id="timerFill"></div></div></div>
+  <div id="snapFx"><div class="flash"></div><div class="wave"></div><div class="case">💼</div></div>
 </div>
 <div id="inspectModal"><div id="inspectCard"></div><div id="inspectText"></div><small style="opacity:.7">toque para fechar</small></div>
 <div id="lockerModal"><div id="lockerBox"></div></div>
@@ -1016,9 +1134,12 @@ body::after{ /* vinheta sutil */
 <div id="overlay">
   <div id="ovTitle"></div>
   <div id="ovText"></div>
-  <button class="menu-btn" onclick="UI.openRoad()">Ver Jornada 🗺️</button>
-  <button class="menu-btn ghost" onclick="UI.show('menu')">Voltar ao vestiário</button>
+  <button class="menu-btn ghost" id="ovPeek" style="max-width:420px">👁 Ver a mesa</button>
+  <button class="menu-btn copa" id="ovNext" style="display:none;max-width:420px">⚽ Próxima partida</button>
+  <button class="menu-btn" style="max-width:420px" onclick="UI.openRoad()">Ver Jornada 🗺️</button>
+  <button class="menu-btn ghost" style="max-width:420px" onclick="Copa.active=false;UI.show('menu')">Voltar ao vestiário</button>
 </div>
+<button id="peekBack" class="ctl" style="display:none;position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:62;background:linear-gradient(180deg,#ffd95e,#f5a700);color:#3c2600;box-shadow:0 4px 0 #8a5a00">📋 Voltar ao resultado</button>
 <div id="toast"></div>
 <script>
 /* =====================================================
@@ -1029,14 +1150,69 @@ const rnd=a=>a[Math.floor(Math.random()*a.length)];
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 /* feedback tátil */
 const vib=p=>{try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}};
-/* verso de carta selecionável */
-const BackSkin={
-  list:[['classic','Clássico'],['ouro','Ouro'],['holo','Holo'],['canarinho','Canarinho']],
-  get(){return localStorage.getItem('brclash_back')||'classic'},
-  set(s){localStorage.setItem('brclash_back',s)}
+/* ---------------- MOEDAS / COMPRAS ---------------- */
+const Coins={
+  get(){return +localStorage.getItem('brclash_coins')||0},
+  add(n){localStorage.setItem('brclash_coins',Math.max(0,this.get()+n));},
+  spend(n){if(this.get()<n)return false;this.add(-n);return true;}
+};
+const Bought={
+  list(k){try{return JSON.parse(localStorage.getItem(k))||[]}catch(e){return[]}},
+  cards(){return this.list('brclash_bought')},
+  skins(){return this.list('brclash_skins')},
+  add(k,id){const l=this.list(k);if(!l.includes(id)){l.push(id);localStorage.setItem(k,JSON.stringify(l));}}
 };
 
-/* ---------------- AUDIO ---------------- */
+/* verso de carta selecionável — com desbloqueio (jornada) e preço (loja) */
+const BackSkin={
+  list:[
+    {id:'classic',label:'Clássico',unl:0,price:0},
+    {id:'ouro',label:'Ouro',unl:12,price:200},
+    {id:'canarinho',label:'Canarinho',unl:20,price:250},
+    {id:'holo',label:'Holo',unl:28,price:400},
+  ],
+  get(){return localStorage.getItem('brclash_back')||'classic'},
+  set(s){if(this.owned(s))localStorage.setItem('brclash_back',s)},
+  owned(id){
+    const sk=this.list.find(x=>x.id===id);
+    if(!sk)return false;
+    return sk.unl<=maxTacas()||Bought.skins().includes(id);
+  }
+};
+
+/* ---------------- AUDIO ----------------
+   Sons em arquivo: coloque .mp3 em assets/sfx/ com estes nomes.
+   Se o arquivo não existir, o jogo usa o som sintetizado (fallback).
+   ├─ card_play.mp3     → carta escalada/selecionada
+   ├─ card_draw.mp3     → compra de carta (DRAW)
+   ├─ card_reveal.mp3   → carta revelada na resolução
+   ├─ card_destroy.mp3  → carta destruída
+   ├─ effect_glow.mp3   → efeito Virar ativando (brilho)
+   ├─ dice_roll.mp3     → dado/roleta de sorte
+   ├─ turn_banner.mp3   → banner de turno/resolução
+   ├─ whistle.mp3       → apito (início da partida / turno 6)
+   ├─ mala_snap.mp3     → Mala Branca na mesa
+   ├─ victory.mp3       → vitória
+   ├─ defeat.mp3        → derrota
+   ├─ coins.mp3         → moedas ganhas
+   ├─ shop_buy.mp3      → compra na loja
+   ├─ timer_out.mp3     → tempo esgotado
+   └─ undo.mp3          → desfazer jogada                       */
+const SFXMAP={card:'card_play',draw:'card_draw',reveal:'card_reveal',boom:'card_destroy',
+  fx:'effect_glow',dice:'dice_roll',banner:'turn_banner',whistle:'whistle',snap:'mala_snap',
+  win:'victory',lose:'defeat',coin:'coins',buy:'shop_buy',timeout:'timer_out',undo:'undo'};
+const SFXCACHE={};
+function sfx(name){
+  if(!Snd.on||!SFXMAP[name])return false;
+  let a=SFXCACHE[name];
+  if(a===undefined){
+    a=new Audio('assets/sfx/'+SFXMAP[name]+'.mp3');
+    a.onerror=()=>{a._bad=true;};
+    SFXCACHE[name]=a;
+  }
+  if(a._bad)return false;
+  try{a.currentTime=0;const p=a.play();if(p)p.catch(()=>{});return true;}catch(e){return false;}
+}
 const Snd={
   on:true, ctx:null,
   c(){ if(!this.ctx) this.ctx=new (window.AudioContext||window.webkitAudioContext)(); return this.ctx; },
@@ -1051,15 +1227,20 @@ const Snd={
       o.stop(t+d+.02);
     }catch(e){}
   },
-  card(){this.beep(520,.07,'triangle',.09);},
-  reveal(){this.beep(330,.08,'triangle',.1);this.beep(660,.1,'triangle',.08,.06);},
-  fx(){this.beep(880,.12,'sine',.1);this.beep(1320,.16,'sine',.08,.08);},
-  boom(){this.beep(110,.3,'sawtooth',.16);this.beep(70,.4,'sawtooth',.12,.08);},
-  banner(){this.beep(392,.14,'triangle',.1);this.beep(523,.18,'triangle',.1,.12);},
-  whistle(){this.beep(2200,.18,'square',.07);this.beep(2200,.3,'square',.07,.25);},
-  snap(){this.beep(140,.25,'sawtooth',.18);this.whistle();},
-  win(){[523,659,784,1046].forEach((f,i)=>this.beep(f,.22,'triangle',.12,i*.13));},
-  lose(){[400,330,262].forEach((f,i)=>this.beep(f,.3,'sawtooth',.08,i*.18));}
+  card(){if(sfx('card'))return;this.beep(520,.07,'triangle',.09);},
+  draw(){if(sfx('draw'))return;this.beep(620,.08,'triangle',.09);this.beep(820,.08,'triangle',.07,.07);},
+  reveal(){if(sfx('reveal'))return;this.beep(330,.08,'triangle',.1);this.beep(660,.1,'triangle',.08,.06);},
+  fx(){if(sfx('fx'))return;this.beep(880,.12,'sine',.1);this.beep(1320,.16,'sine',.08,.08);},
+  boom(){if(sfx('boom'))return;this.beep(110,.3,'sawtooth',.16);this.beep(70,.4,'sawtooth',.12,.08);},
+  banner(){if(sfx('banner'))return;this.beep(392,.14,'triangle',.1);this.beep(523,.18,'triangle',.1,.12);},
+  whistle(){if(sfx('whistle'))return;this.beep(2200,.18,'square',.07);this.beep(2200,.3,'square',.07,.25);},
+  snap(){if(sfx('snap'))return;this.beep(140,.25,'sawtooth',.18);this.whistle();},
+  win(){if(sfx('win'))return;[523,659,784,1046].forEach((f,i)=>this.beep(f,.22,'triangle',.12,i*.13));},
+  lose(){if(sfx('lose'))return;[400,330,262].forEach((f,i)=>this.beep(f,.3,'sawtooth',.08,i*.18));},
+  coin(){if(sfx('coin'))return;this.beep(988,.08,'square',.08);this.beep(1319,.14,'square',.08,.08);},
+  buy(){if(sfx('buy'))return;this.coin();this.beep(1568,.16,'square',.07,.18);},
+  timeout(){if(sfx('timeout'))return;this.beep(220,.3,'sawtooth',.12);},
+  undo(){if(sfx('undo'))return;this.beep(420,.08,'triangle',.09);this.beep(300,.1,'triangle',.08,.07);}
 };
 
 /* ---------------- ARTES (PNG) ---------------- */
@@ -1118,6 +1299,15 @@ const FX={
     await sleep(ms);
     els.forEach(el=>el.classList.remove('fx-glow'));
   },
+  /* brilho na placa do local quando o efeito dele ativa */
+  async glowLoc(f,ms=750){
+    const el=document.querySelector(`.field[data-fi="${f}"] .loc`);
+    if(!el){await sleep(120);return;}
+    el.classList.remove('fxloc');void el.offsetWidth;el.classList.add('fxloc');
+    Snd.fx();
+    await sleep(ms);
+    el.classList.remove('fxloc');
+  },
   /* dado/roleta para efeitos de sorte */
   async dice(c,ms=1100){
     const els=document.querySelectorAll(`[data-uid="${c.uid}"]`);
@@ -1125,10 +1315,11 @@ const FX={
     const ds=[];
     els.forEach(el=>{const d=document.createElement('div');d.className='dicefx';el.appendChild(d);ds.push(d);});
     if(!ds.length){await sleep(300);return;}
+    const hasFile=sfx('dice');
     const t0=Date.now();
     while(Date.now()-t0<ms){
       ds.forEach(d=>d.textContent=rnd(faces));
-      Snd.beep(700+Math.random()*500,.04,'square',.04);
+      if(!hasFile)Snd.beep(700+Math.random()*500,.04,'square',.04);
       await sleep(95);
     }
     ds.forEach(d=>d.remove());
@@ -1156,7 +1347,7 @@ const Timer={
       if(!Game.g||Game.g.over){this.stop();return;}
       if(Game.busy)return;
       this.t--;this.draw();
-      if(this.t<=0){this.stop();UI.toast('⏱️ Tempo esgotado! Jogada encerrada.');vib(150);Game.endTurn();}
+      if(this.t<=0){this.stop();UI.toast('⏱️ Tempo esgotado! Jogada encerrada.');Snd.timeout();vib(150);Game.endTurn();}
     },1000);
   },
   add(s){
@@ -1338,6 +1529,58 @@ const CARDS=[
     let n=0;for(let i=0;i<3;i++)n+=g.fields[i].cards[s].filter(x=>!x.destroyed).length;
     if(n){bump(c,n);say('O Doutor lidera a Democracia! +'+n+'!');}
   }},
+ {id:'claudinho20',name:'Claudinho',year:2020,cost:3,pow:3,rar:'comum',unl:3,
+  text:'Virar: +2 se você tiver 4+ cartas na mão.',
+  c1:'#f5f5f5',c2:'#7a7a7a',cb:'#d62828',
+  onReveal(g,c,f,s){ if(g.hands[s].length>=4){bump(c,2);say('Claudinho organizou a jogada! +2');}}},
+ {id:'diegosouza17',name:'Diego Souza',year:2017,cost:4,pow:6,rar:'comum',unl:7,
+  text:'Condicional: -2 se houver outra carta sua neste campo. Quer o palco só pra ele.',
+  c1:'#3a3010',c2:'#1c1c1c',cb:'#ffc933'},
+ {id:'eribeiro14',name:'E. Ribeiro',year:2014,cost:3,pow:2,rar:'rara',unl:14,
+  text:'Virar: suas outras cartas neste campo ganham +1.',
+  c1:'#0b3d91',c2:'#06141f',cb:'#fff',
+  onReveal(g,c,f,s){
+    let hit=0;
+    g.fields[f].cards[s].forEach(x=>{if(x!==c&&!x.destroyed){bump(x,1);hit++;}});
+    if(hit)say('Everton Ribeiro deixou todo mundo na cara do gol! +1 em '+hit+'!');
+  }},
+ {id:'fabio23',name:'Fábio',year:2023,cost:2,pow:1,rar:'rara',unl:16,
+  text:'Contínuo: suas outras cartas neste campo não podem ser destruídas. O paredão defende tudo.',
+  c1:'#6b0f1a',c2:'#0e3a23',cb:'#1a7a3c'},
+ {id:'pikachu22',name:'Pikachu',year:2022,cost:2,pow:2,rar:'comum',unl:24,
+  text:'Virar: +1 de Poder por carta sua nos OUTROS campos.',
+  c1:'#1336a8',c2:'#3b0f12',cb:'#d62828',
+  onReveal(g,c,f,s){
+    let n=0;
+    for(let i=0;i<3;i++){ if(i===f)continue; n+=g.fields[i].cards[s].filter(x=>!x.destroyed).length; }
+    if(n){bump(c,n);say('⚡ Pikachu eletrizou o time! +'+n+'!');}
+  }},
+ {id:'lh24',name:'Luiz Henrique',year:2024,cost:4,pow:5,rar:'rara',unl:32,
+  text:'Virar: rouba 2 de Poder do inimigo mais forte neste campo.',
+  c1:'#1c1c1c',c2:'#2e2e2e',cb:'#fff',
+  onReveal(g,c,f,s){
+    const foes=g.fields[f].cards[1-s].filter(x=>!x.destroyed&&!x.immune);
+    if(foes.length){
+      const v=foes.sort((a,b)=>cardPower(g,b,f,1-s)-cardPower(g,a,f,1-s))[0];
+      bump(v,-2);bump(c,2);
+      say('Luiz Henrique fez o estádio tremer! Roubou 2 de '+v.name+'!');
+    }
+  }},
+ {id:'pulga25',name:'Pulga',year:2025,cost:1,pow:1,rar:'comum',unl:45,
+  text:'Virar: +3 se for sua única carta neste campo.',
+  c1:'#1336a8',c2:'#3b0f12',cb:'#d62828',
+  onReveal(g,c,f,s){
+    if(g.fields[f].cards[s].filter(x=>!x.destroyed).length===1){bump(c,3);say('A Pulga pulou sozinha pro gol! +3!');}
+  }},
+ {id:'yuri25',name:'Yuri Alberto',year:2025,cost:5,pow:7,rar:'rara',unl:60,
+  text:'Virar: +2 se houver inimigo com Poder maior que o dele neste campo.',
+  c1:'#1c1c1c',c2:'#2e2e2e',cb:'#fff',
+  onReveal(g,c,f,s){
+    const my=cardPower(g,c,f,s);
+    if(g.fields[f].cards[1-s].some(x=>!x.destroyed&&cardPower(g,x,f,1-s)>my)){
+      bump(c,2);say('Yuri Alberto respondeu na bronca! +2!');
+    }
+  }},
  {id:'zico81',name:'Zico',year:1981,cost:6,pow:9,rar:'lenda',unl:50,
   text:'Virar — GALINHO 🐔⚡: suas cartas nos OUTROS campos ganham +2 de Poder.',
   c1:'#7a0c14',c2:'#1a0103',cb:'#d62828',
@@ -1364,6 +1607,10 @@ const LOCS=[
  {id:'z4',name:'Z4',text:'No fim do turno, se houver 2+ cartas aqui, a de menor Poder é destruída.'},
  {id:'mesa',name:'Mesa Redonda',text:'Efeitos Virar não ativam aqui. Só vale stat puro.'},
  {id:'var',name:'Sala do VAR',text:'Efeitos Virar só ativam no início do turno seguinte. Checando…'},
+ {id:'stjd',name:'STJD',text:'Ao ser revelado, o tribunal troca outro local por um novo.'},
+ {id:'fielzao',name:'Arquibancada Lotada',text:'Cartas de custo 1 ou 2 ganham +1 aqui.'},
+ {id:'chuva',name:'Temporal',text:'Efeitos Contínuos de fim de turno não ativam aqui.'},
+ {id:'classico',name:'Clássico',text:'No fim do turno, a carta mais forte de CADA lado ganha +1.'},
 ];
 
 /* ---------------- BOTS ---------------- */
@@ -1385,32 +1632,15 @@ const Decks={
     const ids=(a&&d[a]&&d[a].length===12)?d[a]:DEFAULT_DECK;
     return ids.map(byId).filter(Boolean);
   },
-  openList(){
-    const d=this.load(), a=this.active(), list=$('#deckList');
-    list.innerHTML='';
-    const mk=(name,ids,isDefault)=>{
-      const row=document.createElement('div');
-      row.className='deck-row'+(((a===name)||(isDefault&&!a))?' active':'');
-      row.innerHTML=`<span><b>${name}</b><br><small>${ids.length} cartas${((a===name)||(isDefault&&!a))?' · ✔ ativo':''}</small></span>
-        <span style="display:flex;gap:6px">
-          <button class="mini-btn use">Usar</button>
-          ${isDefault?'':'<button class="mini-btn edit">Editar</button><button class="mini-btn del">🗑</button>'}
-        </span>`;
-      row.querySelector('.use').onclick=()=>{ if(isDefault)localStorage.removeItem('brclash_active'); else localStorage.setItem('brclash_active',name); this.openList(); };
-      if(!isDefault){
-        row.querySelector('.edit').onclick=()=>this.edit(name);
-        row.querySelector('.del').onclick=()=>{
-          const dd=this.load(); delete dd[name]; this.store(dd);
-          if(this.active()===name)localStorage.removeItem('brclash_active');
-          this.openList();
-        };
-      }
-      list.appendChild(row);
-    };
-    mk('Seleção Padrão',DEFAULT_DECK,true);
-    Object.entries(d).forEach(([name,ids])=>mk(name,ids,false));
-    UI.show('decks');
+  /* abre direto o construtor, carregando o baralho ativo */
+  openBuilder(){
+    const a=this.active(), d=this.load();
+    if(a&&d[a]){ this.editing=a; this.sel=[...d[a]]; $('#deckName').value=a; }
+    else{ this.editing=null; this.sel=[...DEFAULT_DECK]; $('#deckName').value=''; }
+    this.renderBuilder();
+    UI.show('builder');
   },
+  openList(){ this.openBuilder(); },
   newDeck(){ this.editing=null; this.sel=[]; $('#deckName').value=''; this.renderBuilder(); UI.show('builder'); },
   edit(name){ this.editing=name; this.sel=[...this.load()[name]]; $('#deckName').value=name; this.renderBuilder(); UI.show('builder'); },
   toggle(id){
@@ -1429,6 +1659,20 @@ const Decks={
     return t.includes('Virar')?'virar':t.includes('Contínuo')?'continuo':t.includes('Condicional')?'cond':'none';
   },
   renderBuilder(){
+    // seletor de verso (só do usuário; o rival tem verso próprio)
+    const sr=$('#skinRow');sr.innerHTML='';
+    BackSkin.list.forEach(sk=>{
+      const owned=BackSkin.owned(sk.id);
+      const d=document.createElement('div');
+      d.className='skin-opt'+(BackSkin.get()===sk.id?' sel':'');
+      if(!owned)d.style.cssText='filter:grayscale(1) brightness(.5)';
+      d.innerHTML=`<div class="gcard back skin-${sk.id}"><span class="backmark">${owned?'⚽':'🔒'}</span></div><small>${sk.label}</small>`;
+      d.onclick=()=>{
+        if(!owned){UI.toast('🔒 Verso bloqueado — '+sk.unl+' 🏆 na Jornada ou '+sk.price+' 🪙 na Loja.');return;}
+        BackSkin.set(sk.id);vib(10);Snd.card();this.renderBuilder();
+      };
+      sr.appendChild(d);
+    });
     const grid=$('#builderGrid');grid.innerHTML='';
     const q=($('#fName').value||'').toLowerCase().trim();
     const fe=$('#fEffect').value, fc=$('#fCost').value, fs=$('#fSort').value||'cost-a';
@@ -1457,6 +1701,46 @@ const Decks={
       };
       grid.appendChild(w);
     });
+    // lista de baralhos do usuário (ver/editar/excluir) na barra lateral
+    const md=$('#myDecks');md.innerHTML='';
+    const a=this.active(), saved=this.load();
+    const mkRow=(name,ids,isDefault)=>{
+      const isActive=(a===name)||(isDefault&&!a);
+      const row=document.createElement('div');
+      row.className='deck-row'+(isActive?' active':'');
+      row.style.cssText='padding:7px 9px;margin-bottom:6px;font-size:12px;flex-wrap:wrap';
+      row.innerHTML=`<span style="cursor:pointer;flex:1;min-width:0"><b style="font-size:13px">${name}</b><br><small>${ids.length}/12${isActive?' · ✔ ativo':''}${this.editing===name||(isDefault&&this.editing===null&&$('#deckName').value==='')?'':''}</small></span>
+        <span style="display:flex;gap:4px">
+          ${isActive?'':'<button class="mini-btn use" style="padding:5px 8px;font-size:10px">Usar</button>'}
+          ${isDefault?'':'<button class="mini-btn del" style="padding:5px 8px;font-size:10px">🗑</button>'}
+        </span>`;
+      // clicar no nome: carrega para ver/editar
+      row.querySelector('span').onclick=()=>{
+        if(isDefault){this.editing=null;this.sel=[...DEFAULT_DECK];$('#deckName').value='';}
+        else{this.editing=name;this.sel=[...saved[name]];$('#deckName').value=name;}
+        Snd.card();this.renderBuilder();
+      };
+      const ub=row.querySelector('.use');
+      if(ub)ub.onclick=e=>{
+        e.stopPropagation();
+        if(isDefault)localStorage.removeItem('brclash_active');
+        else localStorage.setItem('brclash_active',name);
+        Snd.card();this.renderBuilder();
+      };
+      const db=row.querySelector('.del');
+      if(db)db.onclick=e=>{
+        e.stopPropagation();
+        const dd=this.load(); delete dd[name]; this.store(dd);
+        if(this.active()===name)localStorage.removeItem('brclash_active');
+        if(this.editing===name){this.editing=null;this.sel=[];$('#deckName').value='';}
+        UI.toast('🗑 Baralho "'+name+'" excluído.');
+        this.renderBuilder();
+      };
+      md.appendChild(row);
+    };
+    mkRow('Seleção Padrão',DEFAULT_DECK,true);
+    Object.entries(saved).forEach(([name,ids])=>mkRow(name,ids,false));
+
     // barra lateral com a escalação atual (cartas inteiras em miniatura)
     const side=$('#deckSideList');side.innerHTML='';
     if(!this.sel.length){side.innerHTML='<div class="side-empty" style="grid-column:1/-1">Nenhuma carta ainda. Toque numa figurinha pra ler o efeito e escalar.</div>';}
@@ -1484,8 +1768,10 @@ const Decks={
     d[name]=[...this.sel];
     this.store(d);
     localStorage.setItem('brclash_active',name);
+    this.editing=name;
     UI.toast('💾 Baralho "'+name+'" salvo e ativado!');
-    this.openList();
+    Snd.buy();
+    this.renderBuilder();
   }
 };
 
@@ -1497,8 +1783,10 @@ function cardPower(g,card,f,side){
   if(card.id==='romario'&&mates.length===1) p+=7;
   if(card.id==='gabigol'&&g.turn>=6) p+=3;
   if(card.id==='cano23'&&mates.length>=2) p+=3;
+  if(card.id==='diegosouza17'&&mates.length>=2) p-=2;
   if(card.id!=='cassio'&&mates.some(x=>x.id==='cassio')) p+=1;
   if(g.fields[f].loc.id==='maraca'&&g.turn>=6) p+=2;
+  if(g.fields[f].loc.id==='fielzao'&&g.fields[f].open&&card.cost<=2) p+=1;
   return Math.max(0,p);
 }
 function fieldPower(g,f,side){
@@ -1537,7 +1825,7 @@ const Game={
     const g=this.g={
       bot:BOTS[botId], botId, turn:1, stakes:1,
       snapped:[false,false], snapTurn:[-1,-1], over:false,
-      fields:locs.map((l,i)=>({loc:l,open:i===0,cards:[[],[]]})),
+      fields:locs.map((l,i)=>({loc:l,open:false,cards:[[],[]]})),
       decks:[myDefs.map(makeCard).sort(()=>Math.random()-.5),
              botDefs.map(makeCard).sort(()=>Math.random()-.5)],
       hands:[[],[]],
@@ -1546,7 +1834,6 @@ const Game={
       energy:1, first:Math.random()<.5?0:1,
     };
     for(let s=0;s<2;s++)for(let i=0;i<3;i++) g.hands[s].push(g.decks[s].pop());
-    g.hands[0].push(g.decks[0].pop()); g.hands[1].push(g.decks[1].pop());
     this.sel=null;this.busy=false;
     // garante que os botões voltam a funcionar numa nova partida
     $('#btnEnd').disabled=$('#btnRetreat').disabled=false;
@@ -1558,7 +1845,21 @@ const Game={
     UI.show('match'); this.render();
     Snd.whistle();vib(30);
     Timer.bonus=false;
+    this.busy=true;
+    await sleep(500);
+    // compra inicial (4ª carta) antes de revelar o primeiro local
+    for(let s=0;s<2;s++){const c=g.decks[s].pop();if(c){c._drawn=(s===0);g.hands[s].push(c);}}
+    say('Compra de carta! 🃏');Snd.draw();
+    this.render();
+    await sleep(900);
+    // revela o primeiro local
+    g.fields[0].open=true;
+    this.render();
+    await FX.glowLoc(0,800);
+    if(g.fields[0].loc.id==='stjd')await this.applySTJD(0);
+    this.busy=false;
     await banner('Turno 1','Energia: 1⚡ · Boa sorte!');
+    this.render();
     Timer.start();
   },
 
@@ -1646,8 +1947,12 @@ const Game={
     const s=player?0:1;
     if(g.snapped[s])return;
     g.snapped[s]=true; g.snapTurn[s]=g.turn; g.stakes*=2;
-    Snd.snap();vib([90,40,90]);
+    Snd.snap();vib([120,50,120,50,180]);
     Timer.add(15);
+    // impacto visual: maleta caindo + onda de choque + flash
+    const fx=$('#snapFx');
+    fx.classList.remove('on');void fx.offsetWidth;fx.classList.add('on');
+    setTimeout(()=>fx.classList.remove('on'),950);
     document.body.classList.add('shake');
     setTimeout(()=>document.body.classList.remove('shake'),500);
     say((player?'Você':g.bot.name)+' PÔS A MALA NA MESA! Valendo '+g.stakes+' 🏆!');
@@ -1663,9 +1968,37 @@ const Game={
     this.finish(false,true,loss);
   },
 
+  /* STJD: troca outro local (revelado ou não) por um novo */
+  async applySTJD(fi){
+    const g=this.g;
+    const others=[0,1,2].filter(i=>i!==fi);
+    const target=rnd(others);
+    const inUse=g.fields.map(fl=>fl.loc.id);
+    const pool=LOCS.filter(l=>!inUse.includes(l.id)&&l.id!=='stjd');
+    if(!pool.length)return;
+    const old=g.fields[target].loc, nu=rnd(pool);
+    const wasOpen=g.fields[target].open;
+    await FX.glowLoc(fi,800);
+    g.fields[target].loc=nu;
+    g.fields[target].open=true; // se estava oculto, o julgamento o revela
+    this.render();
+    await FX.glowLoc(target,800);
+    say('⚖️ STJD julgou: '+(wasOpen?old.name:'um local oculto')+' virou '+nu.name+'!');
+    UI.toast('⚖️ STJD trocou '+(wasOpen?'':'e revelou ')+'um local!');
+    vib(60);
+    await sleep(500);
+  },
+
   /* destruição com animação */
   async destroyCard(card,f,s){
     const g=this.g;
+    // Fábio defende: suas outras cartas no campo dele não podem ser destruídas
+    if(g.fields[f].cards[s].some(x=>x.id==='fabio23'&&!x.destroyed&&x!==card)){
+      say('FÁBIO DEFENDEU! '+card.name+' está protegido. 🧤');
+      const guard=g.fields[f].cards[s].find(x=>x.id==='fabio23'&&!x.destroyed);
+      if(guard)await FX.glow(guard,800);
+      return;
+    }
     card.destroyed=true;
     g.destroyed[s].push(card);
     vib(70);
@@ -1731,12 +2064,33 @@ const Game={
       }
     }
 
-    // fim de turno: contínuos (Ganso etc.)
+    // fim de turno: contínuos (Ganso etc.) — Temporal cancela
     let hadEnd=false;
     for(let f=0;f<3;f++)for(let s=0;s<2;s++)for(const c of g.fields[f].cards[s]){
-      if(c.onEndTurn&&!c.destroyed){setCtx('Contínuo: '+c.name);c.onEndTurn(g,c);hadEnd=true;}
+      if(c.onEndTurn&&!c.destroyed){
+        if(g.fields[f].loc.id==='chuva'&&g.fields[f].open){
+          this.render();await FX.glowLoc(f,500);
+          say('Temporal! O gramado encharcado segurou '+c.name+'.');
+          continue;
+        }
+        setCtx('Contínuo: '+c.name);c.onEndTurn(g,c);hadEnd=true;
+      }
     }
     if(hadEnd){this.render();FX.flush();await sleep(500);}
+
+    // Clássico: a carta mais forte de cada lado ganha +1
+    for(let f=0;f<3;f++){
+      if(g.fields[f].loc.id!=='classico'||!g.fields[f].open)continue;
+      let any=false;
+      this.render();await FX.glowLoc(f,600);
+      for(let s=0;s<2;s++){
+        const alive=g.fields[f].cards[s].filter(x=>!x.destroyed);
+        if(!alive.length)continue;
+        const top=alive.sort((a,b)=>cardPower(g,b,f,s)-cardPower(g,a,f,s))[0];
+        setCtx('Local: Clássico');bump(top,1);any=true;
+      }
+      if(any){say('Clima de Clássico! Os craques crescem no jogo grande.');this.render();FX.flush();await sleep(550);}
+    }
 
     // Z4 — só se revelado e com 2+ cartas no campo
     for(let f=0;f<3;f++){
@@ -1750,6 +2104,7 @@ const Game={
         if(!low||p<low.p)low={c,p,s};
       }
       if(low){
+        this.render();await FX.glowLoc(f,600);
         say('Z4 não perdoa: '+low.c.name+' foi rebaixado! 📉');
         await this.destroyCard(low.c,f,low.s);
         await sleep(250);
@@ -1758,7 +2113,7 @@ const Game={
     this.render();
     await sleep(450);
 
-    if(g.turn>=6){ this.resolve(); return; }
+    if(g.turn>=6){ await this.resolve(); return; }
 
     // bot amarela?
     if(this.botRetreatDecision()){
@@ -1772,8 +2127,10 @@ const Game={
     g.turn++;
     g.energy=g.turn;
     g.first=Math.random()<.5?0:1;
-    if(g.turn===2)g.fields[1].open=true;
-    if(g.turn===3)g.fields[2].open=true;
+    let stjdField=-1;
+    if(g.turn===2){g.fields[1].open=true;if(g.fields[1].loc.id==='stjd')stjdField=1;}
+    if(g.turn===3){g.fields[2].open=true;if(g.fields[2].loc.id==='stjd')stjdField=2;}
+    if(stjdField>-1){this.render();await this.applySTJD(stjdField);}
     if(g.turn===6&&!g._t6){g._t6=true;g.stakes*=2;UI.toast('🏆 Turno final: Taças dobradas! Valendo '+g.stakes+'!');Snd.whistle();}
     /* fase de DRAW */
     const drawn=[];
@@ -1792,7 +2149,7 @@ const Game={
     await banner('Turno '+g.turn, g.turn===6?'É DECISÃO! 🏆':'Energia: '+g.energy+'⚡');
     if(drawn.length){
       say('Compra de carta: +'+drawn.length+' na mão! 🃏');
-      Snd.card();
+      Snd.draw();
     }
     this.busy=false;
     $('#btnEnd').disabled=$('#btnRetreat').disabled=false;
@@ -1811,11 +2168,11 @@ const Game={
     card._flip=true;
     g.fields[f].cards[s].push(card);
     Snd.reveal();
-    // debuffs de chegada — só se o campo já foi revelado
+    // debuffs de chegada — só se o campo já foi revelado (o local brilha antes)
     const loc=g.fields[f].loc, locOn=g.fields[f].open;
-    if(locOn&&loc.id==='dm'){setCtx('Local: DM');bump(card,-2);}
-    if(locOn&&loc.id==='januario'&&g.turn>4){setCtx('Local: São Januário');bump(card,-2);}
-    if(locOn&&card.tag==='CRIA'&&loc.id==='allianz'){setCtx('Local: Allianz Parque');bump(card,1);}
+    if(locOn&&loc.id==='dm'){this.render();await FX.glowLoc(f);setCtx('Local: DM');bump(card,-2);}
+    if(locOn&&loc.id==='januario'&&g.turn>4){this.render();await FX.glowLoc(f);setCtx('Local: São Januário');bump(card,-2);}
+    if(locOn&&card.tag==='CRIA'&&loc.id==='allianz'){this.render();await FX.glowLoc(f);setCtx('Local: Allianz Parque');bump(card,1);}
     if(!card.immune&&g.fields[f].cards[1-s].some(x=>x.id==='ceni'&&!x.destroyed)){setCtx('Contínuo: Rogério Ceni');bump(card,-1);}
     say((s===0?'Você joga ':g.bot.name+' joga ')+card.name+'! '+rnd(PHRASES_PLAY));
     this.render();FX.flush();
@@ -1823,8 +2180,8 @@ const Game={
     await sleep(620);
     // Virar
     if(card.onReveal){
-      if(locOn&&loc.id==='mesa'){say('Mesa Redonda: muita falação, efeito nenhum.');}
-      else if(locOn&&loc.id==='var'){g.pendingVAR.push({card,f,s});say('Checando o lance no VAR... 📺');}
+      if(locOn&&loc.id==='mesa'){await FX.glowLoc(f);say('Mesa Redonda: muita falação, efeito nenhum.');}
+      else if(locOn&&loc.id==='var'){await FX.glowLoc(f);g.pendingVAR.push({card,f,s});say('Checando o lance no VAR... 📺');}
       else{
         await FX.glow(card,1100);
         setCtx('Virar: '+card.name);
@@ -1835,8 +2192,21 @@ const Game={
     }
   },
 
-  resolve(){
+  async resolve(){
     const g=this.g;
+    // pulso sequencial no placar vencedor de cada local
+    this.render();
+    await sleep(400);
+    for(let f=0;f<3;f++){
+      const mp=fieldPower(g,f,0),fp=fieldPower(g,f,1);
+      const who=mp===fp?null:(mp>fp?'me':'foe');
+      if(who){
+        const el=document.querySelector(`.field[data-fi="${f}"] .fpower.${who}`);
+        if(el){el.classList.add('endpulse');Snd.fx();vib(25);}
+      }
+      await sleep(700);
+    }
+    await sleep(400);
     const me=fieldsWon(g,0),foe=fieldsWon(g,1);
     let win;
     if(me!==foe)win=me>foe;
@@ -1845,12 +2215,15 @@ const Game={
       const tf=[0,1,2].reduce((t,i)=>t+fieldPower(g,i,1),0);
       win=tp>tf?true:tp<tf?false:null;
     }
+    // texto animado do resultado
+    await banner(win===null?'EMPATE':win?'VITÓRIA!':'DERROTA', me+' × '+foe+' em locais', win!==true);
     if(win===null){this.finish(null,false,0);return;}
     this.finish(win,false,g.stakes);
   },
 
   finish(win,retreated,amount){
     const g=this.g;g.over=true;this.busy=true;
+    this._roadFrom=this.tacas; // para animar a barra da Jornada
     Timer.stop();
     vib(win?[60,40,60,40,140]:200);
     const ov=$('#overlay'),t=$('#ovTitle'),x=$('#ovText');
@@ -1876,6 +2249,30 @@ const Game={
       const unlocked=CARDS.filter(c=>(c.unl||0)>prevMax&&(c.unl||0)<=this.tacas);
       if(unlocked.length)x.textContent+=' · 🔓 Desbloqueou: '+unlocked.map(c=>c.name).join(', ')+'!';
     }
+    // moedas da partida
+    let coins=win===null?15:win?30*amount:10;
+    // modo copa
+    $('#ovNext').style.display='none';
+    if(Copa.active){
+      if(win===true){
+        if(Copa.n>=7){
+          Copa.active=false;coins+=300;
+          t.textContent='CAMPEÃO DA COPA! 🏆🏆🏆';
+          x.textContent='7 vitórias seguidas! Bônus de 300 🪙. '+x.textContent;
+          Snd.win();vib([80,40,80,40,80,40,200]);
+        }else{
+          const nx=$('#ovNext');
+          nx.style.display='flex';
+          nx.textContent='⚽ Próxima partida ('+(Copa.n+1)+'/7) — '+BOTS[Copa.seq[Copa.n]].name;
+          nx.onclick=()=>Copa.next();
+        }
+      }else{
+        Copa.active=false;
+        x.textContent+=' · A Copa acabou na partida '+Copa.n+'/7. 😞';
+      }
+    }
+    Coins.add(coins);Snd.coin();
+    x.textContent+=' · +'+coins+' 🪙 (total: '+Coins.get()+')';
     $('#tacasMenu').textContent=this.tacas;
     ov.classList.add('on');
   },
@@ -1894,8 +2291,9 @@ const Game={
     </div>`;
   },
 
-  backHTML(){
-    return `<div class="gcard back skin-${BackSkin.get()}"><span class="backmark">⚽</span></div>`;
+  backHTML(side=0){
+    const skin=side===1?'rival':BackSkin.get();
+    return `<div class="gcard back skin-${skin}"><span class="backmark">${side===1?'😈':'⚽'}</span></div>`;
   },
 
   bigCardHTML(c,p){
@@ -1914,6 +2312,7 @@ const Game={
     cube.classList.toggle('hot',g.stakes>=4);
     cube.classList.toggle('done',g.snapped[0]||this.busy);
     $('#stakeHint').textContent=g.snapped[0]?'mala na mesa!':'toque = MALA 💼';
+    $('#stakeWorth').textContent='valendo '+g.stakes+' 🏆';
     $('#energy').textContent=this.energyLeft();
     $('#botHand').textContent='🃏 '+g.hands[1].length+' cartas';
     $('#firstMe').classList.toggle('on',g.first===0);
@@ -1950,6 +2349,8 @@ const Game={
 
       const foeRow=document.createElement('div');foeRow.className='slot-row';
       const foeBacks=sdHere(1);
+      // espelhado: a "frente" do adversário é a fileira de BAIXO (junto ao local)
+      const foeCells=[];
       for(let i=0;i<4;i++){
         const sl=document.createElement('div');sl.className='cardslot';
         const c=fl.cards[1][i];
@@ -1958,12 +2359,18 @@ const Game={
           sl.onclick=e=>{e.stopPropagation();UI.inspect(c,g,fi,1);};
         }else{
           const b=foeBacks[i-fl.cards[1].length];
-          if(b)sl.innerHTML=this.backHTML();
+          if(b)sl.innerHTML=this.backHTML(1);
         }
-        foeRow.appendChild(sl);
+        foeCells.push(sl);
       }
+      [3,2,1,0].forEach(i=>foeRow.appendChild(foeCells[i])); // 1ª carta: inferior direita
       const loc=document.createElement('div');
       loc.className='locwrap';
+      loc.onclick=e=>{
+        if(this.sel!=null)return; // escalando uma carta: deixa o clique do campo agir
+        e.stopPropagation();
+        UI.inspectLoc(fl.open?fl.loc:null,fi);
+      };
       loc.innerHTML=fl.open
         ? `<span class="fpower foe ${fp>mp?'leading':''}">${fp}</span>
            <div class="loc">${locArtHTML(fl.loc)}<div class="lname">${fl.loc.name}</div><div class="ltext">${fl.loc.text}</div></div>
@@ -1982,7 +2389,7 @@ const Game={
           sl.onclick=e=>{e.stopPropagation();UI.inspect(c,g,fi,0);};
         }else{
           const b=myBacks[i-fl.cards[0].length];
-          if(b){ sl.innerHTML=this.backHTML(); }
+          if(b){ sl.innerHTML=this.backHTML(0); }
           else{
             const st=stagedHere[i-fl.cards[0].length-myBacks.length];
             if(st){
@@ -2027,12 +2434,30 @@ function toggleFull(){
 function maxTacas(){
   return Math.max(+localStorage.getItem('brclash_maxtacas')||0, Game.tacas||0);
 }
-function isUnlocked(c){ return (c.unl||0)<=maxTacas(); }
+function isUnlocked(c){ return (c.unl||0)<=maxTacas()||Bought.cards().includes(c.id); }
+
+/* ---------------- MODO COPA (7 partidas seguidas) ---------------- */
+const Copa={
+  active:false,n:0,
+  seq:['ze','ze','mister','mister','presidente','presidente','presidente'],
+  start(){ UI.show('copaintro'); },
+  begin(){
+    this.active=true;this.n=1;
+    UI.toast('🏆 COPA: Partida 1/7 — boa sorte!');
+    Game.start(this.seq[0]);
+  },
+  next(){
+    this.n++;
+    UI.toast('🏆 COPA: Partida '+this.n+'/7');
+    Game.start(this.seq[this.n-1]);
+  }
+};
 
 /* taças persistem entre sessões */
 Game.tacas=+localStorage.getItem('brclash_tacas')||0;
 $('#tacasMenu').textContent=Game.tacas;
 $('#recordMenu').textContent=maxTacas();
+$('#coinsMenu').textContent=Coins.get();
 $('#deckMenu').textContent=localStorage.getItem('brclash_active')||'Seleção Padrão';
 
 $('#btnEnd').onclick=()=>Game.endTurn();
@@ -2058,7 +2483,7 @@ $('#btnUndo').onclick=()=>{
   const g=Game.g;
   if(!g||Game.busy||g.over||!g.staged.length)return;
   g.staged=[];
-  Snd.card();vib(20);
+  Snd.undo();vib(20);
   UI.toast('↩ Jogada desfeita.');
   Game.render();
 };
@@ -2191,9 +2616,11 @@ const UI={
     document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
     $('#'+id).classList.add('on');
     $('#overlay').classList.remove('on');
+    $('#peekBack').style.display='none';
     if(id==='menu'){
       $('#tacasMenu').textContent=Game.tacas;
       $('#recordMenu').textContent=maxTacas();
+      $('#coinsMenu').textContent=Coins.get();
       $('#deckMenu').textContent=localStorage.getItem('brclash_active')||'Seleção Padrão';
     }
   },
@@ -2203,25 +2630,103 @@ const UI={
   openRoad(){
     const list=$('#roadList');list.innerHTML='';
     const max=maxTacas();
-    const miles=[...CARDS].filter(c=>c.unl).sort((a,b)=>a.unl-b.unl);
-    const doneCount=miles.filter(c=>isUnlocked(c)).length;
-    $('#roadProg').textContent=`Recorde: ${max} 🏆 · ${doneCount}/${miles.length} figurinhas reveladas`;
+    // marcos: cartas (enigmáticas) + versos (visíveis)
+    const miles=[
+      ...CARDS.filter(c=>c.unl).map(c=>({type:'card',unl:c.unl,c})),
+      ...BackSkin.list.filter(s=>s.unl).map(s=>({type:'skin',unl:s.unl,s})),
+    ].sort((a,b)=>a.unl-b.unl);
+    const doneCount=miles.filter(m=>m.type==='card'?isUnlocked(m.c):BackSkin.owned(m.s.id)).length;
+    $('#roadProg').textContent=`Recorde: ${max} 🏆 · ${doneCount}/${miles.length} recompensas conquistadas`;
     let nextEl=null;
-    miles.forEach(c=>{
-      const done=isUnlocked(c);
+    miles.forEach(m=>{
+      const done=m.type==='card'?isUnlocked(m.c):BackSkin.owned(m.s.id);
       const it=document.createElement('div');
       it.className='road-item'+(done?' done':'');
-      it.innerHTML=`
-        <div class="road-node">${done?'✔':'🏆'}</div>
-        <div class="road-card" style="position:relative">${done?Game.bigCardHTML(c,c.pow):this.mysteryHTML(c)}</div>
-        <div class="road-info"><b>${done?c.name:'Figurinha misteriosa'}</b><small>${done?'Desbloqueada! ('+c.unl+' 🏆)':'Alcance '+c.unl+' Taças para revelar'}</small></div>`;
-      if(done){it.style.cursor='pointer';it.onclick=()=>this.inspect(c);}
-      else if(!nextEl){nextEl=it;it.classList.add('next');}
+      if(m.type==='card'){
+        it.innerHTML=`
+          <div class="road-node">${done?'✔':'🏆'}</div>
+          <div class="road-card" style="position:relative">${done?Game.bigCardHTML(m.c,m.c.pow):this.mysteryHTML(m.c)}</div>
+          <div class="road-info"><b>${done?m.c.name:'Figurinha misteriosa'}</b><small>${done?'Desbloqueada! ('+m.unl+' 🏆)':'Alcance '+m.unl+' Taças para revelar'}</small></div>`;
+        if(done){it.style.cursor='pointer';it.onclick=()=>this.inspect(m.c);}
+      }else{
+        it.innerHTML=`
+          <div class="road-node">${done?'✔':'🂠'}</div>
+          <div class="road-card" style="position:relative">
+            <div class="gcard back skin-${m.s.id}" style="position:relative;width:100%;aspect-ratio:5/7;${done?'':'filter:grayscale(.8) brightness(.6)'}"><span class="backmark">${done?'⚽':'🔒'}</span></div>
+            ${done?'':`<span class="lockreq">${m.unl} 🏆</span>`}
+          </div>
+          <div class="road-info"><b>Verso ${m.s.label}</b><small>${done?'Conquistado! ('+m.unl+' 🏆)':'Alcance '+m.unl+' Taças (ou compre na Loja)'}</small></div>`;
+        if(done){it.style.cursor='pointer';it.onclick=()=>{BackSkin.set(m.s.id);Snd.card();UI.toast('🂠 Verso '+m.s.label+' equipado!');};}
+      }
+      if(!done&&!nextEl){nextEl=it;it.classList.add('next');}
       list.appendChild(it);
     });
     this.show('road');
+    // barra até o próximo marco — anima enchendo/diminuindo após a partida
+    const nextMile=miles.find(m=>m.type==='card'?!isUnlocked(m.c):!BackSkin.owned(m.s.id));
+    const target=nextMile?nextMile.unl:miles[miles.length-1].unl;
+    const fill=$('#roadBarFill');
+    const pct=v=>Math.max(0,Math.min(100,v/target*100));
+    const from=Game._roadFrom!=null?Game._roadFrom:Game.tacas;
+    $('#roadBarTxt').textContent=nextMile
+      ?`${Game.tacas} / ${target} 🏆 até a próxima recompensa`
+      :'Tudo conquistado! 🏆';
+    fill.style.transition='none';fill.style.width=pct(from)+'%';
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      fill.style.transition='';fill.style.width=pct(Game.tacas)+'%';
+    }));
+    Game._roadFrom=null;
     // centraliza o nível atual do usuário
     setTimeout(()=>{(nextEl||list.lastElementChild)?.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'});},80);
+  },
+  openShop(){
+    $('#coinsShop').textContent=Coins.get();
+    // figurinhas (todas que têm requisito; compráveis se ainda bloqueadas)
+    const sc=$('#shopCards');sc.innerHTML='';
+    CARDS.filter(c=>c.unl).sort((a,b)=>a.unl-b.unl).forEach(c=>{
+      const owned=isUnlocked(c);
+      const price=100+c.unl*12;
+      const w=document.createElement('div');
+      w.className='shop-item';
+      w.innerHTML=Game.bigCardHTML(c,c.pow)+(owned
+        ?'<div class="shop-owned">✔ NA COLEÇÃO</div>'
+        :`<button class="buy-btn" ${Coins.get()<price?'disabled':''}>🪙 ${price}</button>`);
+      w.firstElementChild.style.cursor='pointer';
+      w.firstElementChild.onclick=()=>this.inspect(c);
+      if(!owned){
+        w.querySelector('.buy-btn').onclick=()=>{
+          if(!Coins.spend(price)){UI.toast('🪙 Moedas insuficientes!');return;}
+          Bought.add('brclash_bought',c.id);
+          Snd.buy();vib([30,20,60]);
+          UI.toast('🎉 '+c.name+' comprado! Já está na coleção.');
+          this.openShop();
+        };
+      }
+      sc.appendChild(w);
+    });
+    // versos
+    const ss=$('#shopSkins');ss.innerHTML='';
+    BackSkin.list.filter(s=>s.price).forEach(s=>{
+      const owned=BackSkin.owned(s.id);
+      const w=document.createElement('div');
+      w.className='shop-item';
+      w.innerHTML=`<div class="shop-skin-back"><div class="gcard back skin-${s.id}"><span class="backmark">⚽</span></div></div>
+        <div style="text-align:center;font-size:12px;font-weight:900">${s.label}</div>`+(owned
+        ?'<div class="shop-owned">✔ CONQUISTADO</div>'
+        :`<button class="buy-btn" ${Coins.get()<s.price?'disabled':''}>🪙 ${s.price}</button>`);
+      if(!owned){
+        w.querySelector('.buy-btn').onclick=()=>{
+          if(!Coins.spend(s.price)){UI.toast('🪙 Moedas insuficientes!');return;}
+          Bought.add('brclash_skins',s.id);
+          BackSkin.set(s.id);
+          Snd.buy();vib([30,20,60]);
+          UI.toast('🂠 Verso '+s.label+' comprado e equipado!');
+          this.openShop();
+        };
+      }
+      ss.appendChild(w);
+    });
+    this.show('shop');
   },
   lockerRoom(side){
     const g=Game.g;if(!g)return;
@@ -2246,17 +2751,9 @@ const UI={
   toggleSound(){
     Snd.on=!Snd.on;
     $('#btnSound').textContent=Snd.on?'🔊 Som: ON':'🔇 Som: OFF';
+    const m=$('#miniSound');if(m)m.textContent=Snd.on?'🔊':'🔇';
   },
   openAlbum(){
-    // seletor de verso
-    const sr=$('#skinRow');sr.innerHTML='';
-    BackSkin.list.forEach(([id,label])=>{
-      const d=document.createElement('div');
-      d.className='skin-opt'+(BackSkin.get()===id?' sel':'');
-      d.innerHTML=`<div class="gcard back skin-${id}"><span class="backmark">⚽</span></div><small>${label}</small>`;
-      d.onclick=()=>{BackSkin.set(id);vib(10);Snd.card();this.openAlbum();};
-      sr.appendChild(d);
-    });
     const grid=$('#albumGrid');grid.innerHTML='';
     [...CARDS].sort((a,b)=>(a.unl||0)-(b.unl||0)||a.cost-b.cost).forEach(c=>{
       const w=document.createElement('div');
@@ -2291,6 +2788,18 @@ const UI={
     $('#inspectModal').classList.add('on');
     Snd.card();
   },
+  /* inspeção de local (clicar no campo destaca, como nas cartas) */
+  inspectLoc(l,fi){
+    if(!l){this.toast('Local ainda oculto... revela no turno '+(fi+1)+' 🤫');return;}
+    $('#inspectCard').innerHTML=`
+      <div class="loc" style="height:150px;width:220px;max-width:60vw;margin:0 auto">
+        ${locArtHTML(l)}<div class="lname" style="font-size:17px">${l.name}</div>
+        <div class="ltext" style="font-size:13px">${l.text}</div>
+      </div>`;
+    $('#inspectText').innerHTML=`<b>📍 ${l.name}</b><br>${l.text}`;
+    $('#inspectModal').classList.add('on');
+    Snd.card();
+  },
   /* inspeção no construtor de baralho: lê o efeito + adiciona/remove */
   inspectBuilder(c){
     this.inspect(c);
@@ -2313,6 +2822,18 @@ $('#inspectModal').onclick=()=>$('#inspectModal').classList.remove('on');
 $('#lockerModal').onclick=()=>$('#lockerModal').classList.remove('on');
 $('#plateMe').onclick=()=>UI.lockerRoom(0);
 $('#plateFoe').onclick=()=>UI.lockerRoom(1);
+
+/* ocultar overlay pra ler a mesa após o fim da partida */
+$('#ovPeek').onclick=()=>{
+  $('#overlay').classList.remove('on');
+  $('#peekBack').style.display='block';
+  Snd.card();
+};
+$('#peekBack').onclick=()=>{
+  $('#peekBack').style.display='none';
+  $('#overlay').classList.add('on');
+  Snd.card();
+};
 
 $('#preview').addEventListener('click',e=>e.stopPropagation());
 $('#preview').addEventListener('pointerdown',e=>e.stopPropagation());
