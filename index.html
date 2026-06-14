@@ -542,11 +542,16 @@ body::after{ /* vinheta sutil */
 }
 
 #stakeCube{
-  position:fixed;right:clamp(10px,calc(25vw - 180px),22vw);top:calc(50% - 70px);z-index:20;
-  display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;
-  transition:transform .12s;
+  position:fixed;right:clamp(10px,calc(25vw - 180px),22vw);top:calc(50% - 76px);z-index:20;
+  /* LARGURA TRAVADA — evita que o container mude de tamanho quando #snapNote aparece
+     (o que estava empurrando o cube para a esquerda na centralização do flex). */
+  width:140px;
+  display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;
+  transition:filter .15s ease;
+  transform:translateZ(0);
+  will-change:filter;
 }
-#stakeCube:hover{transform:scale(1.07)}
+#stakeCube:hover{filter:brightness(1.12) drop-shadow(0 0 14px rgba(255,201,51,.5))}
 
 /* impacto da Mala Branca */
 #snapFx{
@@ -578,61 +583,49 @@ body::after{ /* vinheta sutil */
   100%{transform:translateY(6px) scale(1);opacity:0}
 }
 #stakeCube.done{cursor:default;filter:saturate(.6)}
-#stakeCube .cubeface{
-  width:82px;height:82px;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  background:
-    radial-gradient(circle at 30% 25%, rgba(255,255,255,.35), transparent 45%),
-    linear-gradient(160deg,#1849c9,#0a1a55 60%,#051030);
-  clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);
-  box-shadow:0 0 22px rgba(70,130,255,.5);
-  animation:cubefloat 3s ease-in-out infinite;
-}
-@keyframes cubefloat{0%,100%{transform:translateY(0) scale(var(--cs,1));filter:brightness(1)}50%{transform:translateY(-6px) scale(var(--cs,1));filter:brightness(1.25)}}
-/* o cube do snap cresce/intensifica a cada dobra (1>2>4>8...) — punch no container */
+/* Bloco original do .cubeface NEUTRALIZADO — design final está no BLOCO 2.2 abaixo. */
+#stakeCube .cubeface{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center}
+/* cubefloat antigo: agora SEM transform — substituído por pulso de luz */
+@keyframes cubefloat{0%,100%{filter:brightness(1)}50%{filter:brightness(1.18)}}
+/* "grow" agora anima APENAS o número (b) dentro do cubeface — container não se move */
 #stakeCube{--cs:1;--punch:1.3}
-#stakeCube.grow{animation:stakegrow .5s cubic-bezier(.2,1.7,.4,1)}
-@keyframes stakegrow{0%{transform:scale(1)}42%{transform:scale(var(--punch,1.3))}100%{transform:scale(1)}}
-#stakeCube[data-lv="2"] .cubeface{box-shadow:0 0 30px rgba(120,140,255,.8)}
-#stakeCube[data-lv="3"] .cubeface{box-shadow:0 0 42px rgba(160,120,255,.92)}
-#stakeCube[data-lv="4"] .cubeface{box-shadow:0 0 56px rgba(190,120,255,1)}
-#stakeCube[data-lv="3"] .cubeface::after,#stakeCube[data-lv="4"] .cubeface::after{animation-duration:.9s}
-/* eletricidade discreta crepitando no cube */
-#stakeCube .cubeface::after{
-  content:"";position:absolute;inset:0;pointer-events:none;z-index:2;
-  clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);
-  background:
-    radial-gradient(2px 7px at 50% 6%, rgba(190,225,255,.95), transparent 70%),
-    radial-gradient(7px 2px at 90% 50%, rgba(255,230,180,.9), transparent 70%),
-    radial-gradient(2px 7px at 50% 94%, rgba(190,225,255,.85), transparent 70%),
-    radial-gradient(7px 2px at 10% 50%, rgba(255,230,180,.9), transparent 70%);
-  animation:eleccube 1.4s steps(1,end) infinite;opacity:.85;
-}
-@keyframes eleccube{0%{transform:rotate(0)}33%{transform:rotate(120deg);opacity:.55}66%{transform:rotate(240deg)}100%{transform:rotate(360deg)}}
+#stakeCube.grow .cubeface b{animation:stakegrow .55s cubic-bezier(.2,1.7,.4,1)}
+@keyframes stakegrow{0%{transform:translateY(-50%) scale(1)}42%{transform:translateY(-50%) scale(var(--punch,1.3))}100%{transform:translateY(-50%) scale(1)}}
+/* glow externo por nível (sem clip-path antigo) */
+#stakeCube[data-lv="2"] .cubeface{box-shadow:0 0 30px rgba(255,201,51,.45),0 10px 24px rgba(0,0,0,.55),inset 0 2px 0 rgba(255,255,255,.18)}
+#stakeCube[data-lv="3"] .cubeface{box-shadow:0 0 44px rgba(255,170,40,.7),0 10px 24px rgba(0,0,0,.55),inset 0 2px 0 rgba(255,255,255,.22)}
+#stakeCube[data-lv="4"] .cubeface{box-shadow:0 0 58px rgba(255,120,20,.9),0 10px 24px rgba(0,0,0,.6),inset 0 2px 0 rgba(255,255,255,.26)}
+#stakeCube .cubeface::after{content:none}
 #stakeCube .cubeface span{font-size:16px;line-height:1;position:relative;z-index:3}
-#stakeCube .cubeface b{font-size:34px;color:#fff;text-shadow:0 0 8px #7db0ff,0 0 18px #4f8fff,0 2px 3px #001;position:relative;z-index:3}
-#stakeCube.hot .cubeface{background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.4),transparent 45%),linear-gradient(160deg,#c91818,#550a0a 60%,#300505);box-shadow:0 0 26px rgba(255,90,90,.65);animation:pulse .8s infinite}
-/* contagem dos troféus subindo ao encerrar o turno (após pôr a mala) */
-#stakeCube.payout .cubeface{
-  background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.6),transparent 45%),linear-gradient(160deg,#ffc733,#d68a07 55%,#7a4d00);
-  box-shadow:0 0 34px rgba(255,201,51,.95);
-  animation:cubefloat 3s ease-in-out infinite, payoutpulse .42s ease-in-out infinite;
-}
-@keyframes payoutpulse{0%,100%{filter:brightness(1.1)}50%{filter:brightness(1.6)}}
-#stakeCube .cubeface b.tick,#stakesVal.tick{animation:staketick .22s cubic-bezier(.2,1.6,.4,1)}
-@keyframes staketick{0%{transform:scale(1)}45%{transform:scale(1.55);color:#fff4b0;text-shadow:0 0 14px #ffd76a,0 0 26px #ffb01f}100%{transform:scale(1)}}
+/* "hot" agora SEM scale do contêiner — só glow vermelho pulsando */
+#stakeCube.hot .cubeface{animation:hotglow .9s ease-in-out infinite}
+@keyframes hotglow{0%,100%{box-shadow:0 0 26px rgba(255,90,90,.55),0 10px 22px rgba(0,0,0,.55),inset 0 2px 0 rgba(255,255,255,.18)}50%{box-shadow:0 0 42px rgba(255,120,80,.95),0 10px 22px rgba(0,0,0,.55),inset 0 2px 0 rgba(255,255,255,.22)}}
+/* payout: glow dourado intenso, sem mexer no layout */
+#stakeCube.payout .cubeface{animation:payoutpulse .42s ease-in-out infinite}
+@keyframes payoutpulse{0%,100%{filter:brightness(1.05)}50%{filter:brightness(1.55)}}
+/* tick do número: pulsa só o glyph (não o contêiner) */
+#stakeCube .cubeface b.tick,#stakesVal.tick{animation:staketick .26s cubic-bezier(.2,1.6,.4,1)}
+@keyframes staketick{0%{transform:translateY(-50%) scale(1)}45%{transform:translateY(-50%) scale(1.45);filter:brightness(1.6) drop-shadow(0 0 14px rgba(255,231,140,.9))}100%{transform:translateY(-50%) scale(1)}}
 #stakeHint{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#9db8e8;animation:hintblink 2.4s ease-in-out infinite}
 @keyframes hintblink{0%,100%{opacity:.6}50%{opacity:1}}
-/* aviso de quem bateu a mala (abaixo do ícone) */
+/* aviso de quem bateu a mala (ABSOLUTE — fora do flow para não empurrar o cube) */
 #snapNote{
-  display:none;max-width:150px;margin-top:6px;text-align:center;
+  display:none;
+  position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);
+  width:160px;max-width:160px;text-align:center;
   font-size:10.5px;font-weight:800;line-height:1.25;color:#fff;
   background:linear-gradient(180deg,rgba(201,24,24,.95),rgba(120,8,8,.95));
   border:1px solid rgba(255,170,90,.6);border-radius:10px;padding:5px 8px;
   text-shadow:0 1px 2px #000;box-shadow:0 3px 10px rgba(0,0,0,.5);
   animation:snapnotein .4s ease-out;
+  pointer-events:none;
 }
 #snapNote.on{display:block}
-@keyframes snapnotein{0%{transform:scale(.6) translateY(-6px);opacity:0}60%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
+@keyframes snapnotein{
+  0%{transform:translateX(-50%) scale(.6) translateY(-6px);opacity:0}
+  60%{transform:translateX(-50%) scale(1.08);opacity:1}
+  100%{transform:translateX(-50%) scale(1);opacity:1}
+}
 #stakeCube.done #stakeHint{visibility:hidden}
 
 #fields{
@@ -759,8 +752,16 @@ body::after{ /* vinheta sutil */
 .cornerFull:hover{transform:scale(1.1);background:rgba(255,255,255,.15)}
 
 /* energia "enchendo" no novo turno */
-#energyOrb.pop{animation:epop .55s cubic-bezier(.2,1.6,.4,1)}
-@keyframes epop{40%{transform:scale(1.3);filter:brightness(1.6)}}
+#energyOrb.pop{animation:epop .7s cubic-bezier(.2,1.7,.4,1)}
+@keyframes epop{
+  0%{transform:scale(1);filter:brightness(1)}
+  35%{transform:scale(1.42) rotate(-3deg);filter:brightness(2) drop-shadow(0 0 28px rgba(140,210,255,.95))}
+  65%{transform:scale(.94) rotate(2deg)}
+  100%{transform:scale(1);filter:brightness(1)}
+}
+/* tick rápido no número quando muda */
+#energyOrb b.tick{animation:eorbtick .42s cubic-bezier(.2,1.7,.4,1)}
+@keyframes eorbtick{0%{transform:scale(1)}45%{transform:scale(1.7);color:#eaf6ff;text-shadow:0 0 18px #fff,0 0 30px #6fb4ff,0 2px 4px #001}100%{transform:scale(1)}}
 
 /* select rápido de baralho no menu */
 #quickDeck{
@@ -789,30 +790,64 @@ body::after{ /* vinheta sutil */
 
 /* orbe de energia (redondo) */
 #energyOrb{
-  position:fixed;left:clamp(10px,calc(25vw - 180px),22vw);top:calc(50% - 74px);z-index:20;
-  width:86px;height:86px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  background:radial-gradient(circle at 32% 28%,#9fd4ff,#1f6fe0 45%,#0a2a6e 80%);
+  position:fixed;left:clamp(10px,calc(25vw - 180px),22vw);top:calc(50% - 80px);z-index:20;
+  width:98px;height:98px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:
+    radial-gradient(circle at 32% 26%, rgba(255,255,255,.55), transparent 38%),
+    radial-gradient(circle at 50% 50%, #c2e3ff 0%, #2a82f0 38%, #0c2b78 78%, #050f30 100%);
   font-weight:900;pointer-events:none;overflow:visible;
+  border:2px solid rgba(190,225,255,.55);
   animation:orbbreathe 2.4s ease-in-out infinite;
 }
 @keyframes orbbreathe{
-  0%,100%{transform:scale(1);box-shadow:0 0 20px rgba(80,150,255,.55),inset 0 -6px 14px rgba(0,0,30,.5)}
-  50%{transform:scale(1.07);box-shadow:0 0 42px rgba(120,180,255,.98),inset 0 -6px 14px rgba(0,0,30,.5)}
+  0%,100%{transform:scale(1);box-shadow:0 0 22px rgba(80,160,255,.6),0 0 0 5px rgba(120,180,255,.08),inset 0 -8px 16px rgba(0,4,30,.55),inset 0 6px 14px rgba(255,255,255,.18)}
+  50%{transform:scale(1.06);box-shadow:0 0 46px rgba(140,200,255,1),0 0 0 8px rgba(140,200,255,.12),inset 0 -8px 16px rgba(0,4,30,.55),inset 0 6px 14px rgba(255,255,255,.28)}
 }
-/* eletricidade discreta percorrendo o orbe */
+/* anel girando ao redor do orbe (faíscas em órbita) */
 #energyOrb::before{
-  content:"";position:absolute;inset:-4px;border-radius:50%;pointer-events:none;z-index:1;
+  content:"";position:absolute;inset:-7px;border-radius:50%;pointer-events:none;z-index:1;
   background:
-    radial-gradient(2px 8px at 50% 4%, rgba(190,225,255,.95), transparent 70%),
-    radial-gradient(8px 2px at 92% 48%, rgba(160,210,255,.9), transparent 70%),
-    radial-gradient(2px 7px at 50% 96%, rgba(190,225,255,.85), transparent 70%),
-    radial-gradient(7px 2px at 8% 52%, rgba(160,210,255,.9), transparent 70%);
-  filter:drop-shadow(0 0 4px rgba(140,200,255,.9));
-  animation:elecorb 1.6s steps(1,end) infinite;opacity:.9;
+    radial-gradient(2.5px 9px at 50% 3%, rgba(220,240,255,1), transparent 70%),
+    radial-gradient(9px 2.5px at 97% 50%, rgba(180,220,255,.95), transparent 70%),
+    radial-gradient(2.5px 8px at 50% 97%, rgba(220,240,255,.95), transparent 70%),
+    radial-gradient(8px 2.5px at 3% 50%, rgba(180,220,255,.95), transparent 70%),
+    radial-gradient(2px 6px at 78% 18%, rgba(255,255,255,.9), transparent 70%),
+    radial-gradient(2px 6px at 22% 80%, rgba(255,255,255,.9), transparent 70%);
+  filter:drop-shadow(0 0 6px rgba(160,210,255,1));
+  animation:elecorb 2.6s linear infinite;opacity:.95;
 }
-@keyframes elecorb{0%{transform:rotate(0)}25%{transform:rotate(90deg)}50%{transform:rotate(180deg);opacity:.5}75%{transform:rotate(270deg)}100%{transform:rotate(360deg)}}
-#energyOrb b{font-size:36px;color:#fff;text-shadow:0 0 6px #bfe0ff,0 0 16px #6fb4ff,0 2px 3px #001;position:relative;z-index:2}
-#energyOrb small{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:#d6ebff;position:relative;z-index:2}
+@keyframes elecorb{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+/* halo externo pulsando */
+#energyOrb::after{
+  content:"";position:absolute;inset:-14px;border-radius:50%;pointer-events:none;z-index:0;
+  background:radial-gradient(circle, rgba(110,180,255,.35) 0%, transparent 65%);
+  animation:eorbhalo 2.4s ease-in-out infinite;
+}
+@keyframes eorbhalo{0%,100%{opacity:.4;transform:scale(.9)}50%{opacity:.9;transform:scale(1.1)}}
+/* raio sutil ao fundo do número */
+#energyOrb .ebolt{
+  position:absolute;font-size:78px;line-height:1;color:rgba(255,255,255,.10);z-index:1;
+  text-shadow:0 0 18px rgba(180,220,255,.5);
+  animation:eboltflick 3.2s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes eboltflick{0%,100%{opacity:.08;transform:scale(1)}48%{opacity:.18;transform:scale(1.05)}52%{opacity:.35}54%{opacity:.1}}
+#energyOrb b{
+  font-size:48px;line-height:1;color:#fff;
+  text-shadow:
+    0 0 8px #d8eeff,
+    0 0 18px #6fb4ff,
+    0 0 32px rgba(80,160,255,.7),
+    0 2px 3px #001,
+    0 3px 0 rgba(0,20,60,.55);
+  position:relative;z-index:3;font-weight:900;
+  letter-spacing:-1px;
+}
+#energyOrb small{
+  font-size:9.5px;text-transform:uppercase;letter-spacing:1.4px;color:#e6f3ff;
+  position:relative;z-index:3;font-weight:900;margin-top:1px;
+  text-shadow:0 1px 2px #001,0 0 6px rgba(140,200,255,.6);
+}
 
 /* narração (lado esquerdo) */
 #commentary{
@@ -1225,9 +1260,8 @@ body::after{ /* vinheta sutil */
 }
 @media (max-width:640px){
   .hcard{width:72px;height:102px}
-  #stakeCube{top:auto;bottom:96px;right:8px;transform:none}
-  #stakeCube:hover{transform:scale(1.05)}
-  #stakeCube .cubeface{width:54px;height:54px}
+  #stakeCube{top:auto;bottom:96px;right:8px}
+  #stakeCube:hover{filter:brightness(1.12) drop-shadow(0 0 12px rgba(255,201,51,.5))}
   #hand{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;padding:0 4px}
 }
 
@@ -1327,37 +1361,157 @@ body::after{ /* vinheta sutil */
   100%{opacity:0;transform:translate(-50%,-150%) scale(1)}
 }
 
-/* ---- BLOCO 2.2 — MALA BRANCA (redesign) ---- */
+/* ---- BLOCO 2.2 — SNAP ORB (orbe dourado, gêmeo do energy orb) ----
+   Regras: nenhuma transform no #stakeCube nem no .cubeface. Animações só com
+   filter/box-shadow/text-shadow. O punch só rola no número (b). */
 #stakeCube .cubeface{
-  width:90px;height:72px;clip-path:none;border-radius:11px 11px 13px 13px;
-  background:linear-gradient(180deg,#ffffff,#e6e9ef 52%,#cdd3dd);
-  border:2px solid #b6bdca;overflow:visible;
-  box-shadow:0 7px 16px rgba(0,0,0,.5),inset 0 2px 0 rgba(255,255,255,.95),inset 0 -7px 12px rgba(0,0,0,.12);
-  animation:cubefloat 3s ease-in-out infinite;
+  width:96px;height:96px;border-radius:50%;clip-path:none;
+  display:flex;align-items:center;justify-content:center;
+  background:
+    /* brilho de luz no topo (gloss) */
+    radial-gradient(circle at 32% 22%, rgba(255,255,255,.4), transparent 32%),
+    /* miolo escuro para contraste com o número branco; bordas continuam douradas */
+    radial-gradient(circle at 50% 55%, #3a2400 0%, #5a3a00 28%, #d4a020 65%, #ffd24a 88%, #8a5a00 100%);
+  border:2px solid rgba(255,231,140,.7);
+  overflow:visible;
+  box-shadow:
+    0 0 12px rgba(255,201,51,.35),
+    inset 0 -8px 16px rgba(40,20,0,.6),
+    inset 0 6px 14px rgba(255,243,180,.18);
+  /* respira: glow externo bem mais sutil */
+  animation:snaporbbreathe 2.6s ease-in-out infinite;
 }
+@keyframes snaporbbreathe{
+  0%,100%{box-shadow:0 0 12px rgba(255,201,51,.35),inset 0 -8px 16px rgba(40,20,0,.6),inset 0 6px 14px rgba(255,243,180,.18)}
+  50%{box-shadow:0 0 22px rgba(255,231,140,.7),inset 0 -8px 16px rgba(40,20,0,.6),inset 0 6px 14px rgba(255,243,180,.26)}
+}
+/* anel girando ao redor (faíscas em órbita) — sutil, sem ofuscar o número */
 #stakeCube .cubeface::before{
-  content:"";position:absolute;left:7%;right:7%;top:52%;height:3px;transform:translateY(-50%);
-  background:linear-gradient(90deg,transparent,#9aa3b2,transparent);clip-path:none;
+  content:"";position:absolute;inset:-5px;border-radius:50%;pointer-events:none;z-index:1;
+  background:
+    radial-gradient(2px 7px at 50% 3%, rgba(255,255,200,.85), transparent 70%),
+    radial-gradient(7px 2px at 97% 50%, rgba(255,231,140,.75), transparent 70%),
+    radial-gradient(2px 6px at 50% 97%, rgba(255,255,200,.7), transparent 70%),
+    radial-gradient(6px 2px at 3% 50%, rgba(255,231,140,.75), transparent 70%);
+  filter:drop-shadow(0 0 3px rgba(255,231,140,.75));
+  animation:snaporbring 3s linear infinite;opacity:.7;
 }
-#stakeCube .cubeface::after{content:none !important;animation:none !important}
-#stakeCube .case-handle{
-  position:absolute;top:-10px;left:50%;transform:translateX(-50%);
-  width:34px;height:16px;border:3px solid #c2c8d2;border-bottom:0;border-radius:9px 9px 0 0;background:transparent;
+@keyframes snaporbring{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+/* halo externo bem suave (atrás do orbe) */
+#stakeCube .cubeface::after{
+  content:"" !important;position:absolute;inset:-12px;border-radius:50%;pointer-events:none;z-index:0;
+  background:radial-gradient(circle, rgba(255,201,51,.18) 0%, transparent 65%);
+  animation:snaporbhalo 2.6s ease-in-out infinite !important;
 }
-#stakeCube .case-emoji{position:absolute;top:5px;left:8px;font-size:14px;z-index:3;filter:drop-shadow(0 1px 1px rgba(0,0,0,.3))}
-#stakeCube .cubeface b{font-size:32px;color:#15233f;text-shadow:0 1px 0 #fff,0 2px 5px rgba(0,0,0,.2);position:relative;z-index:3}
-#stakeCube #stakeWorth{color:#ffd95e}
-/* estado de TENSÃO (mala engatilhada aguardando o fim da rodada) */
-#stakeCube.armed{animation:staketremor .11s linear infinite}
-@keyframes staketremor{0%,100%{transform:translate(0,0)}25%{transform:translate(-2px,1px)}50%{transform:translate(2px,-1px)}75%{transform:translate(-1px,-1px)}}
+@keyframes snaporbhalo{0%,100%{opacity:.35;transform:scale(.92)}50%{opacity:.65;transform:scale(1.08)}}
+/* troféu sutil ao fundo do número (como o ⚡ do energy orb) */
+#stakeCube .case-emoji{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  font-size:64px;line-height:1;opacity:.12;z-index:1;
+  filter:drop-shadow(0 0 16px rgba(255,231,140,.6));
+  pointer-events:none;
+  animation:snaporbemoji 3.2s ease-in-out infinite;
+}
+@keyframes snaporbemoji{0%,100%{opacity:.08}48%{opacity:.18}52%{opacity:.32}54%{opacity:.1}}
+/* >>> NÚMERO: branco, GIGANTE, perfeitamente central <<< */
+#stakeCube .cubeface b{
+  font-size:46px;line-height:1;color:#ffffff;font-weight:900;
+  letter-spacing:0;
+  position:absolute;left:0;right:0;top:50%;
+  transform:translateY(-50%);
+  text-align:center;
+  z-index:3;
+  text-shadow:
+    0 0 6px rgba(255,255,255,1),
+    0 0 14px rgba(255,243,180,.85),
+    0 2px 3px rgba(0,0,0,.85),
+    0 4px 0 rgba(0,0,0,.55);
+  transform-origin:center 50%;
+}
+/* label "VALENDO" — pequeno texto em cima do orbe */
+#stakeCube #stakeLabel{
+  display:block;
+  color:#ffe48a;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:2px;
+  text-shadow:0 1px 2px #000,0 0 10px rgba(255,201,51,.5);
+  margin-bottom:4px;
+}
+/* selo "×2 🏆" embaixo do orbe — só aparece quando há snap em jogo */
+#stakeCube #stakeWorth{
+  display:none; /* default: oculto. .show liga */
+  color:#3c2600;font-size:14px;font-weight:900;letter-spacing:.6px;
+  background:linear-gradient(180deg,#fff4c4,#ffd24a 55%,#b07a10);
+  border:1.5px solid #5a3e08;border-radius:999px;padding:3px 12px;
+  box-shadow:0 3px 8px rgba(0,0,0,.55),0 0 14px rgba(255,201,51,.45);
+  text-shadow:0 1px 0 rgba(255,255,255,.55);
+  margin-top:8px;
+  animation:multpop .5s cubic-bezier(.2,1.7,.4,1);
+}
+#stakeCube #stakeWorth.show{display:inline-block}
+#stakeCube #stakeWorth.armed-pulse{animation:multpop .5s cubic-bezier(.2,1.7,.4,1),armedmultpulse .55s ease-in-out infinite}
+@keyframes multpop{
+  0%{transform:translateY(-6px) scale(.4);opacity:0}
+  60%{transform:translateY(0) scale(1.18);opacity:1}
+  100%{transform:translateY(0) scale(1);opacity:1}
+}
+/* "entra no orbe" — quando commit, o selo voa pra dentro */
+#stakeCube #stakeWorth.fly-in{display:inline-block !important;animation:multflyin .65s cubic-bezier(.5,0,.7,1) forwards}
+@keyframes multflyin{
+  0%{transform:translateY(0) scale(1);opacity:1}
+  60%{transform:translateY(-70px) scale(1.35);opacity:.95;filter:brightness(1.6) drop-shadow(0 0 20px rgba(255,231,140,1))}
+  100%{transform:translateY(-90px) scale(.2);opacity:0;filter:brightness(2.5)}
+}
+/* ESTADOS ============================================================ */
+/* TENSÃO (armed): orbe vira VERMELHO/FOGO pulsando rápido */
 #stakeCube.armed .cubeface{
-  background:linear-gradient(180deg,#ffe79a,#ffb43a 55%,#e07a10);border-color:#c98a18;
-  box-shadow:0 0 22px rgba(255,170,40,.85),inset 0 2px 0 rgba(255,255,255,.7);
+  background:
+    radial-gradient(circle at 32% 26%, rgba(255,255,255,.55), transparent 38%),
+    radial-gradient(circle at 50% 50%, #ffe07a 0%, #ff5a18 40%, #8a0808 80%, #2a0202 100%);
+  border-color:#ffb060;
+  animation:snaporbarmed .9s ease-in-out infinite;
 }
-#stakeCube.armed .cubeface b{color:#3a2400;text-shadow:0 1px 0 rgba(255,255,255,.6)}
-/* efetivação no início do turno seguinte: animação explosiva/clara */
-#stakeCube.commit-pop .cubeface{animation:commitpop .7s cubic-bezier(.2,1.7,.4,1)}
-@keyframes commitpop{0%{transform:scale(1)}28%{transform:scale(1.5) rotate(3deg);filter:brightness(1.9)}55%{transform:scale(.9) rotate(-2deg)}100%{transform:scale(1)}}
+@keyframes snaporbarmed{
+  0%,100%{box-shadow:0 0 28px rgba(255,120,40,.7),0 0 0 5px rgba(255,80,40,.12),inset 0 -8px 16px rgba(80,8,0,.6),inset 0 6px 14px rgba(255,255,255,.22)}
+  50%{box-shadow:0 0 54px rgba(255,160,60,1),0 0 0 10px rgba(255,80,40,.22),inset 0 -8px 16px rgba(80,8,0,.6),inset 0 6px 14px rgba(255,255,255,.32)}
+}
+#stakeCube.armed .cubeface b{
+  text-shadow:
+    0 0 10px rgba(255,255,255,1),
+    0 0 22px rgba(255,210,120,1),
+    0 0 40px rgba(255,80,40,.95),
+    0 2px 4px rgba(80,8,0,.95),
+    0 4px 0 rgba(60,4,0,.6);
+  animation:snaporbnumpulse .55s ease-in-out infinite;
+}
+@keyframes snaporbnumpulse{
+  0%,100%{filter:brightness(1)}
+  50%{filter:brightness(1.45) drop-shadow(0 0 16px rgba(255,210,120,.9))}
+}
+/* armed: label dourado vira laranja-fogo pulsando */
+#stakeCube.armed #stakeWorth{
+  background:linear-gradient(180deg,#fff35e,#ff5a18);
+  border-color:#5a0808;color:#3a0f00;
+  animation:armedmultpulse .55s ease-in-out infinite;
+}
+@keyframes armedmultpulse{
+  0%,100%{filter:brightness(1);box-shadow:0 3px 8px rgba(0,0,0,.55),0 0 12px rgba(255,201,51,.6)}
+  50%{filter:brightness(1.4);box-shadow:0 3px 10px rgba(0,0,0,.6),0 0 24px rgba(255,160,60,1)}
+}
+/* EFETIVAÇÃO (commit-pop): flash interno + punch no número */
+#stakeCube.commit-pop .cubeface{animation:commitflash .8s ease-out}
+@keyframes commitflash{
+  0%{filter:brightness(1)}
+  18%{filter:brightness(2.4) drop-shadow(0 0 28px rgba(255,243,180,1))}
+  45%{filter:brightness(1.4)}
+  100%{filter:brightness(1)}
+}
+#stakeCube.commit-pop .cubeface b{animation:commitnumpunch .8s cubic-bezier(.2,1.7,.4,1)}
+@keyframes commitnumpunch{
+  0%{transform:translateY(-50%) scale(1)}
+  25%{transform:translateY(-50%) scale(1.6) rotate(3deg);filter:brightness(2)}
+  55%{transform:translateY(-50%) scale(.92) rotate(-2deg)}
+  80%{transform:translateY(-50%) scale(1.06)}
+  100%{transform:translateY(-50%) scale(1)}
+}
 
 /* ---- BLOCO 3 — Deck Builder ---- */
 .bld-h{font-size:13px;text-transform:uppercase;letter-spacing:.8px;color:var(--gold);margin:12px 0 6px;font-weight:900}
@@ -1426,14 +1580,203 @@ body::after{ /* vinheta sutil */
 .stat-pill:hover{transform:translateY(-2px);border-color:rgba(255,201,51,.8)}
 
 @media (max-width:640px){
-  #stakeCube .cubeface{width:66px;height:54px;border-radius:9px}
-  #stakeCube .cubeface b{font-size:24px}
-  #stakeCube .case-handle{width:26px;height:12px;top:-8px}
+  #stakeCube{width:100px}
+  #stakeCube .cubeface{width:84px;height:84px}
+  #stakeCube .cubeface b{font-size:40px;letter-spacing:0}
+  #stakeCube .case-emoji{font-size:56px}
+  #stakeCube #stakeWorth{font-size:12px;padding:2px 10px}
+  #energyOrb{width:84px;height:84px;top:calc(50% - 74px)}
+  #energyOrb b{font-size:40px}
+  #energyOrb .ebolt{font-size:64px}
   #deckGridActive{gap:5px}
   .ov-bigicon{font-size:48px}
   .ov-count{font-size:28px}
   #drawVersus{gap:8px}
   .vs-av{width:62px;height:62px;font-size:32px}
+}
+
+/* ============================================================
+   POLISH GERAL — sombras, brilhos, gradientes em todas as telas
+   ============================================================ */
+
+/* fundo: vinheta com micro-padrão sutil (estádio à noite) */
+body{
+  background:
+    radial-gradient(120% 90% at 50% -10%, #2a3140 0%, #161b22 55%, #0a0d12 100%),
+    repeating-linear-gradient(0deg, rgba(255,255,255,.012) 0 2px, transparent 2px 4px);
+  background-blend-mode:normal, overlay;
+}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(60% 40% at 8% 12%, rgba(255,201,51,.06), transparent 60%),
+    radial-gradient(50% 36% at 92% 18%, rgba(25,194,166,.05), transparent 60%),
+    radial-gradient(70% 50% at 50% 110%, rgba(140,90,220,.07), transparent 60%);
+  mix-blend-mode:screen;
+}
+
+/* logo do menu: brilho dourado pulsando atrás */
+.menu-hero{position:relative}
+.menu-hero::before{
+  content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:520px;height:240px;max-width:90vw;border-radius:50%;
+  background:radial-gradient(closest-side, rgba(255,201,51,.22), transparent 70%);
+  filter:blur(6px);pointer-events:none;z-index:0;
+  animation:herobreathe 4.5s ease-in-out infinite;
+}
+@keyframes herobreathe{0%,100%{opacity:.55;transform:translateX(-50%) scale(1)}50%{opacity:1;transform:translateX(-50%) scale(1.07)}}
+.menu-hero>*{position:relative;z-index:1}
+
+/* pills de stat: leve gradiente + glow ao passar */
+.stat-pill{
+  background:linear-gradient(180deg,rgba(34,40,52,.85),rgba(10,13,18,.92));
+  box-shadow:0 4px 12px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.06);
+  transition:transform .12s,border-color .15s,box-shadow .15s;
+}
+.stat-pill:hover{box-shadow:0 6px 18px rgba(0,0,0,.55),0 0 18px rgba(255,201,51,.32),inset 0 1px 0 rgba(255,255,255,.08)}
+
+/* panels: borda dourada com brilho interno */
+.panel{
+  background:
+    linear-gradient(180deg,rgba(22,27,34,.96),rgba(10,13,18,.96));
+  box-shadow:0 14px 38px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.05),0 0 0 1px rgba(255,201,51,.07);
+}
+.panel h2{
+  text-shadow:0 2px 6px rgba(0,0,0,.6),0 0 18px rgba(255,201,51,.18);
+}
+
+/* menu-btn: brilho mais rico, sombra inferior dourada */
+.menu-btn{
+  text-shadow:0 1px 0 rgba(255,255,255,.25);
+  box-shadow:0 5px 0 #8a5a00, 0 9px 20px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.45);
+}
+.menu-btn.secondary{box-shadow:0 5px 0 #06513c, 0 9px 20px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.35)}
+.menu-btn.copa{box-shadow:0 5px 0 #3a1080, 0 9px 22px rgba(110,43,217,.45), inset 0 1px 0 rgba(255,255,255,.25)}
+.menu-btn.ghost{box-shadow:0 5px 0 rgba(0,0,0,.45), 0 6px 16px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.08)}
+
+/* nameplate: gradiente + inner glow + leve borda dourada quando o jogador é o "primeiro" */
+.nameplate{
+  background:linear-gradient(180deg,rgba(42,50,64,.92),rgba(14,17,22,.96));
+  box-shadow:0 6px 14px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.07);
+}
+.nameplate b{text-shadow:0 1px 2px rgba(0,0,0,.7),0 0 8px rgba(255,201,51,.25)}
+
+/* botões de controle (canto): brilho mais marcado */
+.ctl{
+  box-shadow:0 5px 0 rgba(0,0,0,.45),0 8px 20px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.18);
+  text-shadow:0 1px 2px rgba(0,0,0,.6);
+}
+
+/* timer: glow no fill */
+#timerFill{box-shadow:0 0 10px rgba(43,217,164,.65),inset 0 1px 0 rgba(255,255,255,.4)}
+#timerWrap.low #timerFill{box-shadow:0 0 14px rgba(255,90,90,.75),inset 0 1px 0 rgba(255,255,255,.35)}
+
+/* overlay (resultado): brilho de fundo radial sutil */
+#overlay{
+  background:
+    radial-gradient(70% 60% at 50% 40%, rgba(255,201,51,.06), transparent 70%),
+    rgba(5,8,12,.86);
+}
+.ov-bigicon{filter:drop-shadow(0 6px 14px rgba(0,0,0,.6)) drop-shadow(0 0 18px rgba(255,201,51,.18))}
+.ov-count{transition:transform .12s}
+
+/* turno banner com glow mais elegante */
+#turnTop{
+  background:linear-gradient(180deg,rgba(16,20,28,.92),rgba(6,8,12,.94));
+  box-shadow:0 4px 14px rgba(0,0,0,.6),0 0 0 1px rgba(255,201,51,.18),0 0 18px rgba(255,201,51,.22);
+}
+
+/* deck builder: cards mais elegantes */
+.deck-chip{
+  background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.02));
+  box-shadow:0 4px 10px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.05);
+}
+.deck-chip.active{box-shadow:0 4px 12px rgba(0,0,0,.5),0 0 18px rgba(25,194,166,.35),inset 0 1px 0 rgba(255,255,255,.08)}
+
+/* loja: itens com leve elevação */
+.shop-item .bcard,.shop-skin-back{box-shadow:0 6px 14px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.04)}
+
+/* tier buttons da copa: brilho ao passar */
+.tier-btn{
+  box-shadow:0 5px 0 rgba(0,0,0,.45),0 10px 22px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.12);
+  text-shadow:0 1px 2px rgba(0,0,0,.7);
+}
+.tier-btn:not(.locked):hover{box-shadow:0 6px 0 rgba(0,0,0,.45),0 12px 26px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.18),0 0 22px rgba(255,201,51,.25)}
+
+/* jornada: nó atual com pulse mais nítido */
+.road-item.next .road-node{box-shadow:0 0 14px rgba(25,194,166,.55),inset 0 1px 0 rgba(255,255,255,.18)}
+.road-item.done .road-node{box-shadow:0 0 16px rgba(255,201,51,.65),inset 0 1px 0 rgba(255,255,255,.25)}
+
+/* draw-reel (sorteio): brilho ao landed mais intenso */
+.draw-reel.landed{box-shadow:inset 0 0 28px rgba(0,0,0,.5),0 0 38px rgba(255,201,51,.75),0 0 0 2px rgba(255,201,51,.4)}
+
+/* bot-card no picker: hover com glow dourado */
+.bot-card{
+  background:linear-gradient(180deg,rgba(24,29,38,.95),rgba(12,15,20,.95));
+  box-shadow:0 8px 18px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.05);
+}
+.bot-card:hover{box-shadow:0 10px 22px rgba(0,0,0,.6),0 0 22px rgba(255,201,51,.3),inset 0 1px 0 rgba(255,255,255,.08)}
+
+/* botão fullscreen do canto */
+.cornerFull{box-shadow:0 4px 10px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.08)}
+.cornerFull:hover{box-shadow:0 4px 12px rgba(0,0,0,.55),0 0 14px rgba(255,201,51,.35),inset 0 1px 0 rgba(255,255,255,.12)}
+
+/* mini-config (sons/help) */
+#miniCfg button{box-shadow:0 3px 6px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.06)}
+
+/* commentary (narração) */
+#commentary{
+  box-shadow:0 4px 10px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.05);
+}
+
+/* nome do snap (mala): mais punch */
+#snapNote{
+  box-shadow:0 5px 14px rgba(0,0,0,.6),0 0 18px rgba(214,40,40,.35),inset 0 1px 0 rgba(255,255,255,.12);
+}
+
+/* botão Encerrar: brilho extra quando "allspent" */
+#btnEnd.allspent{box-shadow:0 4px 0 #8a5a00,0 0 32px rgba(255,201,51,.95),inset 0 1px 0 rgba(255,255,255,.45)}
+
+/* hover suave nas cartas grandes do builder */
+.builder-grid .bwrap:hover .bcard{box-shadow:0 8px 18px rgba(0,0,0,.55),0 0 18px rgba(25,194,166,.25)}
+
+/* ---- Ko-fi (apoio do dev no menu) ---- */
+.kofi-link{
+  margin-top:14px;display:inline-flex;align-items:center;gap:9px;
+  text-decoration:none;color:#dcd0b0;
+  font-size:12px;font-weight:700;letter-spacing:.3px;
+  background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.015));
+  border:1px solid rgba(255,201,51,.25);border-radius:999px;
+  padding:7px 14px 7px 10px;
+  box-shadow:0 3px 10px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.05);
+  transition:transform .12s,border-color .15s,background .15s,color .15s,box-shadow .15s;
+  opacity:.78;
+  cursor:pointer;
+}
+.kofi-link:hover{
+  opacity:1;
+  color:#fff;
+  border-color:rgba(255,201,51,.7);
+  background:linear-gradient(180deg,rgba(255,201,51,.18),rgba(255,201,51,.04));
+  box-shadow:0 6px 16px rgba(0,0,0,.5),0 0 18px rgba(255,201,51,.45),inset 0 1px 0 rgba(255,255,255,.1);
+  transform:translateY(-1px);
+}
+.kofi-link b{color:#ffd95e;text-shadow:0 0 8px rgba(255,201,51,.4)}
+.kofi-link .kofi-emoji{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:22px;height:22px;border-radius:50%;
+  background:linear-gradient(180deg,#ffd95e,#c98a18);
+  font-size:13px;
+  box-shadow:0 1px 3px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.5);
+  animation:kofisteam 2.6s ease-in-out infinite;
+}
+@keyframes kofisteam{
+  0%,100%{filter:brightness(1)}
+  50%{filter:brightness(1.2) drop-shadow(0 0 6px rgba(255,201,51,.55))}
+}
+@media (max-width:520px){
+  .kofi-link{font-size:11.5px;padding:6px 12px 6px 8px}
+  .kofi-link .kofi-emoji{width:20px;height:20px;font-size:12px}
 }
 </style>
 </head>
@@ -1466,6 +1809,10 @@ body::after{ /* vinheta sutil */
       <button class="menu-btn ghost" onclick="UI.show('help')">📖 Como Jogar</button>
       <button class="menu-btn ghost" onclick="UI.show('settings')">⚙️ Configurações</button>
     </div>
+    <a class="kofi-link" href="https://ko-fi.com/jovemcali" target="_blank" rel="noopener noreferrer" title="Apoie no Ko-fi">
+      <span class="kofi-emoji">☕</span>
+      <span class="kofi-text">Curtiu? <b>Me paga um café</b> — assim eu mantenho o jogo vivo</span>
+    </a>
   </div>
 </div>
 
@@ -1630,8 +1977,9 @@ body::after{ /* vinheta sutil */
   </div>
   <div id="fields"></div>
   <div id="stakeCube" title="Tocar para Pôr na Mesa 💼">
-    <div class="cubeface"><span class="case-handle"></span><span class="case-emoji">🏆</span><b id="stakesVal">1</b></div>
-    <small id="stakeWorth">valendo 1 🏆</small>
+    <small id="stakeLabel">Valendo</small>
+    <div class="cubeface"><span class="case-emoji">🏆</span><b id="stakesVal">1</b></div>
+    <small id="stakeWorth">×2 🏆</small>
     <small id="stakeHint">toque = MALA 💼</small>
     <div id="snapNote"></div>
   </div>
@@ -1639,7 +1987,7 @@ body::after{ /* vinheta sutil */
   <div id="preview"></div>
   <div id="commentary"></div>
   <div id="handwrap"><div id="hand"></div></div>
-  <div id="energyOrb"><b id="energy">1</b><small>energia</small></div>
+  <div id="energyOrb"><span class="ebolt">⚡</span><b id="energy">1</b><small>energia</small></div>
   <button class="ctl corner" id="btnRetreat">🐔 Amarelar</button>
   <button class="ctl corner" id="btnUndo">↩ Desfazer</button>
   <button class="ctl corner" id="btnEnd">Encerrar ▶</button>
@@ -2947,6 +3295,14 @@ const Game={
     const from=g.stakes;
     g.stakes*=2;
     this._stakeAnim=true;     // trava o render de sobrescrever o número durante a contagem
+    // anima o selo "×2 🏆" voando PARA DENTRO do orbe antes de re-renderizar
+    {
+      const sw=$('#stakeWorth');
+      if(sw && sw.classList.contains('show')){
+        sw.classList.add('fly-in');
+        setTimeout(()=>{sw.classList.remove('fly-in');sw.classList.remove('show');},650);
+      }
+    }
     this.render();
     // efetivação: para a tensão e dispara animação explosiva no ícone
     const cube=$('#stakeCube');
@@ -3519,7 +3875,12 @@ const Game={
     cube.classList.toggle('armed',pend); // mala engatilhada: tensão/trepidação até o fim da rodada
     cube.classList.toggle('done',(g.snapped[0]&&!pend)||(this.busy&&!pend));
     $('#stakeHint').textContent=pend?'dobra ao encerrar ⚡':(g.snapped[0]?'mala na mesa!':'toque = MALA 💼');
-    $('#stakeWorth').textContent=pend?('na mesa → '+(g.stakes*2)+' 🏆'):('valendo '+g.stakes+' 🏆');
+    /* selo "×2 🏆" só aparece quando há snap pendente (vai dobrar ao encerrar) */
+    const sw=$('#stakeWorth');
+    if(sw){
+      sw.textContent='×2 🏆';
+      sw.classList.toggle('show', !!pend);
+    }
     // escala/intensidade do cube conforme as Taças dobram (1>2>4>8...)
     const lv=g.stakes>=16?4:g.stakes>=8?3:g.stakes>=4?2:g.stakes>=2?1:0;
     cube.dataset.lv=lv;
@@ -3534,8 +3895,18 @@ const Game={
       orb.classList.remove('pop');void orb.offsetWidth;orb.classList.add('pop');
       setTimeout(()=>orb.classList.remove('pop'),600); // devolve a respiração do orbe
     }
+    {
+      const eEl=$('#energy');
+      if(eEl){
+        const prev=eEl.textContent;
+        eEl.textContent=enNow;
+        if(prev!==undefined && String(prev)!==String(enNow)){
+          eEl.classList.remove('tick');void eEl.offsetWidth;eEl.classList.add('tick');
+          setTimeout(()=>eEl.classList.remove('tick'),420);
+        }
+      }
+    }
     this._lastEnergy=enNow;
-    $('#energy').textContent=enNow;
     $('#meStats').innerHTML='<span class="pc deck">🂠 '+g.decks[0].length+'</span> <span class="pc hand">🃏 '+g.hands[0].length+'</span>';
     $('#botHand').innerHTML='<span class="pc deck">🂠 '+g.decks[1].length+'</span> <span class="pc hand">🃏 '+g.hands[1].length+'</span>';
     $('#firstMe').classList.toggle('on',g.first===0);
