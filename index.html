@@ -540,6 +540,87 @@ body::after{ /* vinheta sutil */
   font-size:10px;font-weight:900;color:var(--gold);background:rgba(0,0,0,.85);
   border:1px solid rgba(255,201,51,.5);border-radius:999px;padding:2px 8px;white-space:nowrap;
 }
+/* modal de confirmação interno (saída da Copa etc.) */
+#confirmModal{position:fixed;inset:0;z-index:80;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.7);padding:20px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+#confirmModal.on{display:flex}
+#confirmBox{width:min(420px,92vw);background:rgba(14,17,22,.98);border:2px solid rgba(214,40,40,.55);border-radius:16px;padding:22px 20px;text-align:center;box-shadow:0 18px 50px rgba(0,0,0,.6)}
+#confirmText{font-size:15px;line-height:1.55;margin-bottom:18px}
+#confirmBtns{display:flex;gap:10px}
+#confirmBtns .menu-btn{flex:1;font-size:15px;padding:14px 12px}
+#confirmYes{background:linear-gradient(180deg,#ff8a8a,#c91818);color:#fff;box-shadow:0 5px 0 #5e0808,var(--shadow)}
+/* contador grande do sorteio do adversário */
+#drawCountdown{
+  text-align:center;width:100%;
+  font-weight:900;color:var(--gold);line-height:1;
+  font-size:clamp(54px,11vw,96px);
+  text-shadow:0 3px 0 #7a4e00,0 6px 18px rgba(0,0,0,.6),0 0 26px rgba(255,201,51,.6);
+  animation:cdpulse .9s ease-in-out infinite;
+}
+#drawCountdown small{display:block;text-align:center;font-size:14px;letter-spacing:2px;text-transform:uppercase;color:#cfd6dd;text-shadow:none;margin-top:6px;font-weight:800;opacity:.85;animation:none}
+/* botão Encerrar em alerta nos últimos 10s */
+#btnEnd.timewarn{
+  background:linear-gradient(180deg,#ff8a8a,#d62020) !important;color:#fff !important;
+  box-shadow:0 4px 0 #7a0c0c, var(--shadow) !important;
+  animation:endwarn .7s ease-in-out infinite;
+}
+@keyframes endwarn{0%,100%{filter:brightness(1)}50%{filter:brightness(1.18);box-shadow:0 4px 0 #7a0c0c,0 0 16px rgba(214,40,40,.8)}}
+@keyframes cdpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.16)}}
+/* destaque do ÚLTIMO desbloqueio por progressão de troféus (Jornada) */
+@keyframes goldglow{
+  0%,100%{box-shadow:0 0 0 3px rgba(255,201,51,.45),0 0 14px 2px rgba(255,201,51,.5)}
+  50%{box-shadow:0 0 0 4px rgba(255,201,51,.85),0 0 26px 6px rgba(255,201,51,.95)}
+}
+.road-item.last-unlocked .road-node{
+  background:linear-gradient(180deg,#fff0b0,#ffb300);border-color:#fff;color:#3c2600;
+  animation:goldglow 1.6s ease-in-out infinite;
+}
+.road-item.last-unlocked .road-card{animation:goldglow 1.8s ease-in-out infinite;border-radius:11px}
+/* atalhos rápidos no construtor de baralho */
+.bld-shortcuts{display:flex;gap:8px;margin:4px 0 10px}
+.bld-shortcuts .menu-btn{flex:1;font-size:13px;padding:11px 10px}
+/* ---- LOJA: pin / comprada / timer de rotação ---- */
+#shopRotTimer{
+  font-size:12px;font-weight:800;color:#ffd95e;margin:4px 0 2px;
+  background:rgba(0,0,0,.4);border:1px solid rgba(255,201,51,.3);border-radius:999px;
+  padding:5px 12px;display:inline-block;
+}
+/* 3 figurinhas em oferta centralizadas */
+#shopCards{display:flex;justify-content:center;flex-wrap:wrap;gap:14px}
+#shopCards .shop-item{width:138px}
+.shop-item .pin-btn{
+  width:100%;border:1px solid rgba(255,255,255,.25);background:rgba(0,0,0,.45);color:#cdd6e0;
+  border-radius:8px;padding:6px;font:800 11px/1 inherit;letter-spacing:.3px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:4px;
+  transition:background .12s,transform .1s;
+}
+.shop-item .pin-btn:hover{transform:translateY(-1px)}
+.shop-item .pin-btn.pinned{background:linear-gradient(180deg,#ffd95e,#f5a700);color:#3c2600;border-color:#ffe9a0;box-shadow:0 0 8px rgba(255,201,51,.5)}
+.shop-item.bought .bcard,.shop-item.bought .shop-skin-back{filter:saturate(1.1) brightness(1.02)}
+.shop-item.bought::after{
+  content:"";position:absolute;inset:0;border-radius:10px;pointer-events:none;
+  border:2px solid #7dffa8;box-shadow:0 0 16px rgba(125,255,168,.55),inset 0 0 18px rgba(125,255,168,.18);
+}
+.shop-bought-tag{
+  text-align:center;font-size:12px;font-weight:900;color:#0a2a16;
+  background:linear-gradient(180deg,#8dffb6,#34d97a);border-radius:9px;padding:8px 6px;
+  letter-spacing:.5px;box-shadow:0 2px 0 #0a6b3a;
+}
+/* troféu de CAMPEÃO (conclusão da Copa): glow grande */
+@keyframes champglow{
+  0%,100%{transform:scale(1);filter:drop-shadow(0 0 18px rgba(255,201,51,.8))}
+  50%{transform:scale(1.14);filter:drop-shadow(0 0 40px rgba(255,201,51,1))}
+}
+#ovBigTrophy.champ{font-size:84px;animation:champglow 1.4s ease-in-out infinite}
+/* modal de compartilhar conquistas */
+.share-card{
+  background:radial-gradient(120% 90% at 50% 0%,#243042,#121822);
+  border:2px solid rgba(255,201,51,.5);border-radius:16px;padding:18px;text-align:center;
+}
+.share-card h3{color:var(--gold);font-size:20px;letter-spacing:1px;margin-bottom:4px}
+.share-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:14px 0}
+.share-stats .s{background:rgba(0,0,0,.4);border:1px solid rgba(255,201,51,.25);border-radius:12px;padding:10px}
+.share-stats .s b{display:block;font-size:24px;color:#fff;line-height:1}
+.share-stats .s small{display:block;font-size:9px;letter-spacing:1px;text-transform:uppercase;opacity:.65;margin-top:4px}
 
 #stakeCube{
   position:fixed;right:clamp(10px,calc(25vw - 180px),22vw);top:calc(50% - 76px);z-index:20;
@@ -778,7 +859,9 @@ body::after{ /* vinheta sutil */
 }
 .avatar-opt:hover{transform:scale(1.12)}
 .avatar-opt.sel{border-color:var(--teal);box-shadow:0 0 12px rgba(25,194,166,.6)}
-.captain-opt{width:130px;cursor:pointer;position:relative;transition:transform .1s}
+.captain-opt{width:100px;flex:0 0 auto;cursor:pointer;position:relative;transition:transform .1s}
+#captainRow{display:flex !important;flex-direction:row !important;flex-wrap:nowrap !important;justify-content:center;align-items:flex-start;gap:10px;max-width:100%;overflow-x:auto;padding-bottom:6px}
+#captainRow .captain-opt{display:block}
 .captain-opt:hover{transform:scale(1.05)}
 .captain-opt.sel{outline:3px solid var(--gold);outline-offset:3px;border-radius:12px}
 .captain-opt.sel::after{
@@ -1742,32 +1825,44 @@ body::before{
 
 /* ---- Ko-fi (apoio do dev no menu) ---- */
 .kofi-link{
-  margin-top:14px;display:inline-flex;align-items:center;gap:9px;
-  text-decoration:none;color:#dcd0b0;
-  font-size:12px;font-weight:700;letter-spacing:.3px;
-  background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.015));
-  border:1px solid rgba(255,201,51,.25);border-radius:999px;
-  padding:7px 14px 7px 10px;
-  box-shadow:0 3px 10px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.05);
-  transition:transform .12s,border-color .15s,background .15s,color .15s,box-shadow .15s;
-  opacity:.78;
-  cursor:pointer;
+  position:relative;overflow:hidden;
+  margin-top:30px;display:inline-flex;align-items:center;gap:9px;
+  text-decoration:none;color:#3c2600;
+  font-size:12.5px;font-weight:800;letter-spacing:.3px;
+  background:linear-gradient(180deg,#ffe07a,#f5a700);
+  border:1px solid rgba(255,233,160,.9);border-radius:999px;
+  padding:9px 18px 9px 11px;
+  box-shadow:0 4px 0 #8a5a00,0 5px 12px rgba(0,0,0,.4);
+  transition:transform .12s,box-shadow .15s,filter .15s;
+  opacity:1;cursor:pointer;
+  animation:kofipulse 3s ease-in-out infinite;
+}
+.kofi-link::after{ /* brilho passando (shimmer) */
+  content:"";position:absolute;top:0;left:-60%;width:45%;height:100%;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.65),transparent);
+  transform:skewX(-18deg);animation:kofishine 3.2s ease-in-out infinite;
+}
+@keyframes kofipulse{
+  0%,100%{box-shadow:0 4px 0 #8a5a00,0 5px 12px rgba(0,0,0,.4),0 0 8px rgba(255,201,51,.25);transform:translateY(0)}
+  50%{box-shadow:0 4px 0 #8a5a00,0 6px 14px rgba(0,0,0,.42),0 0 14px 1px rgba(255,201,51,.45);transform:translateY(-1px)}
+}
+@keyframes kofishine{
+  0%{left:-60%}55%,100%{left:130%}
 }
 .kofi-link:hover{
-  opacity:1;
-  color:#fff;
-  border-color:rgba(255,201,51,.7);
-  background:linear-gradient(180deg,rgba(255,201,51,.18),rgba(255,201,51,.04));
-  box-shadow:0 6px 16px rgba(0,0,0,.5),0 0 18px rgba(255,201,51,.45),inset 0 1px 0 rgba(255,255,255,.1);
-  transform:translateY(-1px);
+  color:#2a1a00;
+  filter:brightness(1.08);
+  box-shadow:0 5px 0 #8a5a00,0 8px 18px rgba(0,0,0,.45),0 0 16px 2px rgba(255,201,51,.5);
+  transform:translateY(-2px) scale(1.02);
 }
-.kofi-link b{color:#ffd95e;text-shadow:0 0 8px rgba(255,201,51,.4)}
+.kofi-link:active{transform:translateY(1px) scale(.99)}
+.kofi-link b{color:#7a1313;text-shadow:0 1px 0 rgba(255,255,255,.35)}
 .kofi-link .kofi-emoji{
   display:inline-flex;align-items:center;justify-content:center;
-  width:22px;height:22px;border-radius:50%;
-  background:linear-gradient(180deg,#ffd95e,#c98a18);
-  font-size:13px;
-  box-shadow:0 1px 3px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.5);
+  width:24px;height:24px;border-radius:50%;
+  background:radial-gradient(circle at 50% 35%,#5a3a08,#2a1a00);
+  font-size:14px;position:relative;z-index:1;
+  box-shadow:0 1px 3px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.25);
   animation:kofisteam 2.6s ease-in-out infinite;
 }
 @keyframes kofisteam{
@@ -1806,12 +1901,12 @@ body::before{
       <button class="menu-btn secondary" onclick="UI.openRoad()">🗺️ Jornada</button>
     </div>
     <div class="menu-foot">
-      <button class="menu-btn ghost" onclick="UI.show('help')">📖 Como Jogar</button>
-      <button class="menu-btn ghost" onclick="UI.show('settings')">⚙️ Configurações</button>
+      <button class="menu-btn ghost" onclick="UI.go('help')">📖 Como Jogar</button>
+      <button class="menu-btn ghost" onclick="UI.go('settings')">⚙️ Configurações</button>
     </div>
     <a class="kofi-link" href="https://ko-fi.com/jovemcali" target="_blank" rel="noopener noreferrer" title="Apoie no Ko-fi">
-      <span class="kofi-emoji">☕</span>
-      <span class="kofi-text">Curtiu? <b>Me paga um café</b> — assim eu mantenho o jogo vivo</span>
+      <span class="kofi-emoji" style="z-index:1">☕</span>
+      <span class="kofi-text" style="position:relative;z-index:1">Curtiu? <b>Me paga um café</b> — assim eu mantenho o jogo vivo e sem anúncios</span>
     </a>
   </div>
 </div>
@@ -1826,7 +1921,7 @@ body::before{
     <h4 class="copa-stats-title">📊 Suas estatísticas na Copa</h4>
     <div id="copaStats" class="copa-stats"></div>
   </div>
-  <button class="menu-btn ghost backbtn" onclick="UI.show('menu')">← Voltar</button>
+  <button class="menu-btn ghost backbtn" onclick="UI.back()">← Voltar</button>
 </div>
 
 <!-- LOJA -->
@@ -1838,10 +1933,16 @@ body::before{
       <button class="shop-tab active" id="shopTabFig" onclick="UI.shopTab('fig')">⚽ Figurinhas</button>
       <button class="shop-tab" id="shopTabVer" onclick="UI.shopTab('ver')">🂠 Versos</button>
     </div>
-    <div id="shopFigSec"><div class="shop-grid" id="shopCards"></div></div>
+    <div id="shopFigSec">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px">
+        <span style="font-size:12px;opacity:.7">3 figurinhas em oferta · 📌 fixe pra não trocar</span>
+        <span id="shopRotTimer">🔄 Nova leva em --:--:--</span>
+      </div>
+      <div class="shop-grid" id="shopCards"></div>
+    </div>
     <div id="shopVerSec" style="display:none"><div class="shop-grid" id="shopSkins"></div></div>
   </div>
-  <button class="menu-btn ghost backbtn" onclick="UI.show('menu')">← Voltar</button>
+  <button class="menu-btn ghost backbtn" onclick="UI.back()">← Voltar</button>
 </div>
 
 <!-- ROADMAP -->
@@ -1852,10 +1953,10 @@ body::before{
       <small id="roadProg"></small>
     </div>
     <div id="roadGoal"></div>
-    <p>Acumule Taças 🏆 para desbloquear novas figurinhas. As próximas são um mistério...</p>
+    <p>Acumule Taças 🏆 para desbloquear novas figurinhas. As bloqueadas aparecem em preto e branco até você alcançá-las. 🔒</p>
     <div class="road" id="roadList"></div>
   </div>
-  <button class="menu-btn ghost backbtn" onclick="UI.show('menu')">← Voltar</button>
+  <button class="menu-btn ghost backbtn" onclick="UI.back()">← Voltar</button>
 </div>
 
 <!-- BOT PICK -->
@@ -1874,8 +1975,10 @@ body::before{
     </div>
   </div>
   <div id="drawStatus" class="draw-status">🎲 Girando o sorteio...</div>
+  <div id="drawCountdown" style="display:none"></div>
   <button class="menu-btn" id="drawGo" style="display:none;max-width:380px">⚽ Entrar em campo ▶</button>
-  <button class="menu-btn ghost backbtn" onclick="UI.show('menu')">← Voltar</button>
+  <button class="menu-btn ghost" id="drawCancel" style="display:none;max-width:380px" onclick="UI.cancelDraw()">✖ Cancelar</button>
+  <button class="menu-btn ghost backbtn" onclick="UI.cancelDraw()">← Voltar</button>
 </div>
 
 <!-- HELP -->
@@ -1899,7 +2002,7 @@ body::before{
       <li><b>Amarelar:</b> desista pagando o valor atual — se o rival acabou de dobrar neste turno, você sai pagando o valor de antes da dobra.</li>
     </ul>
   </div>
-  <button class="menu-btn ghost backbtn" onclick="UI.show('menu')">← Voltar</button>
+  <button class="menu-btn ghost backbtn" onclick="UI.back()">← Voltar</button>
 </div>
 
 <!-- ALBUM -->
@@ -1909,7 +2012,7 @@ body::before{
     <p>Toda a coleção — atuais e lendas. As holográficas são as Lendárias. ✨</p>
     <div class="album-grid" id="albumGrid"></div>
   </div>
-  <button class="menu-btn ghost backbtn" onclick="UI.show('menu')">← Voltar</button>
+  <button class="menu-btn ghost backbtn" onclick="UI.back()">← Voltar</button>
 </div>
 
 <!-- DECK BUILDER -->
@@ -1920,6 +2023,10 @@ body::before{
       <input id="deckName" maxlength="20" placeholder="Nome do baralho">
       <span id="deckCount">0/12</span>
       <button class="mini-btn use" onclick="Decks.save()">💾 Salvar</button>
+    </div>
+    <div class="bld-shortcuts">
+      <button class="menu-btn secondary" onclick="UI.openShop()">🛒 Loja</button>
+      <button class="menu-btn secondary" onclick="UI.openRoad()">🗺️ Jornada</button>
     </div>
     <div id="builderFilters">
       <input id="fName" placeholder="🔎 Buscar nome ou efeito..." oninput="Decks.renderBuilder()">
@@ -1958,7 +2065,7 @@ body::before{
     <h3 class="bld-h">🔎 Coleção <small style="opacity:.6;font-weight:600;font-size:11px">— toque pra escalar</small></h3>
     <div class="builder-grid" id="builderGrid"></div>
   </div>
-  <button class="menu-btn ghost backbtn" onclick="UI.show('menu')">← Voltar</button>
+  <button class="menu-btn ghost backbtn" onclick="UI.back()">← Voltar</button>
 </div>
 
 <!-- MATCH -->
@@ -1976,11 +2083,11 @@ body::before{
     <div class="nameplate foe" id="plateFoe" title="Ver vestiário"><span class="firstdot" id="firstFoe">🎲 revela 1º</span><span style="text-align:right"><b id="botName"></b><br><small class="plate-counts" id="botHand"></small></span><span class="pavatar" id="botAvatar">🤖</span></div>
   </div>
   <div id="fields"></div>
-  <div id="stakeCube" title="Tocar para Pôr na Mesa 💼">
+  <div id="stakeCube" title="Clique para dobrar a aposta 💼">
     <small id="stakeLabel">Valendo</small>
     <div class="cubeface"><span class="case-emoji">🏆</span><b id="stakesVal">1</b></div>
     <small id="stakeWorth">×2 🏆</small>
-    <small id="stakeHint">toque = MALA 💼</small>
+    <small id="stakeHint">clique para dobrar a aposta</small>
     <div id="snapNote"></div>
   </div>
   <div id="blurback"></div>
@@ -1997,6 +2104,13 @@ body::before{
 </div>
 <div id="inspectModal"><div id="inspectCard"></div><div id="inspectText"></div><small style="opacity:.7">toque para fechar</small></div>
 <div id="lockerModal"><div id="lockerBox"></div></div>
+<div id="confirmModal"><div id="confirmBox">
+  <div id="confirmText"></div>
+  <div id="confirmBtns">
+    <button class="menu-btn ghost" id="confirmNo">Cancelar</button>
+    <button class="menu-btn" id="confirmYes">OK</button>
+  </div>
+</div></div>
 
 <div id="turnBanner"><div class="tb-shade"></div><div class="tb-text"></div><div class="tb-sub"></div></div>
 
@@ -2024,7 +2138,7 @@ body::before{
     <button class="menu-btn" id="ovAgain">🔄 Nova partida</button>
     <button class="menu-btn secondary" onclick="UI.openRoad()">🗺️ Jornada</button>
     <button class="menu-btn ghost" id="ovPeek">👁 Ver a mesa</button>
-    <button class="menu-btn ghost" onclick="Copa.active=false;UI.show('menu')">🏠 Menu</button>
+    <button class="menu-btn ghost" onclick="UI.exitToMenu()">🏠 Menu</button>
   </div>
 </div>
 
@@ -2032,17 +2146,17 @@ body::before{
 <div id="onboard" class="screen" style="justify-content:center">
   <button class="cornerFull" onclick="toggleFull()" title="Tela cheia">⛶</button>
   <div class="panel" style="max-width:580px;text-align:center">
-    <h2 style="font-size:24px">👋 Bem-vindo ao Brasileirão Clash!</h2>
-    <p>Monte seu perfil de cartola antes de entrar em campo:</p>
+    <h2 id="onbTitle" style="font-size:24px">👋 Bem-vindo ao Brasileirão Clash!</h2>
+    <p id="onbIntro">Monte seu perfil de cartola antes de entrar em campo:</p>
     <input id="nickIn" maxlength="14" placeholder="Seu nick" style="width:min(280px,80vw);padding:11px 14px;border-radius:10px;border:1px solid rgba(255,255,255,.3);background:rgba(0,0,0,.45);color:#fff;font:900 16px inherit;text-align:center;outline:none;margin:6px 0">
     <h2 style="font-size:14px;margin-top:12px">Seu avatar</h2>
     <div id="avatarRow" style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:8px 0"></div>
-    <h2 style="font-size:14px;margin-top:12px">Escolha seu capitão ⭐ (custo 6)</h2>
-    <p style="font-size:12px;opacity:.7">Ele entra desbloqueado na sua coleção pra sempre.</p>
-    <div id="captainRow" style="display:flex;gap:16px;justify-content:center;margin:8px 0 34px"></div>
-    <h2 style="font-size:14px;margin-top:14px">Verso das suas cartas 🂠</h2>
+    <h2 id="onbCapTitle" style="font-size:14px;margin-top:12px">Escolha seu capitão ⭐ (custo 6)</h2>
+    <p id="onbCapDesc" style="font-size:12px;opacity:.7">Ele entra desbloqueado na sua coleção pra sempre.</p>
+    <div id="captainRow" style="display:flex;gap:10px;justify-content:center;margin:8px 0 28px"></div>
+    <h2 id="onbBackTitle" style="font-size:14px;margin-top:14px">Verso das suas cartas 🂠</h2>
     <div id="onbBackRow" class="skin-row" style="justify-content:center;margin:8px 0 16px"></div>
-    <button class="menu-btn" style="width:min(300px,80vw);margin:0 auto" onclick="Profile.save()">✔ Começar</button>
+    <button id="onbSaveBtn" class="menu-btn" style="width:min(300px,80vw);margin:0 auto" onclick="Profile.save()">✔ Começar</button>
   </div>
 </div>
 
@@ -2053,11 +2167,12 @@ body::before{
     <div style="display:flex;flex-direction:column;gap:10px;margin-top:10px">
       <button class="menu-btn ghost" id="btnSound" onclick="UI.toggleSound()">🔊 Som: ON</button>
       <button class="menu-btn ghost" onclick="toggleFull()">⛶ Tela Cheia</button>
-      <button class="menu-btn ghost" onclick="Profile.open(true)">👤 Editar perfil</button>
+      <button class="menu-btn ghost" onclick="Profile.edit()">👤 Editar perfil</button>
+      <button class="menu-btn secondary" onclick="UI.shareStats()">📸 Compartilhar conquistas</button>
       <button class="menu-btn" style="background:linear-gradient(180deg,#ff8a8a,#c91818);color:#fff;box-shadow:0 5px 0 #5e0808,var(--shadow)" onclick="UI.resetSave()">🗑 Resetar save</button>
     </div>
   </div>
-  <button class="menu-btn ghost backbtn" onclick="UI.show('menu')">← Voltar</button>
+  <button class="menu-btn ghost backbtn" onclick="UI.back()">← Voltar</button>
 </div>
 <button id="peekBack" class="ctl" style="display:none;position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:62;background:linear-gradient(180deg,#ffd95e,#f5a700);color:#3c2600;box-shadow:0 4px 0 #8a5a00">📋 Voltar ao resultado</button>
 <div id="roadReveal"><div class="rr-glow"></div><div class="rr-card" id="roadRevealCard"></div><div class="rr-cap" id="roadRevealCap"></div><small style="opacity:.7;margin-top:8px">toque para fechar</small></div>
@@ -2073,62 +2188,81 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const vib=p=>{try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}};
 /* ---------------- PERFIL DO JOGADOR ---------------- */
 const Profile={
-  avatars:['😎','👑','🦁','🧙','🐔','🔥','🧤','🥇'],
+  avatars:['😎','👑','🦁','🧙','🐔','🔥','🧤','🥇','⚽','🐐','🦊','🐺','🐻','🦅','😼','🤴','🏆','💪','🧠','🤡','👽','🤖','🦸','🥷'],
   selAvatar:'😎',selCaptain:null,selBack:null,
   nick(){return localStorage.getItem('brclash_nick')||''},
   avatar(){return localStorage.getItem('brclash_avatar')||'😎'},
   captain(){return localStorage.getItem('brclash_captain')||''},
-  open(editing){
-    if(!this._opening){ // primeira renderização: carrega do save
-      this.selAvatar=this.avatar();
-      this.selCaptain=this.captain()||null;
-      this.selBack=BackSkin.get();
-      $('#nickIn').value=this.nick();
-      this._opening=true;
-    }
-    // re-renderizações (clique em avatar/capitão) preservam o que foi digitado
+  editing:false,
+  /* onboarding completo (primeira vez) */
+  open(){ this._enter(false); },
+  /* editar perfil: SÓ nome e avatar (não permite trocar capitão/desbloquear cartas) */
+  edit(){ this._enter(true); },
+  _enter(editing){
+    this.editing=!!editing;
+    // carrega valores atuais do save
+    this.selAvatar=this.avatar();
+    this.selCaptain=this.captain()||null;
+    this.selBack=BackSkin.get();
+    $('#nickIn').value=this.nick();
+    this._draw();
+  },
+  _draw(){
+    const editing=this.editing;
     const ar=$('#avatarRow');ar.innerHTML='';
     this.avatars.forEach(a=>{
       const d=document.createElement('div');
       d.className='avatar-opt'+(this.selAvatar===a?' sel':'');
       d.textContent=a;
-      d.onclick=()=>{this.selAvatar=a;Snd.card();this.open(editing);};
+      d.onclick=()=>{this.selAvatar=a;Snd.card();this._draw();};
       ar.appendChild(d);
     });
     const cr=$('#captainRow');cr.innerHTML='';
-    CARDS.filter(c=>c.cost===6).forEach(c=>{
-      const d=document.createElement('div');
-      d.className='captain-opt'+(this.selCaptain===c.id?' sel':'');
-      d.innerHTML=Game.bigCardHTML(c,c.pow);
-      d.onclick=()=>{this.selCaptain=c.id;Snd.card();vib(15);this.open(editing);};
-      cr.appendChild(d);
-    });
-    const br=$('#onbBackRow');
-    if(br){
-      br.innerHTML='';
-      // só os versos grátis ficam na tela inicial; os demais vêm pelo roadmap/loja
-      BackSkin.list.filter(sk=>sk.unl===0&&!sk.price).forEach(sk=>{
+    if(!editing){
+      CARDS.filter(c=>c.cost===6).forEach(c=>{
         const d=document.createElement('div');
-        d.className='skin-opt'+(this.selBack===sk.id?' sel':'');
-        d.innerHTML=backCardHTML(sk.id,'⚽')+`<small>${sk.label}</small>`;
-        d.onclick=()=>{this.selBack=sk.id;Snd.card();vib(10);this.open(editing);};
-        br.appendChild(d);
+        d.className='captain-opt'+(this.selCaptain===c.id?' sel':'');
+        d.innerHTML=Game.bigCardHTML(c,c.pow);
+        d.onclick=()=>{this.selCaptain=c.id;Snd.card();vib(15);this._draw();};
+        cr.appendChild(d);
       });
+      const br=$('#onbBackRow');
+      if(br){
+        br.innerHTML='';
+        BackSkin.list.filter(sk=>sk.unl===0&&!sk.price).forEach(sk=>{
+          const d=document.createElement('div');
+          d.className='skin-opt'+(this.selBack===sk.id?' sel':'');
+          d.innerHTML=backCardHTML(sk.id,'⚽')+`<small>${sk.label}</small>`;
+          d.onclick=()=>{this.selBack=sk.id;Snd.card();vib(10);this._draw();};
+          br.appendChild(d);
+        });
+      }
     }
+    // mostra/esconde as seções que NÃO podem ser editadas no modo edição
+    ['#onbCapTitle','#onbCapDesc','#captainRow','#onbBackTitle','#onbBackRow'].forEach(s=>{
+      const el=$(s);if(el)el.style.display=editing?'none':'';
+    });
+    const t=$('#onbTitle'),i=$('#onbIntro'),b=$('#onbSaveBtn');
+    if(t)t.textContent=editing?'✏️ Editar perfil':'👋 Bem-vindo ao Brasileirão Clash!';
+    if(i)i.textContent=editing?'Altere seu nome e avatar:':'Monte seu perfil de cartola antes de entrar em campo:';
+    if(b)b.textContent=editing?'✔ Salvar':'✔ Começar';
     UI.show('onboard');
   },
   save(){
     const n=$('#nickIn').value.trim();
     if(!n){UI.toast('Escolha um nick, cartola!');return;}
-    if(!this.selCaptain){UI.toast('Escolha seu capitão! ⭐');return;}
+    if(!this.editing && !this.selCaptain){UI.toast('Escolha seu capitão! ⭐');return;}
     localStorage.setItem('brclash_nick',n);
     localStorage.setItem('brclash_avatar',this.selAvatar);
-    localStorage.setItem('brclash_captain',this.selCaptain);
-    if(this.selBack&&BackSkin.owned(this.selBack))localStorage.setItem('brclash_back',this.selBack);
-    Bought.add('brclash_bought',this.selCaptain);
-    this._opening=false;
+    if(!this.editing){
+      // só o onboarding inicial mexe em capitão e verso (evita burlar desbloqueios)
+      localStorage.setItem('brclash_captain',this.selCaptain);
+      if(this.selBack&&BackSkin.owned(this.selBack))localStorage.setItem('brclash_back',this.selBack);
+      Bought.add('brclash_bought',this.selCaptain);
+    }
     Snd.buy();vib([30,20,60]);
-    UI.toast('Bem-vindo, '+n+'! Seu capitão já está na coleção. ⭐');
+    UI.toast(this.editing?('Perfil atualizado, '+n+'! ✔'):('Bem-vindo, '+n+'! Seu capitão já está na coleção. ⭐'));
+    this.editing=false;
     UI.show('menu');
   }
 };
@@ -2174,6 +2308,67 @@ const BackSkin={
     const sk=this.list.find(x=>x.id===id);
     if(!sk)return false;
     return (sk.unl!=null&&sk.unl<=maxTacas())||Bought.skins().includes(id);
+  }
+};
+
+/* ---------------- LOJA: rotação de 3 figurinhas a cada 12h + fixar (pin) ---------------- */
+const Shop={
+  ROT_MS:12*60*60*1000,
+  VERSO_PRICE:600,            // preço padronizado de todos os versos (1ª versão)
+  load(){ try{return JSON.parse(localStorage.getItem('brclash_shop')||'null')}catch(e){return null} },
+  save(d){ localStorage.setItem('brclash_shop',JSON.stringify(d)); },
+  price(c){ return 100+(c.unl||0)*12; },
+  /* cartas que o jogador ainda NÃO possui (e que têm requisito de desbloqueio) */
+  pool(exclude){
+    exclude=exclude||[];
+    return CARDS.filter(c=>c.unl && !isUnlocked(c) && !exclude.includes(c.id));
+  },
+  pickThree(keep){
+    keep=(keep||[]).filter(id=>{const c=byId(id);return c&&!isUnlocked(c);});
+    const avail=this.pool(keep).map(c=>c.id).sort(()=>Math.random()-.5);
+    const out=[...keep];
+    for(const id of avail){ if(out.length>=3)break; out.push(id); }
+    return out.slice(0,3);
+  },
+  /* garante um estado válido; rotaciona se passou 12h */
+  ensure(){
+    let d=this.load();
+    const now=Date.now();
+    if(!d||!Array.isArray(d.ids)){
+      d={ts:now,ids:this.pickThree([]),pins:[]};
+      this.save(d);return d;
+    }
+    d.pins=(d.pins||[]).filter(id=>{const c=byId(id);return c&&!isUnlocked(c);});
+    if(now-d.ts>=this.ROT_MS){
+      // mantém só as fixadas (que ainda não foram compradas) e completa com novas
+      d.ids=this.pickThree(d.pins);
+      d.pins=d.pins.filter(id=>d.ids.includes(id));
+      d.ts=now;
+    }
+    // se ficou com menos de 3 (pool grande), tenta completar sem trocar as atuais
+    if(d.ids.length<3){ d.ids=this.pickThree(d.ids.filter(id=>!isUnlocked(byId(id)))); }
+    this.save(d);
+    return d;
+  },
+  timeLeftMs(){ const d=this.load(); if(!d)return this.ROT_MS; return Math.max(0,this.ROT_MS-(Date.now()-d.ts)); },
+  timeLeftStr(){
+    let s=Math.floor(this.timeLeftMs()/1000);
+    const h=Math.floor(s/3600);s-=h*3600;const m=Math.floor(s/60);s-=m*60;
+    return (h<10?'0':'')+h+':'+(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+  },
+  togglePin(id){
+    const d=this.ensure();d.pins=d.pins||[];
+    if(d.pins.includes(id))d.pins=d.pins.filter(x=>x!==id);
+    else d.pins.push(id);
+    this.save(d);
+  },
+  /* ao comprar: registra na coleção e tira a fixação (será trocada na próxima rotação) */
+  buy(id){
+    const c=byId(id),price=this.price(c);
+    if(!Coins.spend(price))return false;
+    Bought.add('brclash_bought',id);
+    const d=this.ensure();d.pins=(d.pins||[]).filter(x=>x!==id);this.save(d);
+    return true;
   }
 };
 
@@ -2589,11 +2784,12 @@ const Timer={
     if(this.iv){this.t+=s;this.draw();UI.toast('⏱️ +'+s+'s pela Mala na mesa!');}
     else this.bonus=true; // mala do bot durante a resolução → bônus no próximo turno
   },
-  stop(){clearInterval(this.iv);this.iv=null;$('#timerWrap').classList.remove('on');},
+  stop(){clearInterval(this.iv);this.iv=null;$('#timerWrap').classList.remove('on');const be=$('#btnEnd');if(be)be.classList.remove('timewarn');},
   draw(){
     $('#timerTxt').textContent=this.t+'s';
     $('#timerFill').style.width=Math.max(0,Math.min(100,this.t/30*100))+'%';
     $('#timerWrap').classList.toggle('low',this.t<=10);
+    const be=$('#btnEnd');if(be)be.classList.toggle('timewarn',this.t>0&&this.t<=10);
   }
 };
 
@@ -2874,7 +3070,7 @@ const BOTS={
  dorival:{name:'Dorival Júnior',skill:0,snapAggro:.07},
  diniz:{name:'Fernando Diniz',skill:0,snapAggro:.13},
  mano:{name:'Mano Menezes',skill:1,snapAggro:.2},
- cuca:{name:'Cuca',skill:1,snapAggro:.28},
+ roger:{name:'Roger Machado',skill:1,snapAggro:.28},
  renato:{name:'Renato Gaúcho',skill:1,snapAggro:.36},
  luxa:{name:'Vanderlei Luxemburgo',skill:2,snapAggro:.44},
  felipao:{name:'Felipão',skill:2,snapAggro:.52},
@@ -2884,7 +3080,7 @@ const BOTS={
 
 /* níveis do jogo rápido: 3 treinadores por nível (mesma mecânica, só o nome muda) */
 const PLAY_LEVELS=[
-  {name:'Várzea',       skill:0, aggro:.12, coaches:['Dorival Júnior','Fernando Diniz','Cuca']},
+  {name:'Várzea',       skill:0, aggro:.12, coaches:['Dorival Júnior','Fernando Diniz','Roger Machado']},
   {name:'Profissional', skill:1, aggro:.32, coaches:['Mano Menezes','Renato Gaúcho','Vanderlei Luxemburgo']},
   {name:'Elite',        skill:2, aggro:.55, coaches:['Felipão','Abel Ferreira','Tite']},
 ];
@@ -2913,7 +3109,7 @@ const Decks={
     if(a&&d[a]){ this.editing=a; this.sel=[...d[a]]; $('#deckName').value=a; }
     else{ this.editing=null; this.sel=[...DEFAULT_DECK]; $('#deckName').value=''; }
     this.renderBuilder();
-    UI.show('builder');
+    UI.go('builder');
   },
   openList(){ this.openBuilder(); },
   newDeck(){ this.editing=null; this.sel=[]; $('#deckName').value=''; this.renderBuilder(); UI.show('builder'); },
@@ -3127,6 +3323,11 @@ const Game={
     $('#meAvatar').innerHTML=Profile.avatar()+'<img draggable="false" src="'+ART.avatar('player')+'" alt="" onerror="this.remove()">';
     this.busy=true;
     await sleep(500);
+    // Modo Copa: anuncia a fase que está começando (ex.: "Oitavas de Final")
+    if(Copa.active){
+      const gm=Copa.games[Copa.n-1];
+      if(gm){ await banner('🏆 '+COPA_TIERS[Copa.tier].name, gm.label+' · '+Copa.n+'/'+Copa.games.length, true); }
+    }
     // revela o primeiro local
     g.fields[0].open=true;
     this.render();
@@ -3712,7 +3913,7 @@ const Game={
         document.body.appendChild(c);
         setTimeout(()=>c.remove(),6000);
       }
-      t.textContent='GOLAÇO! 🏆';t.style.color='var(--gold)';
+      t.textContent='GANHOU! 🎉🏆';t.style.color='var(--gold)';
       x.textContent=(retreated?g.bot.name+' amarelou! ':'')+'Você faturou '+amount+' Taça'+(amount>1?'s':'')+'. Total: '+this.tacas+' 🏆';
       Snd.win();
     }else{
@@ -3731,8 +3932,16 @@ const Game={
     // recorde para desbloqueio de cartas (nunca regride)
     const prevMax=+localStorage.getItem('brclash_maxtacas')||0;
     const uv=$('#ovUnlock');uv.style.display='none';
+    let roadRefund=0; // cartolas por alcançar marco de carta/verso que o jogador JÁ possuía (comprado)
     if(this.tacas>prevMax){
       localStorage.setItem('brclash_maxtacas',this.tacas);
+      // marcos cruzados nesta partida que já eram do jogador por COMPRA → reembolso de 300 cada
+      const boughtCards=Bought.cards(), boughtSkins=Bought.skins();
+      const reachedOwned=[
+        ...CARDS.filter(c=>(c.unl||0)>prevMax&&(c.unl||0)<=this.tacas&&boughtCards.includes(c.id)),
+        ...BackSkin.list.filter(s=>s.unl!=null&&s.unl>prevMax&&s.unl<=this.tacas&&boughtSkins.includes(s.id))
+      ];
+      roadRefund=reachedOwned.length*300;
       const unlocked=CARDS.filter(c=>(c.unl||0)>prevMax&&(c.unl||0)<=this.tacas);
       if(unlocked.length){
         // mostra as figurinhas reveladas na tela de resultado
@@ -3750,14 +3959,16 @@ const Game={
     }
     // moedas da partida
     let coins=win===null?15:win?30*amount:10;
+    if(roadRefund){ coins+=roadRefund; }
     // modo copa
+    let champion=false;
     $('#ovNext').style.display='none';
     if(Copa.active){
       const TIER=COPA_TIERS[Copa.tier], total=TIER.games.length;
       if(win===true){
         CopaStats.win(Copa.n);
         if(Copa.n>=total){
-          Copa.active=false;coins+=TIER.reward;
+          Copa.active=false;coins+=TIER.reward;champion=true;
           CopaStats.title();
           const wasLocked=CopaStats.load().unlocked<=Copa.tier;
           CopaStats.completeTier(Copa.tier);
@@ -3778,13 +3989,39 @@ const Game={
       }
     }
     Coins.add(coins);Snd.coin();
+    if(roadRefund)x.textContent+=' · 🎁 +'+roadRefund+' 🎩 por marcos que você já tinha!';
     x.textContent+=' · +'+coins+' 🎩 (total: '+Coins.get()+')';
     // nova partida (revanche) — escondida durante a Copa
     const ag=$('#ovAgain');
     ag.style.display=Copa.active?'none':'flex';
-    ag.onclick=()=>Game.start(g.bot);
+    if(champion){
+      // CAMPEÃO: o botão leva de volta à escolha de série da Copa
+      ag.textContent='🏆 Modo Copa';
+      ag.onclick=()=>Copa.start();
+    }else{
+      ag.textContent='🔄 Nova partida';
+      ag.onclick=()=>Game.start(g.bot);
+    }
+    this._champion=champion;
     $('#tacasMenu').textContent=this.tacas;
     ov.classList.add('on');
+    // celebração extra de campeão: troféu grande com glow + chuva de confetes
+    if(champion){
+      const bigT=$('#ovBigTrophy');if(bigT)bigT.classList.add('champ');
+      const emo=['🏆','🎉','⭐','🟡','🟢','🎊','👑'];
+      for(let i=0;i<60;i++){
+        const c=document.createElement('div');
+        c.className='confetti';c.textContent=rnd(emo);
+        c.style.left=Math.random()*100+'vw';
+        c.style.fontSize=(14+Math.random()*16)+'px';
+        c.style.animationDuration=(2.4+Math.random()*3)+'s';
+        c.style.animationDelay=(Math.random()*1.4)+'s';
+        document.body.appendChild(c);
+        setTimeout(()=>c.remove(),7000);
+      }
+    }else{
+      const bigT=$('#ovBigTrophy');if(bigT)bigT.classList.remove('champ');
+    }
     const tdelta=win===null?0:win?amount:-amount;
     requestAnimationFrame(()=>requestAnimationFrame(()=>this.runEndAnim(tdelta,coins)));
   },
@@ -3874,12 +4111,24 @@ const Game={
     cube.classList.toggle('hot',g.stakes>=4||pend);
     cube.classList.toggle('armed',pend); // mala engatilhada: tensão/trepidação até o fim da rodada
     cube.classList.toggle('done',(g.snapped[0]&&!pend)||(this.busy&&!pend));
-    $('#stakeHint').textContent=pend?'dobra ao encerrar ⚡':(g.snapped[0]?'mala na mesa!':'toque = MALA 💼');
-    /* selo "×2 🏆" só aparece quando há snap pendente (vai dobrar ao encerrar) */
+    $('#stakeHint').textContent=pend?'dobra ao encerrar ⚡':(g.snapped[0]?'mala na mesa!':'clique para dobrar a aposta');
+    /* selo de multiplicador:
+       - snap pendente (jogador) → vai dobrar ao encerrar
+       - turno 6 → as Taças dobram obrigatoriamente ao encerrar
+       - turno 6 + snap pendente → quádruplo (×4) */
     const sw=$('#stakeWorth');
     if(sw){
-      sw.textContent='×2 🏆';
-      sw.classList.toggle('show', !!pend);
+      const t6 = g.turn>=6 && !g.over && !g._t6;
+      let mult=1;
+      if(t6)mult*=2;
+      if(pend)mult*=2;
+      if(mult>1){
+        sw.textContent='×'+mult+' 🏆';
+        sw.classList.add('show');
+      }else{
+        sw.textContent='×2 🏆';
+        sw.classList.remove('show');
+      }
     }
     // escala/intensidade do cube conforme as Taças dobram (1>2>4>8...)
     const lv=g.stakes>=16?4:g.stakes>=8?3:g.stakes>=4?2:g.stakes>=2?1:0;
@@ -4062,8 +4311,8 @@ const COPA_TIERS=[
    games:[
      {bot:'diniz',label:'Quartas · Ida'},
      {bot:'diniz',label:'Quartas · Volta'},
-     {bot:'cuca',label:'Semifinal · Ida'},
-     {bot:'cuca',label:'Semifinal · Volta'},
+     {bot:'roger',label:'Semifinal · Ida'},
+     {bot:'roger',label:'Semifinal · Volta'},
      {bot:'luxa',label:'FINAL'},
    ]},
   {key:'b',name:'Série B',cls:'tier-b',reward:400,desc:'Oitavas → final (7 jogos).',
@@ -4120,7 +4369,7 @@ const CopaStats={
 /* ---------------- MODO COPA (7 partidas seguidas, 4 divisões) ---------------- */
 const Copa={
   active:false,n:0,tier:0,games:[],
-  start(){ this.renderPicker(); CopaStats.render(); UI.show('copaintro'); },
+  start(){ this.renderPicker(); CopaStats.render(); UI.go('copaintro'); },
   renderPicker(){
     const box=$('#copaTiers');if(!box)return;
     const unlocked=CopaStats.load().unlocked, done=CopaStats.load().done;
@@ -4321,7 +4570,27 @@ const Drag={
 
 /* ---------------- UI ---------------- */
 const UI={
+  _hist:[],
+  /* navega guardando a tela atual (e se o overlay estava aberto) para o "Voltar" */
+  go(id){
+    const cur=document.querySelector('.screen.on');
+    // re-render da mesma tela (ex.: refresh da loja) não empilha histórico
+    if(cur&&cur.id===id){ this.show(id); return; }
+    this._hist=this._hist||[];
+    this._hist.push({screen:cur?cur.id:'menu', overlay:$('#overlay').classList.contains('on')});
+    this.show(id);
+  },
+  /* volta para a tela anterior (restaura overlay de fim de partida se for o caso) */
+  back(){
+    const h=(this._hist||[]).pop();
+    if(!h){ this.show('menu'); return; }
+    this.show(h.screen);
+    if(h.overlay)$('#overlay').classList.add('on');
+  },
   show(id){
+    if(id!=='botpick'&&this._drawTimer){clearInterval(this._drawTimer);this._drawTimer=null;}
+    // menu e partida são "âncoras": zeram o histórico de navegação
+    if(id==='menu'||id==='match')this._hist=[];
     document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
     $('#'+id).classList.add('on');
     $('#overlay').classList.remove('on');
@@ -4356,9 +4625,85 @@ const UI={
     Snd.card();
   },
   resetSave(){
-    if(!confirm('⚠️ Apagar TODO o progresso?\n(Taças, cartolas, baralhos, compras e perfil)'))return;
-    Object.keys(localStorage).filter(k=>k.startsWith('brclash')).forEach(k=>localStorage.removeItem(k));
-    location.reload();
+    this._confirm(
+      '⚠️ Apagar <b>TODO</b> o progresso?<br>(Taças, cartolas, baralhos, compras e perfil)<br><br>Essa ação não pode ser desfeita.',
+      '🗑 Apagar tudo',
+      ()=>{
+        Object.keys(localStorage).filter(k=>k.startsWith('brclash')).forEach(k=>localStorage.removeItem(k));
+        location.reload();
+      });
+  },
+  /* sair para o menu — durante a Copa exige DUPLA confirmação (sair = eliminado) */
+  exitToMenu(){
+    if(!Copa.active){ this.show('menu'); return; }
+    // dupla confirmação interna (sem pop-up do navegador)
+    this._confirm(
+      '⚠️ Você está no meio da Copa!<br>Sair agora vai te <b>ELIMINAR</b> e zerar o progresso desta Copa.<br><br>Deseja mesmo sair?',
+      '🚪 Quero sair',
+      ()=>{
+        this._confirm(
+          '🐔 Tem certeza <b>ABSOLUTA</b>?<br>Você perde a Copa atual e volta ao menu.',
+          '✔ Confirmar saída',
+          ()=>{
+            CopaStats.lose();Copa.active=false;
+            $('#confirmModal').classList.remove('on');
+            UI.toast('Você saiu da Copa e foi eliminado. 😞');
+            this.show('menu');
+          });
+      });
+  },
+  /* modal de confirmação interno reutilizável */
+  _confirm(html,yesLabel,onYes){
+    const m=$('#confirmModal');
+    $('#confirmText').innerHTML=html;
+    const yes=$('#confirmYes'),no=$('#confirmNo');
+    yes.textContent=yesLabel;
+    yes.onclick=()=>{ onYes(); };
+    no.onclick=()=>{ m.classList.remove('on'); };
+    m.classList.add('on');
+    Snd.card&&Snd.card();
+  },
+  /* compartilhar/print das conquistas — view isolada para screenshot + Web Share */
+  shareStats(){
+    const max=maxTacas();
+    const total=CARDS.length;
+    const owned=CARDS.filter(isUnlocked).length;
+    const cs=CopaStats.load();
+    const nick=Profile.nick()||'Cartola';
+    const lines=[
+      '⚽ Brasileirão Clash — '+nick,
+      '🏆 Taças: '+Game.tacas+'  (recorde '+max+')',
+      '🏅 Títulos de Copa: '+cs.titles,
+      '🃏 Coleção: '+owned+'/'+total+' figurinhas',
+      '🎩 Cartolas: '+Coins.get(),
+      '📈 Recorde na Copa: '+cs.best+'/7  ·  Aproveitamento '+CopaStats.winrate()+'%'
+    ];
+    const txt=lines.join('\n');
+    $('#lockerBox').innerHTML=`
+      <div class="share-card" id="shareCard">
+        <h3>⚽ Brasileirão Clash</h3>
+        <div style="font-size:13px;opacity:.85;margin-bottom:2px">Conquistas de <b>${nick}</b></div>
+        <div class="share-stats">
+          <div class="s"><b>${Game.tacas}</b><small>🏆 Taças</small></div>
+          <div class="s"><b>${max}</b><small>📈 Recorde</small></div>
+          <div class="s"><b>${cs.titles}</b><small>🏅 Títulos Copa</small></div>
+          <div class="s"><b>${owned}/${total}</b><small>🃏 Coleção</small></div>
+          <div class="s"><b>${Coins.get()}</b><small>🎩 Cartolas</small></div>
+          <div class="s"><b>${cs.best}/7</b><small>🔥 Recorde Copa</small></div>
+        </div>
+      </div>
+      <button class="menu-btn" id="shareBtn" style="width:100%;margin-top:12px">📤 Compartilhar / Copiar</button>
+      <small style="display:block;text-align:center;opacity:.6;margin-top:8px">Dica: tire um print desta tela para postar 📸 · toque fora para fechar</small>`;
+    $('#lockerModal').classList.add('on');
+    Snd.card();
+    $('#shareBtn').onclick=async e=>{
+      e.stopPropagation();
+      try{
+        if(navigator.share){ await navigator.share({title:'Brasileirão Clash',text:txt}); }
+        else if(navigator.clipboard){ await navigator.clipboard.writeText(txt); UI.toast('📋 Conquistas copiadas! Cole onde quiser.'); }
+        else { UI.toast('📸 Tire um print para compartilhar!'); }
+      }catch(err){ /* usuário cancelou o share */ }
+    };
   },
   mysteryHTML(c){
     return `<div class="mcard"><span>?</span></div><span class="lockreq">${c.unl} 🏆</span>`;
@@ -4372,11 +4717,14 @@ const UI={
       ...BackSkin.list.filter(s=>s.unl!=null).map(s=>({type:'skin',unl:s.unl,s})),
     ].sort((a,b)=>a.unl-b.unl);
     const doneFlags=miles.map(m=>m.type==='card'?isUnlocked(m.c):BackSkin.owned(m.s.id));
+    // progressão REAL por troféus (ignora cartas obtidas por capitão/compra)
+    const progFlags=miles.map(m=>m.unl<=max);
+    const progCount=progFlags.filter(Boolean).length;
     const doneCount=doneFlags.filter(Boolean).length;
-    // primeira visita (sem registro): considera tudo já visto — anima só nos PRÓXIMOS desbloqueios
+    // primeira visita (sem registro): considera o progresso atual já visto — anima só nos PRÓXIMOS desbloqueios por troféu
     const seenRaw=localStorage.getItem('brclash_road_seen');
-    const seen=seenRaw==null?doneCount:+seenRaw;
-    $('#roadProg').textContent=`Recorde: ${max} 🏆 · ${doneCount}/${miles.length} recompensas conquistadas`;
+    const seen=seenRaw==null?progCount:+seenRaw;
+    $('#roadProg').textContent=`Recorde: ${max} 🏆 · ${progCount}/${miles.length} recompensas por troféus`;
     // texto tipográfico: quanto falta para a próxima recompensa
     const nextMile=miles.find((m,i)=>!doneFlags[i]);
     if(nextMile){
@@ -4387,17 +4735,18 @@ const UI={
     }else{
       $('#roadGoal').innerHTML='🏆 <b>Tudo conquistado!</b> Você é lenda do Brasileirão.';
     }
-    let nextEl=null; const items=[]; const newly=[];
+    let nextEl=null, lastProgEl=null; const items=[]; const newly=[];
     miles.forEach((m,idx)=>{
       const done=doneFlags[idx];
       const it=document.createElement('div');
       it.className='road-item'+(done?' done':'');
       if(m.type==='card'){
+        // mesma lógica visual da Coleção: carta visível, bloqueada = preto e branco + 🔒
         it.innerHTML=`
-          <div class="road-node">${done?'✔':'🏆'}</div>
-          <div class="road-card" style="position:relative">${done?Game.bigCardHTML(m.c,m.c.pow):this.mysteryHTML(m.c)}</div>
-          <div class="road-info"><b>${done?m.c.name:'Figurinha misteriosa'}</b><small>${done?'Desbloqueada! ('+m.unl+' 🏆)':'Alcance '+m.unl+' Taças para revelar'}</small></div>`;
-        if(done){it.style.cursor='pointer';it.onclick=()=>this.inspect(m.c);}
+          <div class="road-node">${done?'✔':'🔒'}</div>
+          <div class="road-card bwrap${done?'':' locked'}" style="position:relative">${Game.bigCardHTML(m.c,m.c.pow)}${done?'':`<span class="lockreq">${m.unl} 🏆</span>`}</div>
+          <div class="road-info"><b>${m.c.name}</b><small>${done?'Desbloqueada! ('+m.unl+' 🏆)':'Alcance '+m.unl+' Taças para desbloquear'}</small></div>`;
+        it.style.cursor='pointer';it.onclick=()=>this.inspect(m.c);
       }else{
         it.innerHTML=`
           <div class="road-node">${done?'✔':'🂠'}</div>
@@ -4408,11 +4757,15 @@ const UI={
           <div class="road-info"><b>Verso ${m.s.label}</b><small>${done?'Conquistado! ('+m.unl+' 🏆)':'Alcance '+m.unl+' Taças (ou compre na Loja)'}</small></div>`;
         if(done){it.style.cursor='pointer';it.onclick=()=>{BackSkin.set(m.s.id);Snd.card();UI.toast('🂠 Verso '+m.s.label+' equipado!');};}
       }
-      if(done&&idx>=seen)newly.push(idx);
-      if(!done&&!nextEl){nextEl=it;it.classList.add('next');}
+      // só conta como "nova conquista" o que veio por PROGRESSÃO de troféus (não capitão/compra)
+      if(progFlags[idx]&&idx>=seen)newly.push(idx);
+      // "próximo" e "último desbloqueio" sempre pela PROGRESSÃO de troféus
+      if(progFlags[idx]) lastProgEl=it;
+      if(!progFlags[idx]&&!nextEl){nextEl=it;it.classList.add('next');}
       items.push(it);list.appendChild(it);
     });
-    this.show('road');
+    if(lastProgEl) lastProgEl.classList.add('last-unlocked');
+    this.go('road');
     // se há recompensas recém-conquistadas: preenche a trilha lentamente e revela no centro
     if(newly.length){
       newly.forEach(i=>items[i].classList.add('road-filling'));
@@ -4420,7 +4773,7 @@ const UI={
       const fillNext=()=>{
         if(k>=newly.length){
           this.roadReveal(miles[newly[newly.length-1]]);
-          localStorage.setItem('brclash_road_seen',doneCount);
+          localStorage.setItem('brclash_road_seen',progCount);
           return;
         }
         const it=items[newly[k]];
@@ -4431,8 +4784,8 @@ const UI={
       };
       setTimeout(fillNext,650);
     }else{
-      localStorage.setItem('brclash_road_seen',doneCount);
-      setTimeout(()=>{(nextEl||list.lastElementChild)?.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'});},80);
+      localStorage.setItem('brclash_road_seen',progCount);
+      setTimeout(()=>{(lastProgEl||nextEl||list.lastElementChild)?.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'});},80);
     }
   },
   /* revelação em destaque (centro da tela) da recompensa recém-desbloqueada */
@@ -4462,31 +4815,10 @@ const UI={
   openShop(){
     $('#coinsShop').textContent=Coins.get();
     this.shopTab('fig');
-    // figurinhas (todas que têm requisito; compráveis se ainda bloqueadas)
-    const sc=$('#shopCards');sc.innerHTML='';
-    CARDS.filter(c=>c.unl).sort((a,b)=>a.unl-b.unl).forEach(c=>{
-      const owned=isUnlocked(c);
-      const price=100+c.unl*12;
-      const w=document.createElement('div');
-      w.className='shop-item';
-      w.innerHTML=Game.bigCardHTML(c,c.pow)+(owned
-        ?'<div class="shop-owned">✔ NA COLEÇÃO</div>'
-        :`<button class="buy-btn" ${Coins.get()<price?'disabled':''}>🎩 ${price}</button>`);
-      w.firstElementChild.style.cursor='pointer';
-      w.firstElementChild.onclick=()=>this.inspect(c);
-      if(!owned){
-        w.querySelector('.buy-btn').onclick=()=>{
-          if(!Coins.spend(price)){UI.toast('🎩 Cartolas insuficientes!');return;}
-          Bought.add('brclash_bought',c.id);
-          Snd.buy();vib([30,20,60]);
-          UI.toast('🎉 '+c.name+' comprado! Já está na coleção.');
-          this.openShop();
-        };
-      }
-      sc.appendChild(w);
-    });
-    // versos
+    this.renderShopCards();
+    // versos — preço padronizado (600)
     const ss=$('#shopSkins');ss.innerHTML='';
+    const VP=Shop.VERSO_PRICE;
     BackSkin.list.filter(s=>s.price).forEach(s=>{
       const owned=BackSkin.owned(s.id);
       const w=document.createElement('div');
@@ -4494,10 +4826,10 @@ const UI={
       w.innerHTML=`<div class="shop-skin-back">${backCardHTML(s.id)}</div>
         <div style="text-align:center;font-size:12px;font-weight:900">${s.label}</div>`+(owned
         ?'<div class="shop-owned">✔ CONQUISTADO</div>'
-        :`<button class="buy-btn" ${Coins.get()<s.price?'disabled':''}>🎩 ${s.price}</button>`);
+        :`<button class="buy-btn" ${Coins.get()<VP?'disabled':''}>🎩 ${VP}</button>`);
       if(!owned){
         w.querySelector('.buy-btn').onclick=()=>{
-          if(!Coins.spend(s.price)){UI.toast('🎩 Cartolas insuficientes!');return;}
+          if(!Coins.spend(VP)){UI.toast('🎩 Cartolas insuficientes!');return;}
           Bought.add('brclash_skins',s.id);
           BackSkin.set(s.id);
           Snd.buy();vib([30,20,60]);
@@ -4507,7 +4839,61 @@ const UI={
       }
       ss.appendChild(w);
     });
-    this.show('shop');
+    // timer de rotação ao vivo
+    this._shopTick&&clearInterval(this._shopTick);
+    const upd=()=>{
+      const t=$('#shopRotTimer');
+      if(!t||!$('#shop').classList.contains('on')){clearInterval(this._shopTick);return;}
+      if(Shop.timeLeftMs()<=0){ this.renderShopCards(); }
+      t.textContent='🔄 Nova leva em '+Shop.timeLeftStr();
+    };
+    upd();this._shopTick=setInterval(upd,1000);
+    this.go('shop');
+  },
+  /* renderiza as 3 figurinhas em oferta (rotação 12h + pin + estado comprada) */
+  renderShopCards(){
+    const sc=$('#shopCards');if(!sc)return;
+    sc.innerHTML='';
+    const d=Shop.ensure();
+    const pins=d.pins||[];
+    if(!d.ids.length){
+      sc.innerHTML='<div style="opacity:.7;font-size:13px;padding:14px">🎉 Você já tem todas as figurinhas desbloqueáveis na loja!</div>';
+      return;
+    }
+    d.ids.forEach(id=>{
+      const c=byId(id);if(!c)return;
+      const owned=isUnlocked(c);
+      const price=Shop.price(c);
+      const pinned=pins.includes(id);
+      const w=document.createElement('div');
+      w.className='shop-item'+(owned?' bought':'');
+      w.innerHTML=Game.bigCardHTML(c,c.pow)+(owned
+        ?'<div class="shop-bought-tag">✅ COMPRADA 🎉</div>'
+        :`<button class="buy-btn" ${Coins.get()<price?'disabled':''}>🎩 ${price}</button>`);
+      // botão de fixar (só faz sentido enquanto não comprada)
+      if(!owned){
+        const pb=document.createElement('button');
+        pb.className='pin-btn'+(pinned?' pinned':'');
+        pb.textContent=pinned?'📌 Fixada':'📌 Fixar';
+        pb.title=pinned?'Fixada — não troca na próxima leva':'Fixar esta carta (não troca na próxima leva)';
+        pb.onclick=e=>{ e.stopPropagation(); Shop.togglePin(id); Snd.tab&&Snd.tab(); this.renderShopCards(); };
+        w.appendChild(pb);
+      }
+      w.firstElementChild.style.cursor='pointer';
+      w.firstElementChild.onclick=()=>this.inspect(c);
+      if(!owned){
+        w.querySelector('.buy-btn').onclick=()=>{
+          if(Coins.get()<price){UI.toast('🎩 Cartolas insuficientes!');return;}
+          if(!Shop.buy(id)){UI.toast('🎩 Cartolas insuficientes!');return;}
+          Snd.buy();vib([30,20,60]);
+          UI.toast('🎉 '+c.name+' comprado! Já está na coleção.');
+          $('#coinsShop').textContent=Coins.get();
+          $('#coinsMenu').textContent=Coins.get();
+          this.renderShopCards(); // a carta permanece no slot, agora marcada como comprada
+        };
+      }
+      sc.appendChild(w);
+    });
   },
   _lockerTab:'desc',
   lockerRoom(side){
@@ -4562,7 +4948,7 @@ const UI={
   drawOpponent(){
     const li=playerLevel(), lvl=PLAY_LEVELS[li];
     const chosen=rnd(lvl.coaches);
-    this.show('botpick');
+    this.go('botpick');
     const reel=$('#drawReel'), status=$('#drawStatus'), go=$('#drawGo'), lab=$('#drawLevel');
     const foeAv=$('#drawFoeAv');
     // lado do jogador: avatar + nick
@@ -4570,6 +4956,7 @@ const UI={
     $('#drawMeName').textContent=Profile.nick()||'Você';
     lab.textContent='Nível '+(li+1)+' · '+lvl.name+(li<PLAY_LEVELS.length-1?' — ganhe Taças pra subir de nível':'');
     go.style.display='none';
+    {const cd=$('#drawCountdown');if(cd)cd.style.display='none';const cc=$('#drawCancel');if(cc)cc.style.display='none';}
     reel.classList.remove('landed');reel.classList.add('spin');
     foeAv.classList.add('spin');foeAv.classList.remove('landed');
     status.textContent='🎲 Girando o sorteio...';
@@ -4592,12 +4979,33 @@ const UI={
         Snd.drawLand();vib([40,30,140]);
         status.textContent='⚽ Seu adversário será:';
         const bot={id:'cpu',name:chosen,skill:lvl.skill,snapAggro:lvl.aggro};
+        const cancel=$('#drawCancel'), cdEl=$('#drawCountdown');
         go.style.display='block';
-        go.textContent='⚽ Enfrentar '+chosen+' ▶';
-        go.onclick=()=>Game.start(bot);
+        if(cancel)cancel.style.display='block';
+        // inicia automaticamente em 5s; o jogador pode entrar antes ou cancelar
+        let cd=5;
+        const launch=()=>{ this.cancelDraw(true); Game.start(bot); };
+        const paint=()=>{ if(cdEl){cdEl.style.display='block';cdEl.innerHTML=cd+'<small>começando…</small>';cdEl.style.animation='none';void cdEl.offsetWidth;cdEl.style.animation='';} };
+        go.textContent='⚽ Enfrentar '+chosen+' agora ▶';
+        go.onclick=launch;
+        paint();
+        clearInterval(this._drawTimer);
+        this._drawTimer=setInterval(()=>{
+          cd--;
+          if(cd<=0){ launch(); return; }
+          paint();
+          Snd.tab&&Snd.tab();
+        },1000);
       }
     };
     spin();
+  },
+  /* aborta o sorteio automático (botão Cancelar / Voltar) */
+  cancelDraw(silent){
+    clearInterval(this._drawTimer);this._drawTimer=null;
+    const c=$('#drawCancel');if(c)c.style.display='none';
+    const cd=$('#drawCountdown');if(cd)cd.style.display='none';
+    if(!silent)this.back();
   },
   openAlbum(){
     const grid=$('#albumGrid');grid.innerHTML='';
@@ -4611,7 +5019,7 @@ const UI={
       w.onclick=()=>this.inspect(c);
       grid.appendChild(w);
     });
-    this.show('album');
+    this.go('album');
   },
   inspect(c,g,f,s){
     const p=g?cardPower(g,c,f,s):null;
