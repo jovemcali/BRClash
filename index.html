@@ -2233,6 +2233,7 @@ const Timer={
       if(!Game.g||Game.g.over){this.stop();return;}
       if(Game.busy)return;
       this.t--;this.draw();
+      if(this.t>0&&this.t<=10){Snd.timerLow();vib(15);} // tique de pressão nos últimos 10s
       if(this.t<=0){this.stop();UI.toast('⏱️ Tempo esgotado! Jogada encerrada.');Snd.timeout();vib(150);Game.endTurn();}
     },1000);
   },
@@ -2574,8 +2575,8 @@ const Decks={
     if(i>-1)this.sel.splice(i,1);
     else{
       const c=byId(id);
-      if(!isUnlocked(c)){UI.toast('🔒 Desbloqueia com '+c.unl+' Taças!');return;}
-      if(this.sel.length>=12){UI.toast('Máximo de 12 cartas!');return;}
+      if(!isUnlocked(c)){Snd.error();UI.toast('🔒 Desbloqueia com '+c.unl+' Taças!');return;}
+      if(this.sel.length>=12){Snd.error();UI.toast('Máximo de 12 cartas!');return;}
       this.sel.push(id);
     }
     Snd.card(); vib(10); this.renderBuilder();
@@ -3340,6 +3341,7 @@ const Game={
     if(win===null){
       t.textContent='EMPATE!';t.style.color='#cfd6dd';
       x.textContent='Zero a zero na arquibancada. Ninguém leva Taças.';
+      Snd.tie();
     }else if(win){
       this.tacas+=amount;
       // confete!
@@ -3387,7 +3389,7 @@ const Game={
           box.appendChild(w);
         });
         uv.style.display='flex';
-        Snd.buy();
+        Snd.unlock();
       }
     }
     // moedas da partida
@@ -3470,7 +3472,7 @@ const Game={
     const ctick=()=>{
       j++;
       cc.textContent=Math.round(coins*j/cs);
-      punch(bigC);
+      punch(bigC);Snd.cartola();
       if(j<cs)setTimeout(ctick,Math.min(130,1500/cs));
       else cc.textContent=coins;
     };
@@ -4053,7 +4055,7 @@ const UI={
         const it=items[newly[k]];
         it.classList.remove('road-filling');it.classList.add('road-litup');
         it.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'});
-        Snd.fx();vib(20);
+        Snd.roadFill();vib(20);
         k++;setTimeout(fillNext,850);
       };
       setTimeout(fillNext,650);
@@ -4074,7 +4076,7 @@ const UI={
       cap.innerHTML='🔓 Novo verso conquistado:<br><b>'+m.s.label+'</b>';
     }
     rv.classList.remove('on');void rv.offsetWidth;rv.classList.add('on');
-    Snd.win();vib([40,30,120,30,120]);
+    Snd.roadRevealSfx();vib([40,30,120,30,120]);
     clearTimeout(this._rrT);this._rrT=setTimeout(()=>rv.classList.remove('on'),2800);
     rv.onclick=()=>{rv.classList.remove('on');clearTimeout(this._rrT);};
   },
@@ -4084,7 +4086,7 @@ const UI={
     $('#shopVerSec').style.display=fig?'none':'';
     $('#shopTabFig').classList.toggle('active',fig);
     $('#shopTabVer').classList.toggle('active',!fig);
-    Snd.card();
+    Snd.tab();
   },
   openShop(){
     $('#coinsShop').textContent=Coins.get();
@@ -4181,6 +4183,7 @@ const UI={
   },
   toggleSound(){
     Snd.on=!Snd.on;
+    if(Snd.on)Snd.toggle(); // só toca ao LIGAR
     $('#btnSound').textContent=Snd.on?'🔊 Som: ON':'🔇 Som: OFF';
     const m=$('#miniSound');if(m)m.textContent=Snd.on?'🔊':'🔇';
   },
@@ -4207,7 +4210,7 @@ const UI={
       // na reta final, gira só dentro do nível do jogador
       reel.textContent = t<950 ? rnd(allNames) : rnd(lvl.coaches);
       foeAv.textContent = rnd(faces);
-      Snd.beep(560+Math.random()*420,.03,'square',.04);
+      Snd.drawSpin();
       t+=delay;
       if(t<1500){ if(t>950)delay+=22; setTimeout(spin,delay); }
       else{
@@ -4215,7 +4218,7 @@ const UI={
         foeAv.textContent=avFor(chosen);
         reel.classList.remove('spin');reel.classList.add('landed');
         foeAv.classList.remove('spin');foeAv.classList.add('landed');
-        Snd.whistle();vib([40,30,140]);
+        Snd.drawLand();vib([40,30,140]);
         status.textContent='⚽ Seu adversário será:';
         const bot={id:'cpu',name:chosen,skill:lvl.skill,snapAggro:lvl.aggro};
         go.style.display='block';
@@ -4348,6 +4351,9 @@ document.addEventListener('click',e=>{
   if(e.target.closest&&e.target.closest('#hand,.field,#preview,#stakeCube'))return;
   Game.sel=null;Game.render();
 });
+
+/* pré-carrega TODOS os sons (e destrava o áudio) no 1º gesto do usuário → sem atraso */
+addEventListener('pointerdown',()=>{try{Snd.c();if(Snd.ctx&&Snd.ctx.state==='suspended')Snd.ctx.resume();}catch(e){}},{once:true});
 
 /* primeira vez no jogo: cria o perfil; senão, menu normal */
 if(!Profile.nick())Profile.open();
