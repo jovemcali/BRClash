@@ -549,8 +549,9 @@ body::after{ /* vinheta sutil */
 #confirmBtns .menu-btn{flex:1;font-size:15px;padding:14px 12px}
 #confirmYes{background:linear-gradient(180deg,#ff8a8a,#c91818);color:#fff;box-shadow:0 5px 0 #5e0808,var(--shadow)}
 /* contador grande do sorteio do adversário */
+#botpick{overflow-x:hidden}
 #drawCountdown{
-  text-align:center;width:100%;
+  text-align:center;width:100%;max-width:100%;overflow:hidden;
   font-weight:900;color:var(--gold);line-height:1;
   font-size:clamp(54px,11vw,96px);
   text-shadow:0 3px 0 #7a4e00,0 6px 18px rgba(0,0,0,.6),0 0 26px rgba(255,201,51,.6);
@@ -621,6 +622,19 @@ body::after{ /* vinheta sutil */
 .share-stats .s{background:rgba(0,0,0,.4);border:1px solid rgba(255,201,51,.25);border-radius:12px;padding:10px}
 .share-stats .s b{display:block;font-size:24px;color:#fff;line-height:1}
 .share-stats .s small{display:block;font-size:9px;letter-spacing:1px;text-transform:uppercase;opacity:.65;margin-top:4px}
+/* modal "Sobre o jogo" */
+.about-card{text-align:center}
+.about-logo{font-weight:900;font-size:22px;color:var(--gold);letter-spacing:1px;text-shadow:0 2px 0 #7a4e00,0 4px 12px rgba(0,0,0,.5)}
+.about-ver{font-size:11px;letter-spacing:2px;text-transform:uppercase;opacity:.6;margin-top:3px}
+.about-stats{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:8px 0}
+.about-stats span{font-size:12px;font-weight:800;background:rgba(255,201,51,.12);border:1px solid rgba(255,201,51,.3);border-radius:999px;padding:5px 11px}
+.about-kofi{
+  display:inline-flex;align-items:center;gap:6px;text-decoration:none;
+  font-weight:900;font-size:13px;color:#3c2600;
+  background:linear-gradient(180deg,#ffe07a,#f5a700);border-radius:999px;padding:9px 18px;
+  box-shadow:0 4px 0 #8a5a00;margin-top:4px;
+}
+.about-kofi:hover{filter:brightness(1.07)}
 
 #stakeCube{
   position:fixed;right:clamp(10px,calc(25vw - 180px),22vw);top:calc(50% - 76px);z-index:20;
@@ -859,9 +873,29 @@ body::after{ /* vinheta sutil */
 }
 .avatar-opt:hover{transform:scale(1.12)}
 .avatar-opt.sel{border-color:var(--teal);box-shadow:0 0 12px rgba(25,194,166,.6)}
-.captain-opt{width:100px;flex:0 0 auto;cursor:pointer;position:relative;transition:transform .1s}
-#captainRow{display:flex !important;flex-direction:row !important;flex-wrap:nowrap !important;justify-content:center;align-items:flex-start;gap:10px;max-width:100%;overflow-x:auto;padding-bottom:6px}
+.captain-opt{width:92px;flex:0 0 auto;cursor:pointer;position:relative;transition:transform .1s}
+#captainRow{display:flex !important;flex-direction:row !important;flex-wrap:nowrap !important;justify-content:center;align-items:flex-start;gap:10px;max-width:100%;overflow:visible;padding-bottom:24px}
 #captainRow .captain-opt{display:block}
+/* emoji animado sobre o local (efeitos dos novos locais) */
+.loc-emoji{
+  position:fixed;z-index:55;transform:translate(-50%,-50%);font-size:34px;pointer-events:none;
+  filter:drop-shadow(0 3px 6px rgba(0,0,0,.6));animation:locemoji 1.1s ease-out forwards;
+}
+@keyframes locemoji{
+  0%{opacity:0;transform:translate(-50%,-30%) scale(.4)}
+  25%{opacity:1;transform:translate(-50%,-90%) scale(1.25)}
+  70%{opacity:1;transform:translate(-50%,-115%) scale(1)}
+  100%{opacity:0;transform:translate(-50%,-155%) scale(.9)}
+}
+/* botão tela cheia em destaque no onboarding (primeiro acesso) */
+#onboard .cornerFull{
+  border-color:rgba(255,201,51,.75);color:var(--gold);background:rgba(255,201,51,.12);
+  animation:fsbeat 2.2s ease-in-out infinite;
+}
+@keyframes fsbeat{
+  0%,100%{box-shadow:0 0 0 0 rgba(255,201,51,.45);transform:scale(1)}
+  50%{box-shadow:0 0 14px 3px rgba(255,201,51,.7);transform:scale(1.09)}
+}
 .captain-opt:hover{transform:scale(1.05)}
 .captain-opt.sel{outline:3px solid var(--gold);outline-offset:3px;border-radius:12px}
 .captain-opt.sel::after{
@@ -1156,6 +1190,41 @@ body::after{ /* vinheta sutil */
   30%{opacity:.9;transform:translate(calc(var(--dx)*-.04),0) scale(1) rotate(0)}
   100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.82) rotate(4deg)}
 }
+/* TRANSFORMAÇÃO (Bruxaria do R10): a carta gira, clareia e renasce */
+.fx-morph{animation:morphspin .64s cubic-bezier(.3,.7,.4,1.2) both;z-index:30}
+@keyframes morphspin{
+  0%{transform:rotateY(0) scale(1);filter:brightness(1)}
+  35%{transform:rotateY(90deg) scale(.86);filter:brightness(2) saturate(1.6) hue-rotate(70deg)}
+  55%{transform:rotateY(270deg) scale(.9);filter:brightness(2.2) saturate(1.8) hue-rotate(220deg)}
+  100%{transform:rotateY(360deg) scale(1);filter:brightness(1)}
+}
+.morphpuff{
+  position:fixed;z-index:87;pointer-events:none;font-size:42px;line-height:1;
+  transform:translate(-50%,-50%);
+  filter:drop-shadow(0 0 14px rgba(190,120,255,.95)) drop-shadow(0 0 26px rgba(120,90,255,.7));
+  animation:morphpuff .72s ease-out forwards;
+}
+@keyframes morphpuff{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.3) rotate(-20deg)}
+  30%{opacity:1;transform:translate(-50%,-50%) scale(1.25) rotate(10deg)}
+  100%{opacity:0;transform:translate(-50%,-58%) scale(1.8) rotate(40deg)}
+}
+/* MOVER carta (drible do Garrincha): clone voa do slot atual até o destino */
+.gcard.cardmove{
+  position:fixed;z-index:84;pointer-events:none;margin:0;
+  filter:drop-shadow(0 8px 18px rgba(0,0,0,.6)) drop-shadow(0 0 14px rgba(120,200,255,.55));
+  animation:cardmove .6s cubic-bezier(.35,.6,.3,1) forwards;
+}
+@keyframes cardmove{
+  0%{opacity:1;transform:translate(0,0) scale(1) rotate(0)}
+  20%{transform:translate(calc(var(--dx)*.15),-14px) scale(1.06) rotate(-6deg)}
+  100%{opacity:1;transform:translate(var(--dx),var(--dy)) scale(1) rotate(8deg)}
+}
+/* carta na MÃO buffada (ex.: Recepção da Torcida): Poder verde + brilho sutil */
+.hcard .pow.buff{color:#3be07a;text-shadow:0 0 6px rgba(59,224,122,.85),0 1px 2px #000}
+.hcard .pow.nerf{color:#ff7a7a;text-shadow:0 0 6px rgba(255,122,122,.7),0 1px 2px #000}
+.hcard.handbuff{box-shadow:0 0 0 2px rgba(59,224,122,.55),0 0 14px rgba(59,224,122,.4);animation:handbuffpulse 1.6s ease-in-out infinite}
+@keyframes handbuffpulse{0%,100%{box-shadow:0 0 0 2px rgba(59,224,122,.45),0 0 10px rgba(59,224,122,.3)}50%{box-shadow:0 0 0 2px rgba(59,224,122,.7),0 0 18px rgba(59,224,122,.55)}}
 /* bola de fogo do Dinamite */
 .fireballfx{
   position:fixed;z-index:86;pointer-events:none;font-size:34px;line-height:1;
@@ -2169,6 +2238,7 @@ body::before{
       <button class="menu-btn ghost" onclick="toggleFull()">⛶ Tela Cheia</button>
       <button class="menu-btn ghost" onclick="Profile.edit()">👤 Editar perfil</button>
       <button class="menu-btn secondary" onclick="UI.shareStats()">📸 Compartilhar conquistas</button>
+      <button class="menu-btn ghost" onclick="UI.about()">ℹ️ Sobre o jogo</button>
       <button class="menu-btn" style="background:linear-gradient(180deg,#ff8a8a,#c91818);color:#fff;box-shadow:0 5px 0 #5e0808,var(--shadow)" onclick="UI.resetSave()">🗑 Resetar save</button>
     </div>
   </div>
@@ -2679,6 +2749,52 @@ const FX={
     await sleep(950);
     clone.remove();
   },
+  /* TRANSFORMAÇÃO (Bruxaria do R10): a carta inimiga "estoura" em fumaça mágica e renasce */
+  async morph(card){
+    const els=card&&card.uid?document.querySelectorAll(`[data-uid="${card.uid}"]`):[];
+    if(!els.length){await sleep(120);return;}
+    els.forEach(el=>{
+      el.classList.remove('fx-morph');void el.offsetWidth;el.classList.add('fx-morph');
+      // baforada de fumaça mágica sobre a carta
+      const r=el.getBoundingClientRect();
+      const puff=document.createElement('div');
+      puff.className='morphpuff';puff.textContent='🪄';
+      puff.style.left=(r.left+r.width/2)+'px';
+      puff.style.top=(r.top+r.height/2)+'px';
+      document.body.appendChild(puff);
+      setTimeout(()=>puff.remove(),720);
+    });
+    Snd.illusion();vib(40);
+    await sleep(640);
+    els.forEach(el=>el.classList.remove('fx-morph'));
+  },
+  /* MOVER carta (drible do Garrincha): clone voa do slot atual até o slot de destino */
+  async moveCard(card,destF,destSide,slotIdx){
+    const src=card&&card.uid?document.querySelector(`[data-uid="${card.uid}"]`):null;
+    if(!src){await sleep(120);return;}
+    const sr=src.getBoundingClientRect();
+    let tr=sr;
+    const fieldEl=document.querySelector(`.field[data-fi="${destF}"]`);
+    if(fieldEl){
+      const row=fieldEl.querySelector(destSide===0?'.merow':'.slot-row:not(.merow)');
+      const cells=row?row.querySelectorAll('.cardslot'):[];
+      const domIdx=destSide===0?slotIdx:(3-slotIdx); // fileira do oponente é espelhada
+      const cell=cells[domIdx];
+      tr=(cell||row||fieldEl).getBoundingClientRect();
+    }
+    const tx=tr.left+tr.width/2-sr.width/2, ty=tr.top+tr.height/2-sr.height/2;
+    const clone=src.cloneNode(true);
+    clone.removeAttribute('data-uid');
+    clone.classList.add('cardmove');
+    clone.style.left=sr.left+'px';clone.style.top=sr.top+'px';clone.style.width=sr.width+'px';clone.style.height=sr.height+'px';
+    clone.style.setProperty('--dx',(tx-sr.left)+'px');
+    clone.style.setProperty('--dy',(ty-sr.top)+'px');
+    document.body.appendChild(clone);
+    src.style.visibility='hidden';
+    Snd.card();
+    await sleep(600);
+    clone.remove();
+  },
   /* bola pegando fogo do Dinamite: voa da carta dele até o alvo e detona */
   async fireball(fromCard,toCard){
     const tgt=toCard&&toCard.uid?document.querySelector(`[data-uid="${toCard.uid}"]`):null;
@@ -2827,7 +2943,7 @@ const CARDS=[
       await FX.dice(c,900);
       const v=rnd(foes);
       await FX.bolt(c,v,'🪄');   // feitiço sai do R10 e atinge a carta inimiga
-      const pool=CARDS.filter(x=>x.cost<v.cost);
+      const pool=CARDS.filter(x=>x.cost<v.cost&&!x.token);
       if(pool.length){
         const nu=makeCard(rnd(pool));
         const arr=g.fields[f].cards[1-s];
@@ -2835,9 +2951,24 @@ const CARDS=[
         g.banished[1-s].push(v);
         Snd.banish();
         say('BRUXARIA! '+v.name+' virou '+nu.name+'!');
+        Game.render();
+        await FX.morph(nu);             // animação clara do momento da transformação
+        // se a NOVA carta tiver efeito "Virar" (On Reveal), o motor o executa imediatamente
+        if(nu.onReveal){
+          setCtx('Virar (Bruxaria): '+nu.name);
+          await FX.glow(nu,900);
+          await nu.onReveal.call(nu,g,nu,f,1-s);
+          Game.render();FX.flush();await sleep(800);
+        }
       }
     }
-    const others=[0,1,2].filter(i=>i!==f&&g.fields[i].open&&g.fields[i].cards[s].length<4);
+    // ILUSÃO: só nasce se houver SLOT realmente livre no destino.
+    // Conta cartas em campo + versos ainda não revelados (showdown/Data FIFA) pra NUNCA
+    // sobrepor cartas que já foram escaladas mas ainda não viraram.
+    const occ=i=>g.fields[i].cards[s].filter(x=>!x.destroyed).length
+      +g.showdown.filter(x=>x.f===i&&x.s===s).length
+      +g.pendingFifa.filter(x=>x.f===i&&x.s===s).length;
+    const others=[0,1,2].filter(i=>i!==f&&g.fields[i].open&&occ(i)<4);
     if(others.length){
       const dest=rnd(others);
       const ill=makeCard(this); ill.basePow=3; ill.mod=0; ill.cost=0; ill.illusion=true; ill.name='Ilusão R10';
@@ -2953,14 +3084,28 @@ const CARDS=[
     }
     if(hit)say('O Bruxo encantou o gramado! -2 em '+hit+' campo'+(hit>1?'s':'')+'!');
   }},
- {id:'garrincha62',name:'Garrincha',year:1962,cost:4,pow:4,rar:'lenda',unl:35,
-  text:'Virar: se houver inimigo neste campo, DOBRA o próprio Poder.',
+ {id:'garrincha62',name:'Garrincha',year:1962,cost:6,pow:5,rar:'lenda',unl:35,
+  text:'Virar — DRIBLE DESCONCERTANTE 🌪️: move a carta inimiga mais forte deste local para OUTRO local aleatório (só se houver espaço livre lá).',
   c1:'#1c1c1c',c2:'#2e2e2e',cb:'#fff',
-  onReveal(g,c,f,s){
-    if(g.fields[f].cards[1-s].some(x=>!x.destroyed)){
-      const cur=c.basePow+c.mod;bump(c,cur);
-      say('Garrincha sentou a marcação no chão! Poder em dobro!');
-    }
+  async onReveal(g,c,f,s){
+    const foes=g.fields[f].cards[1-s].filter(x=>!x.destroyed&&!x.immune);
+    if(!foes.length)return;
+    const v=foes.sort((a,b)=>cardPower(g,b,f,1-s)-cardPower(g,a,f,1-s))[0];
+    // destinos com SLOT livre de verdade (campo aberto, contando versos pendentes)
+    const occ=i=>g.fields[i].cards[1-s].filter(x=>!x.destroyed).length
+      +g.showdown.filter(x=>x.f===i&&x.s===(1-s)).length
+      +g.pendingFifa.filter(x=>x.f===i&&x.s===(1-s)).length;
+    const dests=[0,1,2].filter(i=>i!==f&&g.fields[i].open&&occ(i)<4);
+    if(!dests.length){say('Garrincha driblou, mas não tinha pra onde mandar '+v.name+'!');return;}
+    const dest=rnd(dests);
+    await FX.bolt(c,v,'🌪️');            // tornado do drible sai do Garrincha e atinge o alvo
+    const slotIdx=g.fields[dest].cards[1-s].filter(x=>!x.destroyed).length;
+    const arr=g.fields[f].cards[1-s];
+    const idx=arr.indexOf(v); if(idx>-1)arr.splice(idx,1);
+    await FX.moveCard(v,dest,1-s,slotIdx);  // a carta inimiga voa para o outro local
+    g.fields[dest].cards[1-s].push(v);
+    say('Que drible da vaca! Garrincha mandou '+v.name+' pro outro campo! 🌪️');
+    Game.render();
   }},
  {id:'socrates82',name:'Sócrates',year:1982,cost:4,pow:3,rar:'lenda',unl:40,
   text:'Virar — DEMOCRACIA ✊: +1 de Poder para cada carta sua em campo (todos os campos).',
@@ -3031,6 +3176,10 @@ const CARDS=[
     }
     if(hit)say('O Galinho organizou o time inteiro! +2 em '+hit+' carta'+(hit>1?'s':'')+'!');
   }},
+ /* token gerado pelo local Empresário Pilantra — não vai pra deck, loja, álbum ou roadmap */
+ {id:'empresario',name:'Jogador de Empresário',year:2026,cost:4,pow:-2,rar:'comum',token:true,
+  text:'Ruim e caro!',
+  c1:'#3a3a3a',c2:'#111',cb:'#8a8a8a'},
 ];
 /* desbloqueio mais difícil: cada conquista exige +10 troféus (10, 20, 30, ...) */
 CARDS.filter(c=>c.unl).sort((a,b)=>a.unl-b.unl).forEach((c,i)=>{ c.unl=(i+1)*10; });
@@ -3060,9 +3209,15 @@ const LOCS=[
  {id:'arena_grenal',name:'Arena do Grenal',text:'No fim do turno, a carta de MENOR Poder de cada lado ganha +2 (vira o jogo).'},
  {id:'mercado',name:'Mercado da Bola',text:'Cartas custam 1 a menos aqui (mínimo 1).'},
  {id:'celeiro',name:'Celeiro de Crias',text:'Ao revelar uma carta aqui, você compra 1 carta do baralho.'},
- {id:'tribunal',name:'Tribunal da Torcida',text:'Ao revelar aqui, descarta a carta de MAIOR custo da sua mão. 😬'},
- {id:'portoes',name:'Portões Fechados',text:'A partir do turno 4, ninguém mais escala cartas aqui. 🔒'},
- {id:'loteria',name:'Loteria Esportiva',text:'Cartas de custo ÍMPAR ganham +2; de custo PAR, perdem 1. 🎲'},
+ {id:'tribunal',name:'Tribunal da Torcida',text:'Ao revelar aqui, descarta a carta de MAIOR custo da sua mão.'},
+ {id:'portoes',name:'Portões Fechados',text:'A partir do turno 4, ninguém mais escala cartas aqui.'},
+ {id:'loteria',name:'Loteria Esportiva',text:'Cartas de custo ÍMPAR ganham +2; de custo PAR, perdem 1.'},
+ /* ===== novos locais ===== */
+ {id:'datafifa',name:'Data FIFA',text:'Ninguém revela cartas aqui neste turno.'},
+ {id:'bangu',name:'Moça Bonita',text:'Todo fim de turno, cartas aqui perdem 1 de Poder.'},
+ {id:'recepcao',name:'Recepção da Torcida',text:'Neste turno, TODAS as cartas na mão ganham +2.'},
+ {id:'viradamesa',name:'Virada de Mesa',text:'Quem tiver MENOS Poder vence nesse local.'},
+ {id:'pilantra',name:'Empresário Pilantra',text:'Escala um "Jogador de Empresário" pra cada lado.'},
 ];
 
 /* ---------------- BOTS ---------------- */
@@ -3152,6 +3307,7 @@ const Decks={
       'name-d':(a,b)=>b.name.localeCompare(a.name),
     }[fs];
     [...CARDS].filter(c=>{
+      if(c.token)return false; // tokens não entram no construtor de baralho
       if(q&&!(c.name.toLowerCase().includes(q)||(c.text||'').toLowerCase().includes(q)))return false;
       if(fe&&this.effectOf(c)!==fe)return false;
       if(fc){ if(fc==='6+'){if(c.cost<6)return false;} else if(c.cost!==+fc)return false; }
@@ -3257,13 +3413,25 @@ function cardPower(g,card,f,side){
   if(g.fields[f].loc.id==='morumbi'&&g.fields[f].open&&mates.length===1) p+=3;
   if(g.fields[f].loc.id==='vila'&&g.fields[f].open&&card.tag==='CRIA') p+=2;
   if(g.fields[f].loc.id==='loteria'&&g.fields[f].open) p+=(card.cost%2===1?2:-1);
-  return Math.max(0,p);
+  // Tokens (ex.: Jogador de Empresário) PODEM ter Poder negativo — entram exatamente com o valor base.
+  // Cartas normais nunca ficam abaixo de 0.
+  return card.token?p:Math.max(0,p);
 }
 function fieldPower(g,f,side){
   return g.fields[f].cards[side].reduce((t,c)=>t+cardPower(g,c,f,side),0);
 }
+/* vencedor do campo: 0=você, 1=bot, null=empate. Considera "Virada de Mesa" (menos vence). */
+function fieldWinner(g,f){
+  const mp=fieldPower(g,f,0),fp=fieldPower(g,f,1);
+  if(mp===fp)return null;
+  const fl=g.fields[f];
+  // Virada de Mesa: quem tem MENOS Poder vence de forma ABSOLUTA.
+  // Vale mesmo se um lado tiver 0 (sem cartas) e o outro >0 — o de 0 vence.
+  const inv=fl.loc.id==='viradamesa'&&fl.open;
+  return inv?(mp<fp?0:1):(mp>fp?0:1);
+}
 function fieldsWon(g,side){
-  let n=0;for(let i=0;i<3;i++){const a=fieldPower(g,i,side),b=fieldPower(g,i,1-side);if(a>b)n++;}return n;
+  let n=0;for(let i=0;i<3;i++){if(fieldWinner(g,i)===side)n++;}return n;
 }
 
 /* ---------------- COMENTÁRIO (discreto) ---------------- */
@@ -3293,7 +3461,7 @@ const Game={
     const botId=(typeof botArg==='string')?botArg:(botArg.id||'cpu');
     const locs=[...LOCS].sort(()=>Math.random()-.5).slice(0,3);
     const myDefs=Decks.activeCards();
-    const botDefs=[...CARDS].sort(()=>Math.random()-.5).slice(0,12);
+    const botDefs=[...CARDS].filter(c=>!c.token).sort(()=>Math.random()-.5).slice(0,12);
     const g=this.g={
       bot, botId, turn:1, stakes:1,
       snapped:[false,false], snapTurn:[-1,-1], snapPending:false, over:false,
@@ -3301,7 +3469,7 @@ const Game={
       decks:[myDefs.map(makeCard).sort(()=>Math.random()-.5),
              botDefs.map(makeCard).sort(()=>Math.random()-.5)],
       hands:[[],[]],
-      staged:[], botStaged:[], pendingVAR:[], showdown:[],
+      staged:[], botStaged:[], pendingVAR:[], pendingFifa:[], showdown:[], fifaTurn:-1,
       destroyed:[[],[]], banished:[[],[]], discarded:[[],[]],
       energy:1, first:Math.random()<.5?0:1,
     };
@@ -3333,6 +3501,7 @@ const Game={
     this.render();
     await FX.revealLoc(0);
     if(g.fields[0].loc.id==='stjd')await this.applySTJD(0);
+    await this.applyLocReveal(0);
     await banner('Turno 1','Energia: 1⚡ · Boa sorte!');
     // compra inicial (4ª carta) DEPOIS do anúncio do turno
     for(let s=0;s<2;s++){const c=g.decks[s].pop();if(c){c._drawn=(s===0);g.hands[s].push(c);}}
@@ -3578,6 +3747,62 @@ const Game={
     UI.toast('⚖️ STJD trocou '+(wasOpen?'':'e revelou ')+'um local!');
     vib(60);
     await sleep(500);
+    await this.applyLocReveal(target);
+  },
+
+  /* anima um emoji "saltando" sobre o local de um campo */
+  locEmoji(f,emoji){
+    const el=document.querySelector(`.field[data-fi="${f}"] .loc`);
+    if(!el)return;
+    const r=el.getBoundingClientRect();
+    const e=document.createElement('div');
+    e.className='loc-emoji';e.textContent=emoji;
+    e.style.left=(r.left+r.width/2)+'px';
+    e.style.top=(r.top+r.height*0.2)+'px';
+    document.body.appendChild(e);
+    setTimeout(()=>e.remove(),1100);
+  },
+
+  /* efeitos disparados QUANDO um local é revelado (Recepção, Empresário Pilantra) */
+  async applyLocReveal(f){
+    const g=this.g, loc=g.fields[f].loc;
+    if(!g.fields[f].open)return;
+    if(loc.id==='datafifa'&&g.turn<6){
+      // efeito GLOBAL e de 1 turno: marca o turno atual como "turno da Data FIFA"
+      g.fifaTurn=g.turn;
+      await FX.glowLoc(f,700);
+      this.locEmoji(f,'🛬');
+      say('Data FIFA! Neste turno NINGUÉM revela cartas — todas viram no próximo. 🛬');
+      UI.toast('🛬 Data FIFA: as cartas escaladas neste turno só viram no próximo!');
+      await sleep(600);
+    }
+    if(loc.id==='recepcao'){
+      await FX.glowLoc(f,700);
+      setCtx('Local: Recepção da Torcida');
+      let n=0;
+      for(let s=0;s<2;s++)for(const c of g.hands[s]){bump(c,2);n++;}
+      this.locEmoji(f,'🎉');
+      say('Recepção da Torcida! Todas as cartas na mão ganharam +2! 🎉');
+      UI.toast('🎉 Recepção da Torcida: +2 em todas as cartas da mão!');
+      this.render();FX.flush();await sleep(700);
+    }
+    if(loc.id==='pilantra'){
+      await FX.glowLoc(f,700);
+      let added=0;
+      for(let s=0;s<2;s++){
+        if(g.fields[f].cards[s].length<4){
+          const c=makeCard(byId('empresario'));c._flip=true;
+          g.fields[f].cards[s].push(c);added++;
+        }
+      }
+      if(added){
+        this.locEmoji(f,'🤵');
+        say('Empresário Pilantra colocou um "Jogador de Empresário" pra cada lado! 💸');
+        UI.toast('🤵💸 Empresário Pilantra agiu no mercado!');
+        this.render();FX.flush();await sleep(700);
+        g.fields[f].cards[0].concat(g.fields[f].cards[1]).forEach(c=>{if(c.id==='empresario')c._flip=false;});
+      }
+    }
   },
 
   /* destruição com animação */
@@ -3626,8 +3851,8 @@ const Game={
     g.staged=[];g.botStaged=[];
 
     /* ===== FASE 1: versos na mesa ===== */
-    // suas jogadas entram de uma vez
-    g.showdown=[ ...myPlays.map(p=>({card:p.card,f:p.f,s:0})) ];
+    // suas jogadas entram de uma vez (+ cartas que ficaram de costas na Data FIFA)
+    g.showdown=[ ...g.pendingFifa, ...myPlays.map(p=>({card:p.card,f:p.f,s:0})) ];
     for(const p of myPlays){const i=g.hands[0].indexOf(p.card);if(i>-1)g.hands[0].splice(i,1);}
     for(const p of botPlays){const i=g.hands[1].indexOf(p.card);if(i>-1)g.hands[1].splice(i,1);}
     this.render();
@@ -3661,12 +3886,37 @@ const Game={
     }
     g.pendingVAR=[];
 
+    // Data FIFA: as cartas que ficaram de costas no turno passado entram em campo agora
+    const fifaPrev=g.pendingFifa; g.pendingFifa=[];
+    if(fifaPrev.length){
+      say('Fim da Data FIFA! As cartas entram em campo agora. 🛬');
+      await sleep(400);
+      for(const pf of fifaPrev){
+        if(pf.card.destroyed)continue;
+        await this.reveal(pf.card,pf.f,pf.s);
+      }
+    }
+
     const order=first===0?[0,1]:[1,0];
+    // Data FIFA (GLOBAL, 1 turno): se este é o turno em que a Data FIFA foi revelada,
+    // NENHUMA carta em NENHUM dos 3 campos é revelada — todas viram no próximo turno.
+    const fifaNow=(g.fifaTurn===g.turn)&&g.turn<6;
+    let fifaDeferred=0;
     for(const s of order){
       const plays=s===0?myPlays:botPlays;
       for(const pl of plays){
+        if(fifaNow){
+          g.pendingFifa.push({card:pl.card,f:pl.f,s});
+          fifaDeferred++;
+          continue;
+        }
         await this.reveal(pl.card,pl.f,s);
       }
+    }
+    if(fifaDeferred){
+      for(let f=0;f<3;f++) if(g.fields[f].loc.id==='datafifa'&&g.fields[f].open) this.locEmoji(f,'🛬');
+      say('Data FIFA: ninguém revelou nada neste turno — todas as cartas viram no próximo! 🛬');
+      this.render();await sleep(800);
     }
 
     // fim de turno: contínuos (Ganso etc.) — Temporal cancela
@@ -3714,22 +3964,46 @@ const Game={
     // Z4 — só se revelado e com 2+ cartas no campo
     for(let f=0;f<3;f++){
       if(g.fields[f].loc.id!=='z4'||!g.fields[f].open)continue;
-      const total=g.fields[f].cards[0].filter(x=>!x.destroyed).length+g.fields[f].cards[1].filter(x=>!x.destroyed).length;
-      if(total<2)continue;
-      let low=null;
+      // todas as cartas vivas do local (ambos os lados), com seu Poder atual
+      const alive=[];
+      for(let s=0;s<2;s++)for(const c of g.fields[f].cards[s]){
+        if(!c.destroyed)alive.push({c,s,p:cardPower(g,c,f,s)});
+      }
+      if(alive.length<2)continue;
+      const minP=Math.min(...alive.map(a=>a.p));
+      const lowest=alive.filter(a=>a.p===minP);
+      // EMPATE TOTAL: todas com o mesmo Poder → ninguém é destruído
+      if(lowest.length===alive.length){
+        this.render();await FX.glowLoc(f,600);
+        this.locEmoji(f,'🤝');
+        say('Z4: geral empatado no Poder — ninguém foi rebaixado! 🤝');
+        await sleep(650);
+        continue;
+      }
+      // Caso contrário, TODAS as cartas no menor valor caem simultaneamente
+      this.render();await FX.glowLoc(f,600);
+      say(lowest.length===1
+        ? 'Z4 não perdoa: '+lowest[0].c.name+' foi rebaixado! 📉'
+        : 'Z4 rebaixou '+lowest.length+' cartas empatadas na lanterna! 📉');
+      lowest.forEach(a=>FX.ghost(f,a.c)); // fantasmas simultâneos
+      await sleep(720);
+      for(const a of lowest){ await this.destroyCard(a.c,f,a.s); } // remoção segura (respeita Fábio)
+      await sleep(220);
+    }
+
+    // Moça Bonita — no fim do turno, cada carta aqui perde 1 de Poder (com sol ☀️)
+    for(let f=0;f<3;f++){
+      if(g.fields[f].loc.id!=='bangu'||!g.fields[f].open)continue;
+      let any=false;
+      this.render();await FX.glowLoc(f,600);
+      this.locEmoji(f,'☀️');
       for(let s=0;s<2;s++)for(const c of g.fields[f].cards[s]){
         if(c.destroyed)continue;
-        const p=cardPower(g,c,f,s);
-        if(!low||p<low.p)low={c,p,s};
+        setCtx('Local: Moça Bonita');bump(c,-1);any=true;
       }
-      if(low){
-        this.render();await FX.glowLoc(f,600);
-        say('Z4 não perdoa: '+low.c.name+' foi rebaixado! 📉');
-        await FX.ghost(f,low.c);
-        await this.destroyCard(low.c,f,low.s);
-        await sleep(250);
-      }
+      if(any){say('Sol forte na Moça Bonita: todo mundo aqui perdeu 1 de Poder. ☀️');this.render();FX.flush();await sleep(550);}
     }
+
     this.render();
     await sleep(450);
 
@@ -3755,6 +4029,7 @@ const Game={
     if(g.turn===3){g.fields[2].open=true;if(g.fields[2].loc.id==='stjd')stjdField=2;}
     if(g.turn===2||g.turn===3){this.render();await FX.revealLoc(g.turn-1);}
     if(stjdField>-1){this.render();await this.applySTJD(stjdField);}
+    if(g.turn===2||g.turn===3){await this.applyLocReveal(g.turn-1);}
     if(g.turn===6&&!g._t6shown){g._t6shown=true;UI.toast('🏆 Última rodada! As Taças DOBRAM quando o turno terminar (não dobra se amarelar).');Snd.whistleFinal();}
     /* fase de DRAW */
     const drawn=[];
@@ -3850,7 +4125,8 @@ const Game={
     await sleep(500);
     for(let f=0;f<3;f++){
       const mp=fieldPower(g,f,0),fp=fieldPower(g,f,1);
-      const who=mp===fp?null:(mp>fp?'me':'foe');
+      const fw=fieldWinner(g,f);
+      const who=fw===null?null:(fw===0?'me':'foe');
       if(who){
         const el=document.querySelector(`.field[data-fi="${f}"] .fpower.${who}`);
         if(el){
@@ -3957,9 +4233,10 @@ const Game={
         Snd.unlock();
       }
     }
-    // moedas da partida
-    let coins=win===null?15:win?30*amount:10;
-    if(roadRefund){ coins+=roadRefund; }
+    // moedas da partida — AMARELAR (desistir) não rende nenhuma Cartola
+    const gaveUp=(retreated&&win===false);
+    let coins=gaveUp?0:(win===null?15:win?30*amount:10);
+    if(roadRefund&&!gaveUp){ coins+=roadRefund; }
     // modo copa
     let champion=false;
     $('#ovNext').style.display='none';
@@ -3988,9 +4265,10 @@ const Game={
         x.textContent+=' · '+TIER.name+' acabou na fase '+Copa.n+'/'+total+'. 😞';
       }
     }
-    Coins.add(coins);Snd.coin();
-    if(roadRefund)x.textContent+=' · 🎁 +'+roadRefund+' 🎩 por marcos que você já tinha!';
-    x.textContent+=' · +'+coins+' 🎩 (total: '+Coins.get()+')';
+    Coins.add(coins);if(coins>0)Snd.coin();
+    if(roadRefund&&!gaveUp)x.textContent+=' · 🎁 +'+roadRefund+' 🎩 por marcos que você já tinha!';
+    if(gaveUp)x.textContent+=' · 🐔 Amarelou: nenhuma Cartola desta vez.';
+    else x.textContent+=' · +'+coins+' 🎩 (total: '+Coins.get()+')';
     // nova partida (revanche) — escondida durante a Copa
     const ag=$('#ovAgain');
     ag.style.display=Copa.active?'none':'flex';
@@ -4228,10 +4506,11 @@ const Game={
         e.stopPropagation();
         UI.inspectLoc(fl.open?fl.loc:null,fi);
       };
+      const _fw=fieldWinner(g,fi);
       loc.innerHTML=fl.open
-        ? `<span class="fpower foe ${fp>mp?'leading':''}">${fp}</span>
+        ? `<span class="fpower foe ${_fw===1?'leading':''}">${fp}</span>
            <div class="loc">${locArtHTML(fl.loc)}<div class="lname">${fl.loc.name}</div><div class="ltext">${fl.loc.text}</div></div>
-           <span class="fpower me ${mp>fp?'leading':''}">${mp}${stg?`<i class="stg">+${stg}</i>`:''}</span>`
+           <span class="fpower me ${_fw===0?'leading':''}">${mp}${stg?`<i class="stg">+${stg}</i>`:''}</span>`
         : `<span class="fpower foe ${fp>mp?'leading':''}">${fp}</span>
            <div class="loc hidden-loc"><div class="lname">???</div><div class="ltext">Revela no turno ${fi+1} — aceita cartas 🤫</div></div>
            <span class="fpower me${mp>fp?'leading':''}">${mp}${stg?`<i class="stg">+${stg}</i>`:''}</span>`;
@@ -4272,12 +4551,17 @@ const Game={
       const d=document.createElement('div');
       d.className='hcard'+(c.rar==='lenda'?' legend':'');
       d.dataset.hi=i;
+      d.dataset.uid=c.uid||''; // permite que FX.delta anime o buff JÁ na mão (ex.: Recepção da Torcida)
       d.style.cssText=`--c1:${c.c1};--c2:${c.c2};--cb:${c.cb}`;
       if(this.sel===i)d.classList.add('sel');
       if(c._drawn){d.classList.add('drawn');c._drawn=false;}
       if(c._returned){d.classList.add('returned');c._returned=false;}
       if(this.costOf(c,null)>this.energyLeft())d.classList.add('unaffordable');
-      d.innerHTML=`${artHTML(c)}<div class="chead"><span class="cost">${c.cost}</span><span class="pow">${c.basePow+c.mod}</span></div>
+      // ícone de Poder muda de cor na mão: verde = buffada, vermelho = nerfada
+      const hp=c.basePow+c.mod;
+      const hpc=hp>c.basePow?'buff':hp<c.basePow?'nerf':'';
+      if(hpc==='buff')d.classList.add('handbuff');
+      d.innerHTML=`${artHTML(c)}<div class="chead"><span class="cost">${c.cost}</span><span class="pow ${hpc}">${hp}</span></div>
         <div><div class="cname">${c.name}</div><div class="cyear">${c.year}</div></div>`;
       d.addEventListener('pointerdown',e=>Drag.down(e,i));
       h.appendChild(d);
@@ -4406,8 +4690,9 @@ const Copa={
   }
 };
 
-/* taças persistem entre sessões */
-Game.tacas=+localStorage.getItem('brclash_tacas')||0;
+/* taças persistem entre sessões — nunca abaixo de 0 */
+Game.tacas=Math.max(0, +localStorage.getItem('brclash_tacas')||0);
+localStorage.setItem('brclash_tacas',Game.tacas);
 $('#tacasMenu').textContent=Game.tacas;
 $('#recordMenu').textContent=maxTacas();
 $('#copaTitlesMenu').textContent=CopaStats.load().titles;
@@ -4704,6 +4989,33 @@ const UI={
         else { UI.toast('📸 Tire um print para compartilhar!'); }
       }catch(err){ /* usuário cancelou o share */ }
     };
+  },
+  /* tela "Sobre o jogo" (modal interno) */
+  about(){
+    const totalCards=CARDS.length, totalLocs=LOCS.length;
+    $('#lockerBox').innerHTML=`
+      <div class="about-card">
+        <div class="about-logo">⚽ BRASILEIRÃO CLASH</div>
+        <div class="about-ver">Card-battler de turnos · v9</div>
+        <p style="font-size:13px;line-height:1.55;margin:12px 0">
+          Junte figurinhas de craques do futebol brasileiro, monte seu baralho de 12 cartas
+          e dispute campos em 6 turnos. Ponha a <b>mala na mesa</b> pra dobrar a aposta e
+          mostre quem é craque! 🏆
+        </p>
+        <div class="about-stats">
+          <span>🃏 ${totalCards} figurinhas</span>
+          <span>📍 ${totalLocs} locais</span>
+          <span>🏆 4 divisões na Copa</span>
+        </div>
+        <p style="font-size:12px;opacity:.8;margin:12px 0 4px">
+          Feito com ❤️ por <b>jovemcali</b> · HTML, CSS e JS puro, em um único arquivo.
+        </p>
+        <a class="about-kofi" href="https://ko-fi.com/jovemcali" target="_blank" rel="noopener noreferrer">☕ Apoiar no Ko-fi</a>
+        <p style="font-size:11px;opacity:.55;margin-top:12px">Seu progresso fica salvo neste navegador (localStorage).</p>
+      </div>
+      <small style="display:block;text-align:center;opacity:.6;margin-top:10px">toque fora para fechar</small>`;
+    $('#lockerModal').classList.add('on');
+    Snd.card();
   },
   mysteryHTML(c){
     return `<div class="mcard"><span>?</span></div><span class="lockreq">${c.unl} 🏆</span>`;
@@ -5009,7 +5321,7 @@ const UI={
   },
   openAlbum(){
     const grid=$('#albumGrid');grid.innerHTML='';
-    [...CARDS].sort((a,b)=>(a.unl||0)-(b.unl||0)||a.cost-b.cost).forEach(c=>{
+    [...CARDS].filter(c=>!c.token).sort((a,b)=>(a.unl||0)-(b.unl||0)||a.cost-b.cost).forEach(c=>{
       const unlocked=isUnlocked(c);
       const w=document.createElement('div');
       w.className='bwrap'+(unlocked?'':' locked');
