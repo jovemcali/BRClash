@@ -727,6 +727,7 @@ body::after{ /* vinheta sutil */
   display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;
   width:min(560px,94vw);flex:1;min-height:0;margin:8px 0 4px;
   align-content:center;
+  position:relative;z-index:4;   /* hierarquia: campo fica ABAIXO da mão */
 }
 .field{
   display:flex;flex-direction:column;gap:4px;position:relative;
@@ -753,15 +754,41 @@ body::after{ /* vinheta sutil */
     linear-gradient(180deg,rgba(255,255,255,.10),transparent 30%),
     linear-gradient(160deg,#2a3340,#161c26 70%,#0e1218);
   clip-path:polygon(0 13%,50% 0,100% 13%,100% 87%,50% 100%,0 87%);
-  box-shadow:inset 0 0 0 3px rgba(175,205,245,.6), inset 0 0 0 5px rgba(0,0,0,.55);
 }
 .loc.hidden-loc{
   background:repeating-linear-gradient(45deg,#161616,#161616 8px,#222 8px,#222 16px);
-  box-shadow:inset 0 0 0 2px #3a3a3a;
 }
 .loc .lart{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;pointer-events:none}
 .loc .lart-fade{position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(5,8,14,.5),rgba(5,8,14,.72))}
-.loc .lname,.loc .ltext{position:relative;z-index:2}
+.loc .lname,.loc .ltext{position:relative;z-index:3}
+/* iluminação (luz POR CIMA da imagem, colorização progressiva pro lado vencedor) */
+.loc::before{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;opacity:0;transition:opacity .45s ease,background .45s ease;mix-blend-mode:screen}
+.field.lead-me .loc::before{opacity:1;background:linear-gradient(0deg,rgba(43,217,164,.6),rgba(43,217,164,.1) 45%,transparent 72%)}
+.field.lead-foe .loc::before{opacity:1;background:linear-gradient(180deg,rgba(255,96,84,.55),rgba(255,96,84,.08) 45%,transparent 72%)}
+.field.lead-me .loc::before,.field.lead-foe .loc::before{animation:locLightPulse 2.4s ease-in-out infinite}
+@keyframes locLightPulse{0%,100%{opacity:.78}50%{opacity:1}}
+/* MOLDURA animada POR CIMA da imagem (pseudo acima do art, abaixo do texto) */
+.loc::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;
+  box-shadow:inset 0 0 0 3px rgba(190,215,250,.75),inset 0 0 12px rgba(190,215,250,.22),inset 0 0 0 5px rgba(0,0,0,.45);
+  animation:locFrame 3.2s ease-in-out infinite}
+@keyframes locFrame{
+  0%,100%{box-shadow:inset 0 0 0 3px rgba(190,215,250,.68),inset 0 0 9px rgba(190,215,250,.16),inset 0 0 0 5px rgba(0,0,0,.45)}
+  50%{box-shadow:inset 0 0 0 3px rgba(225,238,255,.98),inset 0 0 18px rgba(190,215,250,.38),inset 0 0 0 5px rgba(0,0,0,.45)}
+}
+.loc.hidden-loc::after{box-shadow:inset 0 0 0 2px #3a3a3a;animation:none}
+.field.lead-me .loc::after{animation:locFrameMe 2.2s ease-in-out infinite}
+@keyframes locFrameMe{
+  0%,100%{box-shadow:inset 0 0 0 3px rgba(43,217,164,.85),inset 0 0 14px rgba(43,217,164,.3),inset 0 0 0 5px rgba(0,0,0,.42)}
+  50%{box-shadow:inset 0 0 0 3px rgba(70,245,190,1),inset 0 0 24px rgba(43,217,164,.55),inset 0 0 0 5px rgba(0,0,0,.42)}
+}
+.field.lead-foe .loc::after{animation:locFrameFoe 2.2s ease-in-out infinite}
+@keyframes locFrameFoe{
+  0%,100%{box-shadow:inset 0 0 0 3px rgba(255,96,84,.85),inset 0 0 14px rgba(255,96,84,.3),inset 0 0 0 5px rgba(0,0,0,.42)}
+  50%{box-shadow:inset 0 0 0 3px rgba(255,128,116,1),inset 0 0 24px rgba(255,96,84,.55),inset 0 0 0 5px rgba(0,0,0,.42)}
+}
+@media (prefers-reduced-motion: reduce){
+  .field.lead-me .loc::before,.field.lead-foe .loc::before,.loc::after{animation:none}
+}
 .loc .lname{
   font-weight:900;font-size:clamp(12px,2vw,16px);color:#fff;text-transform:uppercase;letter-spacing:.5px;
   text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000,0 2px 5px #000;
@@ -1098,7 +1125,7 @@ body::after{ /* vinheta sutil */
   position:relative;width:100%;height:100%;
   border-radius:9px;
   display:flex;flex-direction:column;justify-content:space-between;
-  border:2px solid var(--cb,#888);
+  border:3px solid var(--cb,#888);
   background:radial-gradient(120% 90% at 50% 0%, var(--c1,#2e7d32), var(--c2,#1b5e20));
   box-shadow:0 2px 6px rgba(0,0,0,.5);
   font-size:10px;transition:transform .1s;
@@ -1144,8 +1171,8 @@ body::after{ /* vinheta sutil */
 }
 @keyframes fxglow{
   0%,100%{box-shadow:0 2px 6px rgba(0,0,0,.5);transform:scale(1)}
-  20%,60%{box-shadow:0 0 28px 10px rgba(94,220,255,1), 0 0 64px 22px rgba(94,220,255,.6);transform:scale(1.14) rotate(1.5deg)}
-  40%,80%{box-shadow:0 0 32px 13px rgba(255,243,94,1), 0 0 72px 26px rgba(255,243,94,.6);transform:scale(1.08) rotate(-1.5deg)}
+  30%{box-shadow:0 0 16px 4px rgba(94,220,255,.7), 0 0 30px 8px rgba(94,220,255,.3);transform:scale(1.05)}
+  65%{box-shadow:0 0 18px 5px rgba(255,243,94,.7), 0 0 34px 9px rgba(255,243,94,.28);transform:scale(1.04)}
 }
 /* carta com efeito Contínuo ativo em campo */
 .gcard.cont::before{
@@ -1209,22 +1236,127 @@ body::after{ /* vinheta sutil */
   30%{opacity:1;transform:translate(-50%,-50%) scale(1.25) rotate(10deg)}
   100%{opacity:0;transform:translate(-50%,-58%) scale(1.8) rotate(40deg)}
 }
-/* MOVER carta (drible do Garrincha): clone voa do slot atual até o destino */
+/* MOVER carta (drible do Garrincha): a carta inimiga é ARRASTADA suavemente até o destino.
+   Sem giro brusco — ela "descola" do slot, desliza e assenta no novo campo. */
 .gcard.cardmove{
   position:fixed;z-index:84;pointer-events:none;margin:0;
-  filter:drop-shadow(0 8px 18px rgba(0,0,0,.6)) drop-shadow(0 0 14px rgba(120,200,255,.55));
-  animation:cardmove .6s cubic-bezier(.35,.6,.3,1) forwards;
+  transform-origin:center;
+  filter:drop-shadow(0 12px 26px rgba(0,0,0,.5)) drop-shadow(0 0 18px rgba(120,200,255,.5));
+  animation:cardmove 1.4s cubic-bezier(.5,.02,.25,1) forwards;
 }
 @keyframes cardmove{
-  0%{opacity:1;transform:translate(0,0) scale(1) rotate(0)}
-  20%{transform:translate(calc(var(--dx)*.15),-14px) scale(1.06) rotate(-6deg)}
-  100%{opacity:1;transform:translate(var(--dx),var(--dy)) scale(1) rotate(8deg)}
+  0%  {opacity:1;transform:translate(0,0) scale(1) rotate(0)}
+  14% {transform:translate(calc(var(--dx)*.06),-8px) scale(1.04) rotate(-2deg)}   /* descola do slot */
+  85% {transform:translate(calc(var(--dx)*.97),calc(var(--dy)*.97)) scale(1.03) rotate(1deg)}
+  100%{opacity:1;transform:translate(var(--dx),var(--dy)) scale(1) rotate(0)}      /* assenta */
 }
+/* REVELAÇÃO: a carta sobe ao centro da tela e CAI no seu spot, com squash de impacto */
+.gcard.reveal-drop{
+  animation:revealDrop .96s cubic-bezier(.45,.05,.55,1) forwards;
+  filter:drop-shadow(0 16px 26px rgba(0,0,0,.6));transform-origin:center bottom;will-change:transform;
+}
+@keyframes revealDrop{
+  0%  {opacity:0;transform:translate(var(--cx),calc(var(--cy) + 60px)) scale(.55) rotateX(45deg)}
+  16% {opacity:1;transform:translate(var(--cx),var(--cy)) scale(1.5) rotateX(0)}     /* sobe ao centro, grande */
+  44% {transform:translate(var(--cx),var(--cy)) scale(1.45)}                          /* segura no centro */
+  52% {transform:translate(var(--cx),calc(var(--cy) - 10px)) scale(1.46)}             /* leve "pulo" antes de cair */
+  80% {transform:translate(0,0) scale(1.02)}                                          /* cai no spot */
+  88% {transform:translate(0,7px) scale(1.12,.86)}                                    /* SQUASH de impacto */
+  94% {transform:translate(0,-3px) scale(.96,1.05)}                                   /* rebote */
+  100%{transform:translate(0,0) scale(1)}
+}
+/* poeira do impacto */
+.dustfx{
+  position:fixed;z-index:95;pointer-events:none;width:15px;height:15px;border-radius:50%;
+  background:radial-gradient(circle,rgba(225,215,195,.95),rgba(180,168,148,.35) 60%,transparent 75%);
+  transform:translate(-50%,-50%);animation:dustpuff .62s ease-out forwards;
+}
+@keyframes dustpuff{
+  0%{opacity:.95;transform:translate(-50%,-50%) scale(.35)}
+  100%{opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(2)}
+}
+/* VIRA CASACA: giro 360° + flash de traição */
+.gcard.turncoat-flip{animation:turncoatFlip .64s cubic-bezier(.4,.1,.5,1);z-index:30}
+@keyframes turncoatFlip{
+  0%{transform:rotateY(0) scale(1);filter:brightness(1)}
+  50%{transform:rotateY(180deg) scale(1.12);filter:brightness(1.9) hue-rotate(-40deg)}
+  100%{transform:rotateY(360deg) scale(1);filter:brightness(1)}
+}
+.turncoat-emoji{
+  position:fixed;z-index:90;pointer-events:none;font-size:38px;transform:translate(-50%,-50%);
+  filter:drop-shadow(0 0 12px rgba(255,180,60,.95));animation:turncoatEmoji .64s ease-out forwards;
+}
+@keyframes turncoatEmoji{0%{opacity:0;transform:translate(-50%,-50%) scale(.4) rotate(0)}40%{opacity:1;transform:translate(-50%,-50%) scale(1.2) rotate(180deg)}100%{opacity:0;transform:translate(-50%,-50%) scale(1) rotate(360deg)}}
+/* RECALL (Empréstimo): carta volta voando pra mão */
+.gcard.recallfx{animation:recallFly .52s cubic-bezier(.45,0,.7,1) forwards;filter:drop-shadow(0 8px 16px rgba(0,0,0,.5))}
+@keyframes recallFly{
+  0%{opacity:1;transform:translate(0,0) scale(1) rotate(0)}
+  100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.5) rotate(12deg)}
+}
+/* ===== efeitos de revelação dos LOCAIS novos (no campo inteiro) ===== */
+.field{position:relative}
+.field.fx-ban,.field.fx-blackout,.field.fx-shield,.field.fx-turncoat{animation-fill-mode:forwards}
+/* Transfer Ban: vermelho proibido pulsando */
+.field.fx-ban{animation:fxBan .9s ease-out}
+@keyframes fxBan{0%,100%{box-shadow:none}30%{box-shadow:inset 0 0 0 3px rgba(229,57,53,.9),0 0 24px rgba(229,57,53,.5)}60%{box-shadow:inset 0 0 0 3px rgba(229,57,53,.5)}}
+/* Apagão: a luz "cai" (escurece e pisca) */
+.field.fx-blackout::after{content:"";position:absolute;inset:0;z-index:12;pointer-events:none;border-radius:12px;
+  background:rgba(2,4,10,.86);animation:fxBlackout 1.2s ease-out forwards}
+@keyframes fxBlackout{0%{opacity:0}8%{opacity:.95}16%{opacity:.2}24%{opacity:.9}40%{opacity:.85}100%{opacity:0}}
+/* Nilton Santos: escudo azul protetor */
+.field.fx-shield{animation:fxShield 1.05s ease-out}
+@keyframes fxShield{0%,100%{box-shadow:none}40%{box-shadow:inset 0 0 0 3px rgba(94,180,255,.95),0 0 28px rgba(94,180,255,.55)}}
+/* Vira-Casaca: brilho âmbar girando a ideia de "troca" */
+.field.fx-turncoat{animation:fxTurncoat 1s ease-out}
+@keyframes fxTurncoat{0%,100%{box-shadow:none}50%{box-shadow:inset 0 0 0 3px rgba(255,180,60,.9),0 0 26px rgba(255,180,60,.5)}}
 /* carta na MÃO buffada (ex.: Recepção da Torcida): Poder verde + brilho sutil */
 .hcard .pow.buff{color:#3be07a;text-shadow:0 0 6px rgba(59,224,122,.85),0 1px 2px #000}
 .hcard .pow.nerf{color:#ff7a7a;text-shadow:0 0 6px rgba(255,122,122,.7),0 1px 2px #000}
 .hcard.handbuff{box-shadow:0 0 0 2px rgba(59,224,122,.55),0 0 14px rgba(59,224,122,.4);animation:handbuffpulse 1.6s ease-in-out infinite}
 @keyframes handbuffpulse{0%,100%{box-shadow:0 0 0 2px rgba(59,224,122,.45),0 0 10px rgba(59,224,122,.3)}50%{box-shadow:0 0 0 2px rgba(59,224,122,.7),0 0 18px rgba(59,224,122,.55)}}
+
+/* SELO "VIRAR": anel de energia + etiqueta que sobe ao ativar um efeito Virar */
+.revealring{
+  position:fixed;z-index:83;pointer-events:none;width:44px;height:60px;
+  transform:translate(-50%,-50%);border-radius:12px;
+  border:2px solid rgba(94,220,255,.6);box-shadow:0 0 10px rgba(94,220,255,.4);
+  animation:revealring .8s ease-out forwards;
+}
+@keyframes revealring{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.55)}
+  30%{opacity:.7}
+  100%{opacity:0;transform:translate(-50%,-50%) scale(1.9)}
+}
+.revealtag{
+  position:fixed;z-index:89;pointer-events:none;transform:translate(-50%,-100%);
+  font-size:10.5px;font-weight:800;letter-spacing:1px;color:#06222b;white-space:nowrap;
+  background:linear-gradient(180deg,#bdf3ff,#5ed0ff);border-radius:999px;padding:2px 9px;opacity:.9;
+  box-shadow:0 2px 7px rgba(0,0,0,.45);text-shadow:0 1px 0 rgba(255,255,255,.35);
+  animation:revealtag .95s cubic-bezier(.2,1.2,.4,1) forwards;
+}
+@keyframes revealtag{
+  0%{opacity:0;transform:translate(-50%,-62%) scale(.7)}
+  25%{opacity:.92;transform:translate(-50%,-112%) scale(1)}
+  70%{opacity:.92;transform:translate(-50%,-116%) scale(1)}
+  100%{opacity:0;transform:translate(-50%,-140%) scale(.95)}
+}
+
+/* RASGO DE GARRAS (Luiz Henrique): três riscos diagonais que cortam a carta */
+.clawfx{position:fixed;z-index:88;pointer-events:none;overflow:hidden;border-radius:8px}
+.clawfx .claw{
+  position:absolute;top:-20%;left:-30%;width:18%;height:150%;
+  background:linear-gradient(180deg,rgba(255,255,255,0),#fff 45%,#ffd0d0 55%,rgba(255,80,80,0));
+  filter:drop-shadow(0 0 6px rgba(255,60,60,.9)) drop-shadow(0 0 12px rgba(255,255,255,.7));
+  transform:rotate(22deg) translateY(-120%);opacity:0;border-radius:40%;
+}
+.clawfx .c1{left:8%;animation:clawslash .42s cubic-bezier(.4,0,.6,1) forwards}
+.clawfx .c2{left:34%;animation:clawslash .42s cubic-bezier(.4,0,.6,1) .07s forwards}
+.clawfx .c3{left:60%;animation:clawslash .42s cubic-bezier(.4,0,.6,1) .14s forwards}
+@keyframes clawslash{
+  0%{opacity:0;transform:rotate(22deg) translateY(-120%) scaleY(.6)}
+  35%{opacity:1}
+  100%{opacity:0;transform:rotate(22deg) translateY(120%) scaleY(1.1)}
+}
 /* bola de fogo do Dinamite */
 .fireballfx{
   position:fixed;z-index:86;pointer-events:none;font-size:34px;line-height:1;
@@ -1259,7 +1391,7 @@ body::after{ /* vinheta sutil */
 .firework{position:fixed;width:9px;height:9px;border-radius:50%;z-index:90;pointer-events:none;transform:translate(-50%,-50%);background:currentColor;box-shadow:0 0 10px currentColor,0 0 18px currentColor;animation:fireworkfly .74s ease-out forwards}
 @keyframes fireworkfly{0%{opacity:1;transform:translate(-50%,-50%) scale(1.2)}70%{opacity:1}100%{opacity:0;transform:translate(calc(-50% + var(--fx)),calc(-50% + var(--fy))) scale(.25)}}
 /* carta descartada: destaque + dissolução */
-.discardfx{position:fixed;left:50%;top:48%;width:128px;z-index:88;pointer-events:none;transform:translate(-50%,-50%);animation:discardfx 1.3s ease-in forwards;--sy:240px}
+.discardfx{position:fixed;left:50%;top:48%;width:128px;z-index:88;pointer-events:none;transform:translate(-50%,-50%);animation:discardfx 2s ease-in forwards;--sy:240px}
 .discardfx.foe{--sy:-260px}
 .discardfx.me{--sy:260px}
 .discardfx .discard-tag{
@@ -1329,12 +1461,12 @@ body::after{ /* vinheta sutil */
 }
 
 /* hand */
-#handwrap{width:min(660px,96vw);padding:2px 0 10px}
+#handwrap{width:min(660px,96vw);padding:2px 0 10px;position:relative;z-index:14}/* mão SEMPRE acima do campo */
 #hand{display:flex;gap:6px;justify-content:center;min-height:96px}
 .hcard{
   width:82px;height:110px;flex:0 0 auto;border-radius:9px;cursor:pointer;position:relative;
   display:flex;flex-direction:column;justify-content:space-between;
-  border:2px solid var(--cb,#888);
+  border:3px solid var(--cb,#888);
   background:radial-gradient(120% 90% at 50% 0%, var(--c1,#2e7d32), var(--c2,#1b5e20));
   box-shadow:var(--shadow);transition:transform .12s;font-size:11px;
 }
@@ -1348,7 +1480,7 @@ body::after{ /* vinheta sutil */
 .hcard.legend::after{content:"";position:absolute;inset:0;border-radius:7px;pointer-events:none;opacity:.3;background:linear-gradient(120deg,transparent 20%,var(--holo1) 38%,var(--holo2) 50%,var(--holo3) 62%,transparent 80%);background-size:250% 250%;animation:holo 3.2s linear infinite;mix-blend-mode:screen}
 
 /* big card */
-.bcard{width:100%;aspect-ratio:3/4.2;border-radius:10px;border:2px solid var(--cb,#888);
+.bcard{width:100%;aspect-ratio:3/4.2;border-radius:10px;border:3px solid var(--cb,#888);
   background:radial-gradient(120% 90% at 50% 0%, var(--c1,#2e7d32), var(--c2,#1b5e20));
   display:flex;flex-direction:column;justify-content:space-between;position:relative;font-size:11px;box-shadow:var(--shadow)}
 .bcard .chead{display:flex;justify-content:space-between;padding:4px 5px}
@@ -1404,6 +1536,9 @@ body::after{ /* vinheta sutil */
 #ovText{font-size:18px;color:#e6ecf3;max-width:520px}
 .shake{animation:shake .45s}
 @keyframes shake{0%,100%{transform:translate(0)}20%{transform:translate(-8px,3px)}40%{transform:translate(7px,-4px)}60%{transform:translate(-5px,2px)}80%{transform:translate(4px,-2px)}}
+/* tremor BEM mais sutil (fim da revelação de carta) */
+.shake-soft{animation:shakeSoft .3s ease-out}
+@keyframes shakeSoft{0%,100%{transform:translate(0)}35%{transform:translate(-2px,1px)}65%{transform:translate(1.5px,-1px)}85%{transform:translate(-1px,.5px)}}
 
 #toast{
   position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:60;
@@ -1942,41 +2077,426 @@ body::before{
   .kofi-link{font-size:11.5px;padding:6px 12px 6px 8px}
   .kofi-link .kofi-emoji{width:20px;height:20px;font-size:12px}
 }
+
+/* ===================== POLISH UX/UI (override final) ===================== */
+/* mão: hover/seleção mais suaves, com brilho e profundidade */
+.hcard{transition:transform .16s cubic-bezier(.34,1.4,.5,1), box-shadow .16s ease, filter .16s ease}
+.hcard:hover{transform:translateY(-12px) scale(1.06);box-shadow:0 14px 26px rgba(0,0,0,.5), 0 0 18px rgba(25,194,166,.35);z-index:5}
+.hcard.sel{box-shadow:0 16px 30px rgba(0,0,0,.55), 0 0 22px rgba(25,194,166,.6)}
+/* campo "alvo" da carta selecionada: contorno pulsante e convidativo */
+.field.targetable .merow{animation:targetpulse 1.25s ease-in-out infinite}
+@keyframes targetpulse{
+  0%,100%{outline-color:rgba(25,194,166,.5);box-shadow:0 0 0 0 rgba(25,194,166,0)}
+  50%{outline-color:rgba(25,194,166,1);box-shadow:0 0 16px 2px rgba(25,194,166,.3)}
+}
+/* carta recém-revelada: "assentar" levemente elástico */
+.gcard.flipin{animation:flipin .42s cubic-bezier(.34,1.4,.45,1)}
+/* botões de controle: brilho no hover + clique mais tátil */
+.ctl:hover:not(:disabled){filter:brightness(1.12)}
+.ctl:active:not(:disabled){transform:translateY(3px) scale(.98)}
+/* placar do local que está liderando: leve respiração dourada */
+.fpower.leading{animation:leadbreath 2s ease-in-out infinite}
+@keyframes leadbreath{0%,100%{text-shadow:0 0 4px rgba(255,217,94,.5)}50%{text-shadow:0 0 12px rgba(255,217,94,.95)}}
+/* acessibilidade: respeita quem prefere menos movimento */
+@media (prefers-reduced-motion: reduce){
+  .field.targetable .merow,.fpower.leading,.hcard.handbuff{animation:none}
+  .hcard{transition:none}
+}
+
+/* ===== ícone discreto de efeito CONTÍNUO ativo sobre a carta ===== */
+.gcard .cont-icon{
+  position:absolute;top:2px;left:50%;transform:translateX(-50%);
+  font-size:11px;font-weight:900;line-height:1;color:#bff4e4;z-index:4;pointer-events:none;
+  text-shadow:0 0 5px rgba(25,194,166,.95),0 1px 2px #000;
+  animation:contIcon 1.8s ease-in-out infinite;
+}
+@keyframes contIcon{0%,100%{opacity:.6;transform:translateX(-50%) scale(1)}50%{opacity:1;transform:translateX(-50%) scale(1.18)}}
+
+/* ===== baralho ativo na tela de sorteio (verso + nome, sem nome do verso) ===== */
+.vs-deck{display:flex;flex-direction:column;align-items:center;gap:5px;margin-top:8px;animation:fadeUp .5s ease both}
+.vs-deck-back{width:40px}
+.vs-deck-back .gcard.back{width:40px;height:56px;position:relative;border-radius:7px;box-shadow:0 4px 10px rgba(0,0,0,.45)}
+.vs-deck-name{font-size:12px;font-weight:800;color:#dfe6ee;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:3px 10px;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ===== ENTRADAS SUAVES de telas e painéis (fade + leve deslocamento) ===== */
+.screen.on{animation:screenIn .42s cubic-bezier(.2,.7,.3,1)}
+@keyframes screenIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.panel{animation:panelIn .4s cubic-bezier(.2,.8,.3,1.05) both}
+@keyframes panelIn{from{opacity:0;transform:translateY(14px) scale(.985)}to{opacity:1;transform:none}}
+#overlay.on .ov-card,#inspectModal.on #inspectCard{animation:popIn .45s cubic-bezier(.2,1.4,.4,1) both}
+@keyframes popIn{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:none}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ===== TRANSIÇÕES naturais em botões / cartas / painéis ===== */
+.menu-btn,.mini-btn,.stat-pill,.skin-opt,.avatar-opt,.captain-opt{transition:transform .14s cubic-bezier(.34,1.4,.5,1),box-shadow .16s ease,filter .16s ease,background .2s ease}
+.menu-btn:hover:not(:disabled){transform:translateY(-2px);filter:brightness(1.08)}
+.menu-btn:active:not(:disabled){transform:translateY(1px) scale(.99)}
+.mini-btn:hover{transform:translateY(-1px);filter:brightness(1.1)}
+.skin-opt:hover,.avatar-opt:hover,.captain-opt:hover{transform:translateY(-3px) scale(1.04)}
+.gcard{transition:transform .14s ease, box-shadow .16s ease, filter .16s ease}
+.cardslot .gcard:hover{filter:brightness(1.06)}
+.stat-pill:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,.4)}
+
+/* ===== GLOW / PULSAÇÃO: logo, cubo da Mala, cartas lendárias ===== */
+.logo{animation:logosway 5s ease-in-out infinite, logoGlow 3.4s ease-in-out infinite}
+@keyframes logoGlow{
+  0%,100%{filter:drop-shadow(0 0 0 rgba(255,201,51,0))}
+  50%{filter:drop-shadow(0 0 14px rgba(255,201,51,.55))}
+}
+#stakeCube{transition:transform .18s ease, box-shadow .25s ease, filter .2s ease}
+#stakeCube:not(.hot){animation:cubeIdle 3s ease-in-out infinite}
+@keyframes cubeIdle{0%,100%{filter:drop-shadow(0 3px 8px rgba(0,0,0,.5))}50%{filter:drop-shadow(0 3px 14px rgba(255,201,51,.45))}}
+.gcard.legend{box-shadow:0 4px 14px rgba(0,0,0,.45), 0 0 14px rgba(255,201,51,.25)}
+.bcard.legend{box-shadow:0 6px 20px rgba(0,0,0,.5), 0 0 18px rgba(255,201,51,.3)}
+
+/* ===== feedback de DRAG & DROP / hover de slots ===== */
+.cardslot{transition:background .15s ease, box-shadow .15s ease}
+.field.targetable .cardslot:empty{background:rgba(25,194,166,.06)}
+.field.targetable:hover .merow{outline-color:rgba(25,194,166,1);box-shadow:0 0 20px 3px rgba(25,194,166,.4)}
+
+/* ===== LOADING: rolagem do sorteio e barra do timer mais fluidas ===== */
+.draw-reel.spin{animation:reelPulse .5s ease-in-out infinite}
+@keyframes reelPulse{0%,100%{filter:brightness(1)}50%{filter:brightness(1.25)}}
+#timerFill{transition:width .9s linear, background .3s ease}
+
+/* ===== profundidade: sombra/realce sutil em pílulas e painéis ===== */
+.stat-pill{box-shadow:0 2px 8px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.06)}
+.panel{box-shadow:0 18px 50px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.05)}
+
+@media (prefers-reduced-motion: reduce){
+  .screen.on,.panel,#overlay.on .ov-card,#inspectModal.on #inspectCard,.vs-deck,
+  .gcard .cont-icon,.logo,#stakeCube:not(.hot),.draw-reel.spin{animation:none}
+}
+
+/* ===== POP-UP DE NOVIDADES ===== */
+.news-modal{position:fixed;inset:0;z-index:120;display:none;align-items:center;justify-content:center;padding:16px;
+  background:rgba(4,8,16,.72);backdrop-filter:blur(4px)}
+.news-modal.on{display:flex;animation:screenIn .3s ease}
+.news-card{max-width:520px;width:100%;max-height:86vh;overflow-y:auto;text-align:left}
+.news-title{font-size:23px;text-align:center;margin-bottom:2px}
+.news-ver{text-align:center;font-size:12px;opacity:.7;margin-bottom:12px;letter-spacing:1px}
+.news-section{margin-bottom:12px}
+.news-section h4{font-size:14px;color:var(--gold);margin-bottom:5px}
+.news-section ul{margin:0;padding-left:18px}
+.news-section li{font-size:13px;line-height:1.5;margin-bottom:4px}
+.news-warn{font-size:12.5px;line-height:1.55;background:rgba(255,201,51,.1);border:1px solid rgba(255,201,51,.4);
+  border-radius:12px;padding:11px 13px;margin:6px 0 14px}
+.news-card .menu-btn{margin-top:4px}
+/* banner de versão inicial / acesso antecipado */
+.news-beta{font-size:12.5px;line-height:1.55;color:#eaf0f6;border-radius:14px;padding:12px 14px;margin:0 0 16px;
+  background:linear-gradient(180deg,rgba(176,110,255,.16),rgba(110,43,217,.08));
+  border:1px solid rgba(176,110,255,.45);box-shadow:0 8px 22px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.06)}
+.news-beta p{margin:0}
+.news-beta b{color:#fff}
+.news-beta-tag{display:inline-block;font-size:11px;font-weight:900;letter-spacing:.8px;text-transform:uppercase;
+  color:#1a0b2e;background:linear-gradient(180deg,#d8b4ff,#b06eff);border-radius:999px;padding:4px 11px;margin-bottom:9px;
+  box-shadow:0 3px 9px rgba(110,43,217,.45)}
+
+/* ===== MISSÕES ===== */
+.missions-wrap{display:flex;flex-direction:column;gap:18px;width:100%;max-width:560px}
+.miss-group h3{font-size:17px;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.miss-reset{font-size:11px;opacity:.6;font-weight:600;letter-spacing:.5px}
+.miss-card{background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.1);border-radius:12px;
+  padding:11px 13px;margin-bottom:9px;display:flex;flex-direction:column;gap:7px;
+  transition:transform .14s ease,box-shadow .16s ease}
+.miss-card.done{border-color:rgba(59,224,122,.55);box-shadow:0 0 14px rgba(59,224,122,.2)}
+.miss-card.claimed{opacity:.5}
+.miss-top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.miss-name{font-size:13.5px;font-weight:800}
+.miss-rew{font-size:12px;font-weight:900;color:var(--gold);white-space:nowrap}
+.miss-bar{height:9px;border-radius:999px;background:rgba(255,255,255,.12);overflow:hidden}
+.miss-bar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#1aa37a,#3be07a);
+  transition:width .5s cubic-bezier(.2,.8,.3,1)}
+.miss-foot{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.miss-prog{font-size:11.5px;opacity:.8}
+.miss-claim{font-size:12px;font-weight:900;padding:6px 14px;border-radius:999px;border:0;cursor:pointer;
+  background:linear-gradient(180deg,#ffd95e,#f0a500);color:#3a2600;box-shadow:0 3px 0 #8a5a00;
+  transition:transform .1s ease,filter .15s ease}
+.miss-claim:hover{filter:brightness(1.08)}
+.miss-claim:active{transform:translateY(2px);box-shadow:0 1px 0 #8a5a00}
+.miss-claim:disabled{background:rgba(255,255,255,.12);color:rgba(255,255,255,.4);box-shadow:none;cursor:default}
+.miss-badge{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 5px;
+  margin-left:6px;border-radius:999px;background:#e53935;color:#fff;font-size:12px;font-weight:900;
+  box-shadow:0 0 10px rgba(229,57,53,.7);animation:handbuffpulse 1.4s ease-in-out infinite}
+
+/* ===== LOG lateral persistente (substitui os avisos do centro-topo) ===== */
+#commentary{display:none !important}   /* o log assume o papel da narração */
+#gameLog{
+  position:fixed;left:8px;bottom:78px;z-index:19;
+  width:186px;max-height:42vh;overflow-y:auto;
+  display:flex;flex-direction:column;gap:3px;
+  padding:8px 9px;border-radius:0 10px 10px 0;border-left:3px solid rgba(255,201,51,.55);
+  background:rgba(0,0,0,.26);
+  opacity:.38;transition:opacity .25s ease, background .25s ease;
+  pointer-events:auto;overscroll-behavior:contain;
+  scrollbar-width:thin;scrollbar-color:rgba(255,201,51,.5) transparent;
+  -webkit-mask-image:linear-gradient(180deg,transparent,#000 16%,#000 100%);
+          mask-image:linear-gradient(180deg,transparent,#000 16%,#000 100%);
+}
+#gameLog:hover{opacity:.98;background:rgba(0,0,0,.72)}
+#gameLog:empty{display:none}
+#gameLog::-webkit-scrollbar{width:5px}
+#gameLog::-webkit-scrollbar-thumb{background:rgba(255,201,51,.4);border-radius:3px}
+.log-line{
+  font-size:11.5px;line-height:1.32;color:#c4cdd8;text-shadow:0 1px 2px #000;
+  padding-bottom:2px;border-bottom:1px solid rgba(255,255,255,.05);
+  animation:logIn .28s ease both;word-break:break-word;
+}
+.log-line:last-child{color:#fff;font-weight:600}
+@keyframes logIn{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:none}}
+@media (max-width:640px){
+  #gameLog{width:148px;max-height:34vh;bottom:74px;font-size:11px;opacity:.32}
+}
+@media (prefers-reduced-motion: reduce){ .log-line{animation:none} }
+
+/* ===================== MENU PRINCIPAL (redesign) ===================== */
+@keyframes mp-fadeup{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+@keyframes mp-sway{0%,100%{transform:rotate(-2deg)}50%{transform:rotate(-.5deg) translateY(-5px)}}
+@keyframes mp-glow{0%,100%{opacity:.45;transform:translate(-50%,-50%) scale(1)}50%{opacity:.8;transform:translate(-50%,-50%) scale(1.09)}}
+@keyframes mp-sheen{0%,58%{left:-60%}100%{left:150%}}
+@keyframes mp-floatA{0%,100%{transform:translate(0,0)}50%{transform:translate(34px,-30px)}}
+@keyframes mp-floatB{0%,100%{transform:translate(0,0)}50%{transform:translate(-30px,26px)}}
+@keyframes mp-floatC{0%,100%{transform:translate(0,0)}50%{transform:translate(22px,30px)}}
+@keyframes mp-badgepulse{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}
+@keyframes mp-ringspin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+#menu{padding:0;justify-content:flex-start;align-items:stretch;overflow-y:auto}
+.mp-wrap{position:relative;min-height:100vh;width:100%;display:flex;align-items:center;justify-content:center;padding:40px 18px;
+  background:radial-gradient(120% 90% at 50% -10%,#232a33 0%,#14181e 55%,#0b0e12 100%);color:#f0ede4}
+.mp-orb{position:absolute;border-radius:50%;pointer-events:none;filter:blur(60px)}
+.mp-ring{position:absolute;top:50%;left:50%;width:min(680px,120vw);height:min(680px,120vw);transform:translate(-50%,-50%);border-radius:50%;border:1px solid rgba(255,255,255,.04);pointer-events:none;animation:mp-ringspin 120s linear infinite}
+.mp-vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(80% 70% at 50% 45%,transparent 58%,rgba(0,0,0,.5) 100%)}
+.mp-corner{width:42px;height:42px;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:rgba(255,255,255,.06);color:#cfd6dd;font-size:18px;cursor:pointer;transition:transform .14s,background .2s}
+.mp-corner:hover{transform:translateY(-2px);background:rgba(255,255,255,.12)}
+.mp-panel{position:relative;z-index:2;width:min(620px,96vw);display:flex;flex-direction:column;align-items:center;gap:18px}
+.mp-panel>*{animation:mp-fadeup .55s cubic-bezier(.2,.7,.2,1) both}
+.mp-logo-wrap{position:relative;width:100%;display:flex;justify-content:center;padding-top:8px}
+.mp-logo-glow{position:absolute;top:52%;left:50%;width:460px;max-width:84%;height:200px;border-radius:50%;filter:blur(46px);background:radial-gradient(circle,rgba(255,201,51,.5),transparent 68%);animation:mp-glow 5.5s ease-in-out infinite;pointer-events:none}
+.mp-logo{position:relative;text-align:center;line-height:.9;letter-spacing:-1px;font-weight:900;text-transform:uppercase;font-size:clamp(46px,8vw,86px);color:#ffc933;text-shadow:0 3px 0 #7a4e00,0 6px 0 #3c2600,0 14px 32px rgba(0,0,0,.6);animation:mp-sway 5s ease-in-out infinite}
+.mp-logo span{display:block;font-size:clamp(20px,3.4vw,38px);color:#fff;letter-spacing:7px;text-shadow:0 3px 0 #1336a8,0 6px 18px rgba(0,0,0,.6)}
+.mp-tagline{text-align:center;color:#c8cfd8;font-style:italic;opacity:.85;font-size:clamp(13px,1.5vw,16px);margin-top:-4px;max-width:440px}
+.mp-player{width:100%;display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:14px 16px;border-radius:18px;background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(0,0,0,.28));border:1px solid rgba(255,201,51,.28);box-shadow:0 10px 28px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.08)}
+.mp-avatar{flex:none;width:62px;height:62px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:32px;background:linear-gradient(160deg,#2bd9a4,#0e9c74);box-shadow:0 6px 16px rgba(0,0,0,.4),inset 0 2px 0 rgba(255,255,255,.3);border:2px solid rgba(255,255,255,.18);overflow:hidden}
+.mp-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.mp-pinfo{display:flex;flex-direction:column;gap:3px;min-width:120px;flex:1}
+.mp-pname{font-weight:900;font-size:18px;letter-spacing:.3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px}
+.mp-psub{font-size:12px;color:#9fb0bd;font-weight:700}
+.mp-pstats{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.mp-stat{display:flex;flex-direction:column;align-items:center;min-width:56px;padding:7px 9px;border-radius:12px;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.14)}
+.mp-stat.gold{border-color:rgba(255,201,51,.4)}
+.mp-stat span{font-weight:900;font-size:16px;white-space:nowrap}.mp-stat.gold span{color:#ffc933}
+.mp-stat small{font-size:8.5px;letter-spacing:1px;text-transform:uppercase;opacity:.6;margin-top:2px}
+.mp-primary{width:100%;display:flex;gap:12px;flex-wrap:wrap}
+.mp-play,.mp-copa{display:flex;align-items:center;justify-content:center;gap:10px;border:0;border-radius:16px;cursor:pointer;text-transform:uppercase;letter-spacing:1px;transition:transform .14s cubic-bezier(.34,1.4,.5,1),filter .16s}
+.mp-play{flex:1.4 1 200px;padding:21px 18px;font:900 22px/1 inherit;color:#3c2600;background:linear-gradient(180deg,#ffe07a,#f5a700);box-shadow:0 6px 0 #8a5a00,0 12px 26px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.5);text-shadow:0 1px 0 rgba(255,255,255,.3);position:relative;overflow:hidden}
+.mp-play::after{content:'';position:absolute;top:0;left:-60%;width:38%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-20deg);animation:mp-sheen 3.4s ease-in-out infinite;pointer-events:none}
+.mp-play:hover{transform:translateY(-3px);filter:brightness(1.05)}.mp-play:active{transform:translateY(2px)}
+.mp-copa{flex:1 1 160px;padding:21px 16px;font:900 19px/1 inherit;color:#fff;background:linear-gradient(180deg,#b06eff,#6e2bd9);box-shadow:0 6px 0 #3a1080,0 12px 24px rgba(110,43,217,.4),inset 0 1px 0 rgba(255,255,255,.25);text-shadow:0 1px 3px rgba(0,0,0,.5)}
+.mp-copa:hover{transform:translateY(-3px);filter:brightness(1.07)}.mp-copa:active{transform:translateY(2px)}
+.mp-grid{width:100%;display:grid;grid-template-columns:repeat(auto-fit,minmax(102px,1fr));gap:10px}
+.mp-tile{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:16px 8px;border:1px solid rgba(255,255,255,.1);border-radius:15px;cursor:pointer;background:rgba(255,255,255,.05);color:#eef1f4;font:900 12px/1.1 inherit;text-transform:uppercase;letter-spacing:.5px;transition:transform .16s cubic-bezier(.34,1.4,.5,1),background .2s,border-color .2s,box-shadow .2s}
+.mp-tile:hover{transform:translateY(-4px);background:rgba(255,255,255,.09);border-color:rgba(255,201,51,.55);box-shadow:0 10px 22px rgba(0,0,0,.4)}
+.mp-tile .mp-ico{font-size:28px}
+.mp-badge{position:absolute;top:8px;right:10px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:#d62828;color:#fff;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 2px rgba(0,0,0,.3);animation:mp-badgepulse 1.8s ease-in-out infinite}
+.mp-deck{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:10px 14px;border-radius:13px;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.08)}
+.mp-deck-lbl{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#9fb0bd;font-weight:700}
+.mp-deck-sel{background:transparent;border:0;color:#ffc933;font:900 15px inherit;cursor:pointer;outline:none;max-width:60%}
+.mp-deck-sel option{color:#111}
+.mp-foot-row{width:100%;display:flex;gap:10px;flex-wrap:wrap}
+.mp-foot{flex:1 1 100px;display:flex;align-items:center;justify-content:center;gap:7px;padding:12px;border:1px solid rgba(255,255,255,.1);border-radius:12px;cursor:pointer;background:rgba(255,255,255,.05);color:#cfd6dd;font:700 13px/1 inherit;transition:transform .14s,background .2s}
+.mp-foot:hover{transform:translateY(-2px);background:rgba(255,255,255,.1)}
+.mp-kofi{width:100%;display:flex;align-items:center;justify-content:center;gap:9px;padding:11px 14px;border-radius:13px;text-decoration:none;background:linear-gradient(180deg,rgba(255,201,51,.14),rgba(255,201,51,.05));border:1px solid rgba(255,201,51,.3);color:#e7d9b4;font-size:12.5px;font-weight:700;transition:transform .14s,background .2s;text-align:center}
+.mp-kofi:hover{transform:translateY(-2px);background:linear-gradient(180deg,rgba(255,201,51,.22),rgba(255,201,51,.08))}
+@media (prefers-reduced-motion: reduce){
+  .mp-panel>*,.mp-orb,.mp-ring,.mp-logo,.mp-logo-glow,.mp-play::after,.mp-badge{animation:none}
+}
+
+/* ===================== TELA DE SORTEIO (redesign) ===================== */
+#botpick{padding:0;justify-content:flex-start;align-items:stretch;overflow-y:auto}
+.dp-wrap{position:relative;min-height:100vh;width:100%;display:flex;align-items:center;justify-content:center;padding:40px 18px;background:radial-gradient(120% 90% at 50% -10%,#232a33 0%,#14181e 55%,#0b0e12 100%);color:#f0ede4}
+.dp-wrap .backbtn{position:fixed;top:12px;left:12px;z-index:6;max-width:none}
+.dp-panel{position:relative;z-index:2;width:min(620px,96vw);display:flex;flex-direction:column;align-items:center;gap:16px}
+.dp-panel>*{animation:mp-fadeup .5s cubic-bezier(.2,.7,.2,1) both}
+.dp-title{text-align:center;font-weight:900;text-transform:uppercase;letter-spacing:1px;font-size:clamp(23px,5vw,34px);color:#ffc933;text-shadow:0 2px 0 #7a4e00,0 5px 18px rgba(0,0,0,.6)}
+.dp-level{font-size:13px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#9af0d4;opacity:.95;text-align:center}
+.dp-versus{width:100%;display:flex;align-items:stretch;justify-content:center;gap:12px}
+.dp-card{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;gap:9px;padding:16px 12px;border-radius:18px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(0,0,0,.3));border:1px solid rgba(255,255,255,.1);box-shadow:0 10px 26px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.06)}
+.dp-card.me{border-color:rgba(43,217,164,.4)}
+.dp-card.foe{border-color:rgba(255,120,90,.35)}
+.dp-card.foe.locked{border-color:var(--gold);box-shadow:0 0 30px rgba(255,201,51,.35),0 10px 26px rgba(0,0,0,.4)}
+.dp-av{width:clamp(70px,16vw,88px);height:clamp(70px,16vw,88px);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:clamp(34px,8vw,42px);position:relative;overflow:hidden;border:3px solid rgba(255,255,255,.18);box-shadow:0 6px 18px rgba(0,0,0,.45)}
+.dp-card.me .dp-av{background:radial-gradient(circle at 35% 30%,#2bd9a4,#0e6b50)}
+.dp-card.foe .dp-av{background:radial-gradient(circle at 35% 30%,#5a2030,#2a0a14)}
+.dp-av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.dp-av.spin{animation:reelshake .08s linear infinite;filter:blur(.4px)}
+.dp-av.landed{animation:reelland .5s cubic-bezier(.2,1.6,.4,1);border-color:var(--gold);box-shadow:0 0 26px rgba(255,201,51,.7)}
+.dp-name{font-weight:900;font-size:clamp(15px,3.2vw,19px);color:#fff;text-shadow:0 2px 4px #000;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.dp-name.spin{color:#cfd6dd;filter:blur(.5px);animation:reelshake .08s linear infinite}
+.dp-name.landed{color:var(--gold);animation:reelland .5s cubic-bezier(.2,1.6,.4,1)}
+.dp-vs{flex:0 0 auto;align-self:center}
+.dp-vs span{display:inline-flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:50%;font-weight:900;font-size:17px;color:#3c2600;background:linear-gradient(180deg,#ffe07a,#f5a700);box-shadow:0 4px 0 #8a5a00,0 8px 18px rgba(0,0,0,.4);letter-spacing:.5px}
+.dp-status{font-size:14px;font-weight:700;color:#c8cfd8;letter-spacing:.5px;text-align:center;min-height:18px}
+.dp-actions{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%}
+.dp-go{width:100%;max-width:360px;padding:17px 18px;border:0;border-radius:15px;cursor:pointer;font:900 18px/1 inherit;text-transform:uppercase;letter-spacing:.8px;color:#3c2600;background:linear-gradient(180deg,#ffe07a,#f5a700);box-shadow:0 5px 0 #8a5a00,0 10px 22px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.5);transition:transform .14s cubic-bezier(.34,1.4,.5,1),filter .16s}
+.dp-go:hover{transform:translateY(-2px);filter:brightness(1.05)}.dp-go:active{transform:translateY(2px)}
+.dp-cancel{padding:10px 18px;border:1px solid rgba(255,255,255,.14);border-radius:12px;cursor:pointer;background:rgba(255,255,255,.05);color:#cfd6dd;font:700 13px/1 inherit;transition:transform .14s,background .2s}
+.dp-cancel:hover{transform:translateY(-2px);background:rgba(255,255,255,.1)}
+/* mistério do baralho adversário enquanto sorteia */
+.dp-mystery .vs-deck-back .gcard.back{filter:grayscale(.5) brightness(.6)}
+.dp-mystery .vs-deck-name{opacity:.55}
+@media (prefers-reduced-motion: reduce){ .dp-panel>*,.mp-orb,.mp-ring{animation:none} }
+
+/* ===================== CARTAS 3D (destaque / revelação) ===================== */
+.cardslot .gcard{transition:transform .16s cubic-bezier(.34,1.4,.5,1),box-shadow .16s ease,filter .16s ease}
+.cardslot .gcard:hover{transform:perspective(640px) rotateX(7deg) translateY(-4px) scale(1.1);box-shadow:0 16px 28px rgba(0,0,0,.6),0 0 18px rgba(255,255,255,.14);z-index:8}
+.hcard{transform-origin:center bottom}
+.hcard:hover{transform:perspective(720px) rotateX(9deg) translateY(-13px) scale(1.07);box-shadow:0 20px 32px rgba(0,0,0,.55),0 0 22px rgba(25,194,166,.42)}
+.hcard.sel{transform:perspective(720px) rotateX(7deg) translateY(-17px) scale(1.1);box-shadow:0 24px 38px rgba(0,0,0,.6),0 0 26px rgba(25,194,166,.6)}
+/* brilho especular que percorre a carta em destaque */
+.hcard:hover::before,.cardslot .gcard:hover::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:5;
+  background:linear-gradient(115deg,transparent 36%,rgba(255,255,255,.30) 50%,transparent 64%);background-size:260% 100%;animation:gloss 1.05s ease-in-out}
+@keyframes gloss{from{background-position:130% 0}to{background-position:-130% 0}}
+/* preview da carta selecionada: leve flutuação 3D + profundidade */
+#preview .bcard{animation:cardFloat3d 4.6s ease-in-out infinite;box-shadow:0 28px 54px rgba(0,0,0,.6),0 0 30px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.18)}
+@keyframes cardFloat3d{0%,100%{transform:perspective(900px) rotateY(-7deg) rotateX(3deg)}50%{transform:perspective(900px) rotateY(7deg) rotateX(-2deg)}}
+/* gloss da carta na revelação (passa um brilho ao exibir no centro) */
+.reveal-gloss{position:absolute;inset:0;border-radius:9px;pointer-events:none;z-index:4;
+  background:linear-gradient(115deg,transparent 38%,rgba(255,255,255,.32) 50%,transparent 62%);background-size:250% 100%;
+  animation:revealGloss 1.25s ease-in-out .42s both}
+/* o brilho passa e DESAPARECE suavemente (opacidade→0) pra carta assentar igual à do spot */
+@keyframes revealGloss{
+  0%{background-position:130% 0;opacity:0}
+  16%{opacity:1}
+  68%{background-position:-130% 0;opacity:1}
+  100%{background-position:-130% 0;opacity:0}
+}
+@media (prefers-reduced-motion: reduce){
+  #preview .bcard,.reveal-gloss,.hcard:hover::before,.cardslot .gcard:hover::before{animation:none}
+}
 </style>
 </head>
 <body>
 
-<!-- MENU -->
+<!-- MENU (redesign) -->
 <div id="menu" class="screen on">
-  <button class="cornerFull" onclick="toggleFull()" title="Tela cheia">⛶</button>
-  <div class="menu-hero">
-    <div class="logo">Brasileirão<span class="sub">⚽ CLASH ⚽</span></div>
-    <div class="tagline">Junte as figurinhas, ponha a mala na mesa e mostre quem é craque.</div>
-    <div class="menu-stats">
-      <span class="stat-pill"><small>Taças</small>🏆 <b id="tacasMenu">0</b></span>
-      <span class="stat-pill"><small>Recorde</small>📈 <b id="recordMenu">0</b></span>
-      <span class="stat-pill"><small>Títulos Copa</small>🏅 <b id="copaTitlesMenu">0</b></span>
-      <span class="stat-pill"><small>Cartolas</small>🎩 <b id="coinsMenu">0</b></span>
-      <span class="stat-pill"><small>Baralho ativo</small>🃏 <select id="quickDeck"></select></span>
+  <div class="mp-wrap">
+    <!-- orbes flutuantes -->
+    <div class="mp-orb" style="top:14%;left:16%;width:340px;height:340px;opacity:.22;background:radial-gradient(circle,#ffc933,transparent 70%);animation:mp-floatA 18s ease-in-out infinite"></div>
+    <div class="mp-orb" style="bottom:10%;right:14%;width:300px;height:300px;opacity:.18;background:radial-gradient(circle,#19c2a6,transparent 70%);animation:mp-floatB 22s ease-in-out infinite"></div>
+    <div class="mp-orb" style="top:30%;right:30%;width:240px;height:240px;opacity:.14;background:radial-gradient(circle,#b06eff,transparent 70%);animation:mp-floatC 26s ease-in-out infinite"></div>
+    <div class="mp-ring"></div>
+    <div class="mp-vignette"></div>
+
+    <!-- controles de canto -->
+    <div style="position:absolute;top:16px;right:16px;display:flex;gap:8px;z-index:5">
+      <button class="mp-corner" onclick="UI.go('settings')" title="Configurações">⚙️</button>
+      <button class="mp-corner" onclick="toggleFull()" title="Tela cheia">⛶</button>
     </div>
-    <div class="menu-primary">
-      <button class="menu-btn" onclick="UI.drawOpponent()">▶ Jogar</button>
-      <button class="menu-btn copa" onclick="Copa.start()">🏆 Modo Copa</button>
+
+    <div class="mp-panel">
+      <!-- LOGO -->
+      <div class="mp-logo-wrap">
+        <div class="mp-logo-glow"></div>
+        <div class="mp-logo">Brasileirão<span>⚽ CLASH ⚽</span></div>
+      </div>
+      <div class="mp-tagline">Junte as figurinhas, ponha a mala na mesa e mostre quem é craque.</div>
+
+      <!-- CARTÃO DO JOGADOR -->
+      <div class="mp-player" style="animation-delay:.14s">
+        <div class="mp-avatar" id="menuAvatar">😎</div>
+        <div class="mp-pinfo">
+          <div class="mp-pname" id="menuNick">Craque</div>
+          <div class="mp-psub" id="menuSub">Várzea · cartola iniciante</div>
+        </div>
+        <div class="mp-pstats">
+          <div class="mp-stat gold"><span>🏆 <b id="tacasMenu">0</b></span><small>Taças</small></div>
+          <div class="mp-stat"><span>📈 <b id="recordMenu">0</b></span><small>Recorde</small></div>
+          <div class="mp-stat"><span>🏅 <b id="copaTitlesMenu">0</b></span><small>Títulos</small></div>
+          <div class="mp-stat"><span>🎩 <b id="coinsMenu">0</b></span><small>Cartolas</small></div>
+        </div>
+      </div>
+
+      <!-- PRIMÁRIO -->
+      <div class="mp-primary" style="animation-delay:.2s">
+        <button class="mp-play" onclick="UI.drawOpponent()">▶ Jogar</button>
+        <button class="mp-copa" onclick="Copa.start()">🏆 Modo Copa</button>
+      </div>
+
+      <!-- GRID SECUNDÁRIO -->
+      <div class="mp-grid" style="animation-delay:.27s">
+        <button class="mp-tile" onclick="Missions.open()"><span id="missBadge" class="mp-badge" style="display:none">0</span><span class="mp-ico">🎯</span>Missões</button>
+        <button class="mp-tile" onclick="Decks.openBuilder()"><span class="mp-ico">🃏</span>Baralhos</button>
+        <button class="mp-tile" onclick="UI.openShop()"><span class="mp-ico">🛒</span>Loja</button>
+        <button class="mp-tile" onclick="UI.openAlbum()"><span class="mp-ico">📒</span>Coleção</button>
+        <button class="mp-tile" onclick="UI.openRoad()"><span class="mp-ico">🗺️</span>Jornada</button>
+      </div>
+
+      <!-- BARALHO ATIVO -->
+      <div class="mp-deck" style="animation-delay:.33s">
+        <span class="mp-deck-lbl">🃏 Baralho ativo</span>
+        <select id="quickDeck" class="mp-deck-sel"></select>
+      </div>
+
+      <!-- RODAPÉ -->
+      <div class="mp-foot-row" style="animation-delay:.39s">
+        <button class="mp-foot" onclick="UI.go('help')">📖 Como Jogar</button>
+        <button class="mp-foot" onclick="News.open()">📣 Novidades</button>
+        <button class="mp-foot" onclick="UI.go('settings')">⚙️ Configurações</button>
+      </div>
+
+      <!-- KO-FI -->
+      <a class="mp-kofi" href="https://ko-fi.com/jovemcali" target="_blank" rel="noopener noreferrer" style="animation-delay:.45s">
+        <span style="font-size:18px">☕</span><span>Curtiu? <b style="color:#ffc933">Me paga um café</b> — mantém o jogo vivo e sem anúncios</span>
+      </a>
     </div>
-    <div class="menu-grid">
-      <button class="menu-btn secondary" onclick="Decks.openBuilder()">🃏 Baralhos</button>
-      <button class="menu-btn secondary" onclick="UI.openShop()">🛒 Loja</button>
-      <button class="menu-btn secondary" onclick="UI.openAlbum()">📒 Coleção</button>
-      <button class="menu-btn secondary" onclick="UI.openRoad()">🗺️ Jornada</button>
+  </div>
+</div>
+
+<!-- POP-UP DE NOVIDADES -->
+<div id="newsModal" class="news-modal">
+  <div class="news-card panel">
+    <h2 class="news-title">📣 Novidades da atualização</h2>
+    <div class="news-ver" id="newsVer"></div>
+    <div class="news-body">
+      <div class="news-beta">
+        <div class="news-beta-tag">🚧 Versão inicial · Acesso antecipado</div>
+        <p>Seja bem-vindo ao <b>Brasileirão Clash</b>! 🎉 Esta é a <b>primeira versão</b> do jogo — uma prévia feita com muito carinho e ainda <b>em ajustes constantes</b>. Pode ser que você cruze com alguns <b>bugs</b> ou detalhes meio tortos pelo caminho; se isso acontecer, relaxa, faz parte desta fase. 🛠️</p>
+        <p style="margin-top:7px">Obrigado por jogar logo no começo de tudo — seu <b>feedback vale ouro</b> e ajuda a deixar o jogo cada vez melhor. 🙏</p>
+        <p style="margin-top:7px">🔜 <b>Em breve:</b> <b>sistema de login</b> (pra salvar seu progresso na nuvem e jogar de qualquer aparelho) e <b>modo PvP</b> pra você encarar outros cartolas de verdade. ⚔️🔥</p>
+      </div>
+      <div class="news-section">
+        <h4>✨ Adições</h4>
+        <ul>
+          <li><b>Missões diárias e semanais</b> que pagam Cartolas 🎩.</li>
+          <li><b>Troféus extras por título de Copa</b> — quantia progressiva por série 🏆.</li>
+          <li>O <b>baralho ativo</b> (nome + verso) aparece na tela de sorteio.</li>
+          <li><b>Ícone de efeito contínuo</b> ∞ sobre as cartas com efeito ativo.</li>
+        </ul>
+      </div>
+      <div class="news-section">
+        <h4>🛠️ Cartas & Regras</h4>
+        <ul>
+          <li><b>Garrincha</b> repaginado: custo 6, poder 5 e drible que <b>arrasta</b> o inimigo mais forte pra outro campo.</li>
+          <li><b>Ronaldinho R10</b> mais consistente (ilusão e transformação corrigidas).</li>
+          <li><b>Luiz Henrique</b> com novo rasgo de garras 🐾.</li>
+          <li>Correções em <b>Virada de Mesa, Z4, Data FIFA</b> e <b>Recepção da Torcida</b>.</li>
+          <li>Cartas podem ter <b>poder negativo</b> (Moça Bonita) e o capitão já entra no baralho padrão.</li>
+        </ul>
+      </div>
+      <div class="news-section">
+        <h4>🎨 Visual & UX</h4>
+        <ul>
+          <li>Animações de entrada, transições, brilhos e mais profundidade nas telas.</li>
+          <li>Novos efeitos de revelação de "Virar", buff do Gabigol e mais.</li>
+        </ul>
+      </div>
+      <div class="news-warn">
+        ⚠️ <b>Sobre o seu progresso:</b> por enquanto, tudo (Taças, Cartolas, baralhos e coleção)
+        fica salvo <b>só neste navegador/aparelho</b>. Se você limpar os dados do site, usar uma aba
+        anônima ou trocar de dispositivo, o progresso <b>não vai junto</b>. Já estamos trabalhando em
+        contas para salvar na nuvem. 🙏
+      </div>
     </div>
-    <div class="menu-foot">
-      <button class="menu-btn ghost" onclick="UI.go('help')">📖 Como Jogar</button>
-      <button class="menu-btn ghost" onclick="UI.go('settings')">⚙️ Configurações</button>
-    </div>
-    <a class="kofi-link" href="https://ko-fi.com/jovemcali" target="_blank" rel="noopener noreferrer" title="Apoie no Ko-fi">
-      <span class="kofi-emoji" style="z-index:1">☕</span>
-      <span class="kofi-text" style="position:relative;z-index:1">Curtiu? <b>Me paga um café</b> — assim eu mantenho o jogo vivo e sem anúncios</span>
-    </a>
+    <button class="menu-btn" onclick="News.close()">✔ Entendi, bora jogar!</button>
   </div>
 </div>
 
@@ -2028,26 +2548,45 @@ body::before{
   <button class="menu-btn ghost backbtn" onclick="UI.back()">← Voltar</button>
 </div>
 
-<!-- BOT PICK -->
-<div id="botpick" class="screen" style="justify-content:center;gap:18px">
-  <div class="logo" style="font-size:30px">Sorteio do adversário</div>
-  <div id="drawLevel" class="draw-level"></div>
-  <div id="drawVersus">
-    <div class="vs-side me">
-      <div class="vs-av" id="drawMeAv">😎</div>
-      <div class="vs-name" id="drawMeName">Você</div>
-    </div>
-    <div class="vs-x">×</div>
-    <div class="vs-side foe">
-      <div class="vs-av spin" id="drawFoeAv">🎲</div>
-      <div id="drawReel" class="draw-reel">—</div>
+<!-- BOT PICK (redesign) -->
+<div id="botpick" class="screen">
+  <div class="dp-wrap">
+    <div class="mp-orb" style="top:12%;left:14%;width:300px;height:300px;opacity:.18;background:radial-gradient(circle,#ffc933,transparent 70%);animation:mp-floatA 18s ease-in-out infinite"></div>
+    <div class="mp-orb" style="bottom:12%;right:14%;width:280px;height:280px;opacity:.16;background:radial-gradient(circle,#d62828,transparent 70%);animation:mp-floatB 22s ease-in-out infinite"></div>
+    <div class="mp-ring"></div>
+    <div class="mp-vignette"></div>
+    <button class="menu-btn ghost backbtn" onclick="UI.cancelDraw()">← Voltar</button>
+
+    <div class="dp-panel">
+      <div class="dp-title">Sorteio do Adversário</div>
+      <div id="drawLevel" class="dp-level"></div>
+
+      <div class="dp-versus">
+        <!-- VOCÊ -->
+        <div class="dp-card me">
+          <div class="dp-av" id="drawMeAv">😎</div>
+          <div class="dp-name" id="drawMeName">Você</div>
+          <div class="vs-deck" id="drawMeDeck"></div>
+        </div>
+
+        <div class="dp-vs"><span>VS</span></div>
+
+        <!-- ADVERSÁRIO -->
+        <div class="dp-card foe">
+          <div class="dp-av spin" id="drawFoeAv">🎲</div>
+          <div class="dp-name spin" id="drawReel">—</div>
+          <div class="vs-deck" id="drawFoeDeck"></div>
+        </div>
+      </div>
+
+      <div id="drawStatus" class="dp-status">🎲 Girando o sorteio...</div>
+      <div id="drawCountdown" style="display:none"></div>
+      <div class="dp-actions">
+        <button class="dp-go" id="drawGo" style="display:none">⚽ Entrar em campo ▶</button>
+        <button class="dp-cancel" id="drawCancel" style="display:none" onclick="UI.cancelDraw()">✖ Cancelar</button>
+      </div>
     </div>
   </div>
-  <div id="drawStatus" class="draw-status">🎲 Girando o sorteio...</div>
-  <div id="drawCountdown" style="display:none"></div>
-  <button class="menu-btn" id="drawGo" style="display:none;max-width:380px">⚽ Entrar em campo ▶</button>
-  <button class="menu-btn ghost" id="drawCancel" style="display:none;max-width:380px" onclick="UI.cancelDraw()">✖ Cancelar</button>
-  <button class="menu-btn ghost backbtn" onclick="UI.cancelDraw()">← Voltar</button>
 </div>
 
 <!-- HELP -->
@@ -2162,6 +2701,7 @@ body::before{
   <div id="blurback"></div>
   <div id="preview"></div>
   <div id="commentary"></div>
+  <div id="gameLog" title="Histórico da partida"></div>
   <div id="handwrap"><div id="hand"></div></div>
   <div id="energyOrb"><span class="ebolt">⚡</span><b id="energy">1</b><small>energia</small></div>
   <button class="ctl corner" id="btnRetreat">🐔 Amarelar</button>
@@ -2289,7 +2829,8 @@ const Profile={
     });
     const cr=$('#captainRow');cr.innerHTML='';
     if(!editing){
-      CARDS.filter(c=>c.cost===6).forEach(c=>{
+      // Pelé NÃO é capitão inicial — vira recompensa do FINAL da Jornada
+      CARDS.filter(c=>c.cost===6&&c.id!=='pele').forEach(c=>{
         const d=document.createElement('div');
         d.className='captain-opt'+(this.selCaptain===c.id?' sel':'');
         d.innerHTML=Game.bigCardHTML(c,c.pow);
@@ -2721,11 +3262,18 @@ const FX={
     await sleep(720);
     gh.remove();
   },
-  /* ilusão do R10: a carta original "se divide" e a cópia espectral voa pro SLOT exato da ilusão */
-  async illusionSplit(card,fi,s,slotIdx){
+  /* ilusão do R10: a carta original "se divide" e a cópia espectral voa pro SLOT exato da ilusão.
+     fromF = campo de origem (fallback caso o elemento do R10 já tenha saído do DOM). */
+  async illusionSplit(card,fi,s,slotIdx,fromF){
     const src=card&&card.uid?document.querySelector(`[data-uid="${card.uid}"]`):null;
-    if(!src){await sleep(120);return;}
-    const sr=src.getBoundingClientRect();
+    // retângulo de origem: o R10 se existir; senão, o centro do campo de origem (sempre arrasta)
+    let sr=null, srcNode=src;
+    if(src){ sr=src.getBoundingClientRect(); }
+    else if(fromF!=null){
+      const ff=document.querySelector(`.field[data-fi="${fromF}"]`);
+      if(ff){ const r=ff.getBoundingClientRect(); sr={left:r.left+r.width/2-29,top:r.top+r.height/2-40,width:58,height:80}; }
+    }
+    if(!sr){ await sleep(120); return; }
     // alvo = o slot exato onde a ilusão vai aparecer
     let tr=sr;
     const fieldEl=document.querySelector(`.field[data-fi="${fi}"]`);
@@ -2737,16 +3285,162 @@ const FX={
       tr=(cell||row||fieldEl).getBoundingClientRect();
     }
     const tx=tr.left+tr.width/2-sr.width/2, ty=tr.top+tr.height/2-sr.height/2;
-    const clone=src.cloneNode(true);
-    clone.removeAttribute('data-uid');
+    // se temos a carta original, clonamos ela; senão, criamos um "espectro" genérico do Bruxo
+    let clone;
+    if(srcNode){ clone=srcNode.cloneNode(true); clone.removeAttribute('data-uid'); }
+    else{ clone=document.createElement('div'); clone.className='gcard'; clone.innerHTML='<div class="chead"><span class="cost">0</span><span class="pow">3</span></div><div class="cname" style="text-align:center">🪄</div>'; }
     clone.classList.add('illu-split');
     clone.style.left=sr.left+'px';clone.style.top=sr.top+'px';clone.style.width=sr.width+'px';clone.style.height=sr.height+'px';
     clone.style.setProperty('--dx',(tx-sr.left)+'px');
     clone.style.setProperty('--dy',(ty-sr.top)+'px');
     document.body.appendChild(clone);
-    src.classList.remove('fx-glow');void src.offsetWidth;src.classList.add('fx-glow');
+    if(srcNode){ srcNode.classList.remove('fx-glow');void srcNode.offsetWidth;srcNode.classList.add('fx-glow'); }
     Snd.illusion();
     await sleep(950);
+    clone.remove();
+  },
+  /* RASGO DE GARRAS (Luiz Henrique): três riscos diagonais cortam a carta inimiga */
+  async claw(card){
+    const el=card&&card.uid?document.querySelector(`[data-uid="${card.uid}"]`):null;
+    if(!el){await sleep(120);return;}
+    const r=el.getBoundingClientRect();
+    const wrap=document.createElement('div');
+    wrap.className='clawfx';
+    wrap.style.left=r.left+'px';wrap.style.top=r.top+'px';
+    wrap.style.width=r.width+'px';wrap.style.height=r.height+'px';
+    wrap.innerHTML='<span class="claw c1"></span><span class="claw c2"></span><span class="claw c3"></span>';
+    document.body.appendChild(wrap);
+    el.classList.remove('fx-hit');void el.offsetWidth;el.classList.add('fx-hit');
+    if(Snd.boom)Snd.boom();vib([30,20,60]);
+    await sleep(560);
+    wrap.remove();
+  },
+  /* SELO "VIRAR": reforça visualmente a ativação do efeito Virar de qualquer carta */
+  revealBadge(card){
+    const el=card&&card.uid?document.querySelector(`[data-uid="${card.uid}"]`):null;
+    if(!el)return;
+    const r=el.getBoundingClientRect();
+    const ring=document.createElement('div');ring.className='revealring';
+    ring.style.left=(r.left+r.width/2)+'px';ring.style.top=(r.top+r.height/2)+'px';
+    document.body.appendChild(ring);
+    const tag=document.createElement('div');tag.className='revealtag';tag.textContent='⚡ VIRAR';
+    tag.style.left=(r.left+r.width/2)+'px';tag.style.top=(r.top)+'px';
+    document.body.appendChild(tag);
+    if(Snd.fx)Snd.fx();
+    setTimeout(()=>{ring.remove();tag.remove();},1150);
+  },
+  /* REVELAÇÃO: a carta sobe a partir do seu spot VIRADA (mostrando o verso), VIRA perto do
+     centro da tela (exibindo a frente) e então CAI no spot com impacto + poeira. */
+  async revealDrop(card,side){
+    const el=card&&card.uid?document.querySelector(`[data-uid="${card.uid}"]`):null;
+    if(!el){await sleep(200);return;}
+    el.style.visibility='hidden'; // esconde o real; o clone faz o show
+    const tr=el.getBoundingClientRect();
+    const cx=window.innerWidth/2, cy=window.innerHeight*0.40;
+    const dx=cx-(tr.left+tr.width/2), dy=cy-(tr.top+tr.height/2);
+    // wrapper com perspectiva 3D
+    const wrap=document.createElement('div');
+    wrap.style.cssText='position:fixed;margin:0;z-index:120;pointer-events:none;perspective:1100px';
+    wrap.style.left=tr.left+'px';wrap.style.top=tr.top+'px';wrap.style.width=tr.width+'px';wrap.style.height=tr.height+'px';
+    wrap.style.filter='drop-shadow(0 18px 30px rgba(0,0,0,.65)) drop-shadow(0 6px 12px rgba(0,0,0,.5))';
+    const inner=document.createElement('div');
+    inner.style.cssText='position:absolute;inset:0;transform-style:preserve-3d';
+    // FRENTE = a carta; VERSO = back skin do dono
+    const front=document.createElement('div');
+    front.style.cssText='position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:9px;overflow:hidden;transform:rotateY(0deg)';
+    const fc=el.cloneNode(true);fc.removeAttribute('data-uid');fc.classList.remove('flipin','reveal-drop');
+    fc.style.width='100%';fc.style.height='100%';fc.style.margin='0';fc.style.visibility='visible';
+    front.appendChild(fc);
+    const gloss=document.createElement('div');gloss.className='reveal-gloss';front.appendChild(gloss); // brilho 3D ao exibir
+    const back=document.createElement('div');
+    back.style.cssText='position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:9px;overflow:hidden;transform:rotateY(180deg)';
+    const skin=(side===1)?((Game.g&&Game.g.bot&&Game.g.bot.back)||'rival'):(typeof BackSkin!=='undefined'?BackSkin.get():'classic');
+    back.innerHTML=backCardHTML(skin, side===1?'😈':'⚽');
+    const bk=back.querySelector('.gcard');if(bk){bk.style.width='100%';bk.style.height='100%';bk.style.margin='0';}
+    inner.appendChild(back);inner.appendChild(front);
+    wrap.appendChild(inner);
+    document.body.appendChild(wrap);
+    Snd.reveal&&Snd.reveal();
+    const dur=1750; // mais lento, pra dar tempo de ver a carta no centro
+    const S=1.95;   // tamanho da carta no centro (bem maior)
+    let wAnim=null;
+    try{
+      // wrapper: sobe ao centro (grande), SEGURA com wiggle discreto, cai no spot com squash
+      wAnim=wrap.animate([
+        {transform:'translate(0px,0px) scale(1) rotate(0deg)'},
+        {transform:`translate(${dx.toFixed(1)}px,${dy.toFixed(1)}px) scale(${S}) rotate(-2deg)`, offset:0.22},
+        {transform:`translate(${dx.toFixed(1)}px,${dy.toFixed(1)}px) scale(${(S+0.03).toFixed(2)}) rotate(2deg)`,  offset:0.36},  /* wiggle */
+        {transform:`translate(${dx.toFixed(1)}px,${dy.toFixed(1)}px) scale(${S}) rotate(-1.5deg)`, offset:0.50},                  /* wiggle */
+        {transform:`translate(${dx.toFixed(1)}px,${dy.toFixed(1)}px) scale(${(S+0.02).toFixed(2)}) rotate(1.2deg)`, offset:0.62}, /* wiggle (segura no centro) */
+        {transform:`translate(${dx.toFixed(1)}px,${(dy-14).toFixed(1)}px) scale(${(S+0.04).toFixed(2)}) rotate(0deg)`, offset:0.68}, /* pulinho antes de cair */
+        {transform:'translate(0px,0px) scale(1.05) rotate(0deg)', offset:0.88},
+        {transform:'translate(0px,7px) scale(1.14,.84) rotate(0deg)', offset:0.93},
+        {transform:'translate(0px,0px) scale(1) rotate(0deg)'}
+      ],{duration:dur,easing:'cubic-bezier(.4,.05,.4,1)',fill:'forwards'});
+      // inner: começa no VERSO (rotateY 180) e VIRA pra FRENTE (rotateY 360) ao chegar no centro,
+      // com um leve tilt em X (rotateX) pra dar profundidade 3D enquanto está em destaque
+      inner.animate([
+        {transform:'rotateY(180deg) rotateX(0deg)'},
+        {transform:'rotateY(180deg) rotateX(0deg)', offset:0.18},
+        {transform:'rotateY(360deg) rotateX(11deg)', offset:0.36},
+        {transform:'rotateY(360deg) rotateX(7deg)', offset:0.62},
+        {transform:'rotateY(360deg) rotateX(0deg)'}
+      ],{duration:dur,easing:'cubic-bezier(.4,.1,.3,1)',fill:'forwards'});
+    }catch(e){ wAnim=null; }
+    // impacto + poeira no momento da queda (tremor BEM sutil)
+    setTimeout(()=>{
+      this.dust(tr.left+tr.width/2, tr.top+tr.height*0.92);
+      document.body.classList.add('shake-soft');setTimeout(()=>document.body.classList.remove('shake-soft'),320);
+      if(Snd.boom)Snd.boom();vib(18);
+    }, Math.round(dur*0.91));
+    if(wAnim){ try{ await wAnim.finished; }catch(e){ await sleep(dur); } }
+    else{ await sleep(dur); }
+    await sleep(70);
+    wrap.remove();
+    el.style.visibility='';
+  },
+  /* poeira do impacto: várias partículas espalhando rente ao chão */
+  dust(x,y){
+    for(let i=0;i<8;i++){
+      const p=document.createElement('div');p.className='dustfx';
+      const dir=(i/7-0.5)*2;                 // -1 .. 1 (espalha pros lados)
+      const dist=18+Math.random()*40;
+      p.style.left=x+'px';p.style.top=y+'px';
+      p.style.setProperty('--dx',(dir*dist).toFixed(0)+'px');
+      p.style.setProperty('--dy',(-6-Math.random()*16).toFixed(0)+'px');
+      document.body.appendChild(p);
+      setTimeout(()=>p.remove(),640);
+    }
+  },
+  /* VIRA CASACA: a carta gira 360° e pisca "traindo" o time ao mudar de lado */
+  async turncoat(card){
+    const el=card&&card.uid?document.querySelector(`[data-uid="${card.uid}"]`):null;
+    if(!el){await sleep(120);return;}
+    el.classList.remove('turncoat-flip');void el.offsetWidth;el.classList.add('turncoat-flip');
+    const r=el.getBoundingClientRect();
+    const e=document.createElement('div');e.className='turncoat-emoji';e.textContent='🔄';
+    e.style.left=(r.left+r.width/2)+'px';e.style.top=(r.top+r.height/2)+'px';
+    document.body.appendChild(e);
+    Snd.illusion&&Snd.illusion();vib([20,30,20]);
+    await sleep(640);
+    el.classList.remove('turncoat-flip');e.remove();
+  },
+  /* RECALL (Empréstimo): a carta volta voando para a mão do dono */
+  async recall(card,side){
+    const el=card&&card.uid?document.querySelector(`[data-uid="${card.uid}"]`):null;
+    if(!el){await sleep(80);return;}
+    const r=el.getBoundingClientRect();
+    const clone=el.cloneNode(true);clone.removeAttribute('data-uid');clone.classList.add('recallfx');
+    clone.style.position='fixed';clone.style.margin='0';clone.style.zIndex='90';
+    clone.style.width=r.width+'px';clone.style.height=r.height+'px';clone.style.left=r.left+'px';clone.style.top=r.top+'px';
+    // mão do jogador embaixo; mão do bot em cima
+    const ty=side===0?(window.innerHeight+40):(-80);
+    clone.style.setProperty('--dx',((window.innerWidth/2)-(r.left+r.width/2)).toFixed(0)+'px');
+    clone.style.setProperty('--dy',(ty-(r.top+r.height/2)).toFixed(0)+'px');
+    document.body.appendChild(clone);
+    el.style.visibility='hidden';
+    Snd.card&&Snd.card();
+    await sleep(520);
     clone.remove();
   },
   /* TRANSFORMAÇÃO (Bruxaria do R10): a carta inimiga "estoura" em fumaça mágica e renasce */
@@ -2768,31 +3462,60 @@ const FX={
     await sleep(640);
     els.forEach(el=>el.classList.remove('fx-morph'));
   },
-  /* MOVER carta (drible do Garrincha): clone voa do slot atual até o slot de destino */
-  async moveCard(card,destF,destSide,slotIdx){
+  /* MOVER carta (drible do Garrincha): a carta inimiga é ARRASTADA, visível, do slot atual
+     até o slot de destino. Usa Web Animations API (valores de pixel explícitos) pra garantir
+     que o arrasto SEMPRE rode, sem depender de keyframe CSS/custom props. */
+  async moveCard(card,destF,destSide,slotIdx,fromF){
     const src=card&&card.uid?document.querySelector(`[data-uid="${card.uid}"]`):null;
-    if(!src){await sleep(120);return;}
-    const sr=src.getBoundingClientRect();
+    let sr=null;
+    if(src){ sr=src.getBoundingClientRect(); }
+    else if(fromF!=null){
+      const ff=document.querySelector(`.field[data-fi="${fromF}"]`);
+      if(ff){ const r=ff.getBoundingClientRect(); sr={left:r.left+r.width/2-29,top:r.top+r.height/2-40,width:58,height:80}; }
+    }
+    if(!sr||!sr.width){ await sleep(120); return; }
+    // mede o DESTINO (a célula exata onde a carta vai pousar)
     let tr=sr;
     const fieldEl=document.querySelector(`.field[data-fi="${destF}"]`);
     if(fieldEl){
       const row=fieldEl.querySelector(destSide===0?'.merow':'.slot-row:not(.merow)');
       const cells=row?row.querySelectorAll('.cardslot'):[];
       const domIdx=destSide===0?slotIdx:(3-slotIdx); // fileira do oponente é espelhada
-      const cell=cells[domIdx];
+      const cell=cells[Math.max(0,Math.min(3,domIdx))];
       tr=(cell||row||fieldEl).getBoundingClientRect();
     }
-    const tx=tr.left+tr.width/2-sr.width/2, ty=tr.top+tr.height/2-sr.height/2;
-    const clone=src.cloneNode(true);
-    clone.removeAttribute('data-uid');
-    clone.classList.add('cardmove');
-    clone.style.left=sr.left+'px';clone.style.top=sr.top+'px';clone.style.width=sr.width+'px';clone.style.height=sr.height+'px';
-    clone.style.setProperty('--dx',(tx-sr.left)+'px');
-    clone.style.setProperty('--dy',(ty-sr.top)+'px');
+    const dx=(tr.left+tr.width/2)-(sr.left+sr.width/2);
+    const dy=(tr.top+tr.height/2)-(sr.top+sr.height/2);
+    // clona a carta (ou cria um espectro) e posiciona EXATAMENTE sobre a origem
+    let clone;
+    if(src){ clone=src.cloneNode(true); clone.removeAttribute('data-uid'); }
+    else{ clone=document.createElement('div'); clone.className='gcard'; clone.style.cssText='--c1:#1c1c1c;--c2:#2e2e2e;--cb:#fff';
+          clone.innerHTML='<div class="chead"><span class="cost"></span><span class="pow"></span></div><div class="cname" style="text-align:center">🌪️</div>'; }
+    clone.classList.remove('cardmove','flipin','reveal-drop');
+    Object.assign(clone.style,{position:'fixed',margin:'0',zIndex:'120',pointerEvents:'none',
+      left:sr.left+'px',top:sr.top+'px',width:sr.width+'px',height:sr.height+'px',
+      filter:'drop-shadow(0 12px 24px rgba(0,0,0,.55)) drop-shadow(0 0 16px rgba(120,200,255,.6))'});
     document.body.appendChild(clone);
-    src.style.visibility='hidden';
-    Snd.card();
-    await sleep(600);
+    if(src)src.style.visibility='hidden';
+    Snd.card&&Snd.card();vib(20);
+    const dur=1200;
+    let done;
+    try{
+      const anim=clone.animate([
+        {transform:'translate(0px,0px) scale(1) rotate(0deg)'},
+        {transform:`translate(${(dx*0.12).toFixed(1)}px,-16px) scale(1.07) rotate(-3deg)`, offset:0.16},
+        {transform:`translate(${(dx*0.62).toFixed(1)}px,${(dy*0.62-12).toFixed(1)}px) scale(1.05) rotate(3deg)`, offset:0.56},
+        {transform:`translate(${dx.toFixed(1)}px,${dy.toFixed(1)}px) scale(1) rotate(0deg)`}
+      ], {duration:dur, easing:'cubic-bezier(.45,.05,.3,1)', fill:'forwards'});
+      done=anim.finished;
+    }catch(e){ done=null; }
+    if(done){ try{ await done; }catch(e){ await sleep(dur); } }
+    else{ // fallback se a Web Animations API não existir
+      clone.style.transition='transform '+dur+'ms cubic-bezier(.45,.05,.3,1)';
+      void clone.offsetWidth;
+      clone.style.transform=`translate(${dx.toFixed(1)}px,${dy.toFixed(1)}px)`;
+      await sleep(dur);
+    }
     clone.remove();
   },
   /* bola pegando fogo do Dinamite: voa da carta dele até o alvo e detona */
@@ -2849,7 +3572,8 @@ const FX={
     const tx=tr.left+tr.width/2, ty=tr.top+tr.height/2;
     const sx=window.innerWidth/2, sy=-90;
     const fly=document.createElement('div');fly.className='flyback';
-    fly.innerHTML='<div class="gcard back skin-rival"><img class="bart" src="'+ART.back('rival')+'" onerror="this.remove()"><span class="backmark">😈</span></div>';
+    {const fb=(Game.g&&Game.g.bot&&Game.g.bot.back)||'rival';
+     fly.innerHTML='<div class="gcard back skin-'+fb+'"><img class="bart" src="'+ART.back(fb)+'" onerror="this.remove()"><span class="backmark">😈</span></div>';}
     fly.style.left=sx+'px';fly.style.top=sy+'px';
     fly.style.setProperty('--dx',(tx-sx).toFixed(0)+'px');
     fly.style.setProperty('--dy',(ty-sy).toFixed(0)+'px');
@@ -2865,7 +3589,7 @@ const FX={
     wrap.innerHTML=Game.bigCardHTML(card,card.pow)+'<div class="discard-tag">✂️ DESCARTADA</div>';
     document.body.appendChild(wrap);
     Snd.discard();vib(60);
-    await sleep(1300);
+    await sleep(2000);
     wrap.remove();
   }
 };
@@ -2931,7 +3655,7 @@ const CARDS=[
   text:'CRIA 🌱 — Virar: +1 de Poder por turno restante na partida.',
   c1:'#0e5a2c',c2:'#062e16',cb:'#2bd96a',
   onReveal(g,c){const b=6-g.turn;if(b>0){bump(c,b);say('A joia da base cresce o jogo inteiro! +'+b);}}},
- {id:'pele',name:'Pelé',year:1962,cost:6,pow:11,rar:'lenda',
+ {id:'pele',name:'Pelé',year:1962,cost:6,pow:11,rar:'lenda',unl:999,
   text:'Contínuo: não pode ser afetado por efeitos inimigos.',
   c1:'#1c1c1c',c2:'#3a3010',cb:'#ffc933',immune:true},
  {id:'r10',name:'Ronaldinho',year:1999,cost:4,pow:3,rar:'lenda',tag:'CRIA',
@@ -2953,11 +3677,12 @@ const CARDS=[
         say('BRUXARIA! '+v.name+' virou '+nu.name+'!');
         Game.render();
         await FX.morph(nu);             // animação clara do momento da transformação
-        // se a NOVA carta tiver efeito "Virar" (On Reveal), o motor o executa imediatamente
+        // se a NOVA carta tiver efeito "Virar" (On Reveal), o motor o executa imediatamente.
+        // Protegido em try/catch para que uma falha NUNCA aborte a Ilusão do R10.
         if(nu.onReveal){
           setCtx('Virar (Bruxaria): '+nu.name);
           await FX.glow(nu,900);
-          await nu.onReveal.call(nu,g,nu,f,1-s);
+          try{ await nu.onReveal.call(nu,g,nu,f,1-s); }catch(e){ console.warn('Efeito da carta transformada falhou:',e); }
           Game.render();FX.flush();await sleep(800);
         }
       }
@@ -2973,9 +3698,13 @@ const CARDS=[
       const dest=rnd(others);
       const ill=makeCard(this); ill.basePow=3; ill.mod=0; ill.cost=0; ill.illusion=true; ill.name='Ilusão R10';
       ill.onReveal=null;
-      await FX.illusionSplit(c,dest,s,g.fields[dest].cards[s].length);   // mira o slot exato da ilusão
+      // garante o R10 e o campo de destino renderizados/posicionados ANTES do arrasto
+      Game.render(); await sleep(60);
+      // origem do arrasto = o próprio R10 (com fallback pro campo dele, caso a carta tenha saído do DOM)
+      await FX.illusionSplit(c,dest,s,g.fields[dest].cards[s].length,f);
       g.fields[dest].cards[s].push(ill);
       say('Ginga e ilusão! O Bruxo se multiplica em campo. 🪄');
+      Game.render();
     }
   }},
  {id:'romario',name:'Romário',year:2000,cost:5,pow:5,rar:'lenda',
@@ -3099,10 +3828,17 @@ const CARDS=[
     if(!dests.length){say('Garrincha driblou, mas não tinha pra onde mandar '+v.name+'!');return;}
     const dest=rnd(dests);
     await FX.bolt(c,v,'🌪️');            // tornado do drible sai do Garrincha e atinge o alvo
-    const slotIdx=g.fields[dest].cards[1-s].filter(x=>!x.destroyed).length;
+    // PRÓXIMO spot livre no destino = cartas vivas + viradas (showdown/Data FIFA) ainda não reveladas.
+    // Assim a carta NÃO toma o lugar de uma carta virada nem reorganiza o campo.
+    const backsAtDest=g.showdown.filter(x=>x.f===dest&&x.s===(1-s)).length
+      +g.pendingFifa.filter(x=>x.f===dest&&x.s===(1-s)).length;
+    const slotIdx=Math.min(3, g.fields[dest].cards[1-s].filter(x=>!x.destroyed).length + backsAtDest);
+    // ARRASTA a carta enquanto ela ainda está no DOM (medição correta da origem)
+    await FX.moveCard(v,dest,1-s,slotIdx,f);
+    // só agora efetiva o movimento na lógica e renderiza uma vez
     const arr=g.fields[f].cards[1-s];
     const idx=arr.indexOf(v); if(idx>-1)arr.splice(idx,1);
-    await FX.moveCard(v,dest,1-s,slotIdx);  // a carta inimiga voa para o outro local
+    v._movedIn=true;                    // renderiza após as viradas (ocupa o próximo spot livre)
     g.fields[dest].cards[1-s].push(v);
     say('Que drible da vaca! Garrincha mandou '+v.name+' pro outro campo! 🌪️');
     Game.render();
@@ -3143,12 +3879,13 @@ const CARDS=[
  {id:'lh24',name:'Luiz Henrique',year:2024,cost:4,pow:5,rar:'rara',unl:32,
   text:'Virar: rouba 2 de Poder do inimigo mais forte neste campo.',
   c1:'#1c1c1c',c2:'#2e2e2e',cb:'#fff',
-  onReveal(g,c,f,s){
+  async onReveal(g,c,f,s){
     const foes=g.fields[f].cards[1-s].filter(x=>!x.destroyed&&!x.immune);
     if(foes.length){
       const v=foes.sort((a,b)=>cardPower(g,b,f,1-s)-cardPower(g,a,f,1-s))[0];
+      await FX.claw(v);   // RASGO DE GARRAS na carta inimiga atingida
       bump(v,-2);bump(c,2);
-      say('Luiz Henrique fez o estádio tremer! Roubou 2 de '+v.name+'!');
+      say('Luiz Henrique rasgou a marcação! Roubou 2 de '+v.name+'! 🐾');
     }
   }},
  {id:'pulga25',name:'Pulga',year:2025,cost:1,pow:1,rar:'comum',unl:45,
@@ -3181,8 +3918,18 @@ const CARDS=[
   text:'Ruim e caro!',
   c1:'#3a3a3a',c2:'#111',cb:'#8a8a8a'},
 ];
-/* desbloqueio mais difícil: cada conquista exige +10 troféus (10, 20, 30, ...) */
-CARDS.filter(c=>c.unl).sort((a,b)=>a.unl-b.unl).forEach((c,i)=>{ c.unl=(i+1)*10; });
+/* desbloqueio mais difícil: cada conquista exige +10 troféus (10, 20, 30, ...).
+   Zico, Bruxo, Neymar e PELÉ (o Rei) são os últimos a desbloquear na Jornada (nessa ordem;
+   Pelé é a recompensa final). */
+const LAST_UNLOCKS=['zico81','bruxo13','neymar11','pele'];
+CARDS.filter(c=>c.unl).sort((a,b)=>{
+  const la=LAST_UNLOCKS.indexOf(a.id), lb=LAST_UNLOCKS.indexOf(b.id);
+  if(la>-1||lb>-1){
+    if(la>-1&&lb>-1)return la-lb;   // mantém a ordem zico → bruxo → neymar no fim
+    return la>-1?1:-1;              // marcadas vão para o final
+  }
+  return a.unl-b.unl;              // demais cartas na ordem original
+}).forEach((c,i)=>{ c.unl=(i+1)*10; });
 const byId=id=>CARDS.find(c=>c.id===id);
 function makeCard(def){
   return Object.assign(Object.create(def),{uid:Math.random().toString(36).slice(2),basePow:def.pow,mod:0,destroyed:false,log:[]});
@@ -3218,6 +3965,12 @@ const LOCS=[
  {id:'recepcao',name:'Recepção da Torcida',text:'Neste turno, TODAS as cartas na mão ganham +2.'},
  {id:'viradamesa',name:'Virada de Mesa',text:'Quem tiver MENOS Poder vence nesse local.'},
  {id:'pilantra',name:'Empresário Pilantra',text:'Escala um "Jogador de Empresário" pra cada lado.'},
+ /* ===== locais novos (lote 5) ===== */
+ {id:'transferban',name:'Transfer Ban',text:'Ao revelar: NINGUÉM compra carta no próximo turno.'},
+ {id:'apagao',name:'Apagão',text:'Nenhuma carta pode ser jogada aqui.'},
+ {id:'emprestimo',name:'Empréstimo',text:'Cartas jogadas aqui voltam pra mão do dono no fim do turno (se houver espaço).'},
+ {id:'nilton',name:'Nilton Santos',text:'🛡️ A Enciclopédia fecha o sistema: nenhuma carta aqui pode ser destruída.'},
+ {id:'vira_casaca',name:'Vira-Casaca',text:'A 1ª carta que cada lado jogar aqui troca de campo (vai pro adversário).'},
 ];
 
 /* ---------------- BOTS ---------------- */
@@ -3240,8 +3993,34 @@ const PLAY_LEVELS=[
   {name:'Elite',        skill:2, aggro:.55, coaches:['Felipão','Abel Ferreira','Tite']},
 ];
 
+/* baralho (nome + verso) de cada treinador — exibido na tela de sorteio e usado em campo */
+const COACH_DECKS={
+  'Dorival Júnior':       {deck:'Muralha Tricolor',  back:'saopaulo'},
+  'Fernando Diniz':       {deck:'Dinizismo',         back:'flu'},
+  'Roger Machado':        {deck:'Troca e Toca',      back:'santos'},
+  'Mano Menezes':         {deck:'Raposa Cascuda',    back:'cruzeiro'},
+  'Renato Gaúcho':        {deck:'Baita Time',        back:'fla'},
+  'Vanderlei Luxemburgo': {deck:'Quadrado Mágico',   back:'vasco'},
+  'Felipão':              {deck:'Família Scolari',   back:'galo'},
+  'Abel Ferreira':        {deck:'Academia de Futebol',back:'palmeiras'},
+  'Tite':                 {deck:'Sistema Tite',      back:'timao'},
+};
+function coachDeck(name){ return COACH_DECKS[name] || {deck:'Esquadrão Rival', back:'rival'}; }
+
 /* ---------------- DECKS (montar/salvar/editar) ---------------- */
 const DEFAULT_DECK=['hulk','arrasca','ganso','estevao','pele','r10','romario','ceni','endrick','gabigol','cassio','cafu'];
+/* baralho padrão JÁ inclui o capitão escolhido: se ele não estiver na lista base,
+   entra no lugar de uma carta de custo 6 (ou da última), mantendo 12 cartas. */
+function defaultDeckIds(){
+  const cap=(typeof Profile!=='undefined'&&Profile.captain)?Profile.captain():null;
+  const ids=DEFAULT_DECK.slice();
+  if(cap&&byId(cap)&&!ids.includes(cap)){
+    let ri=ids.findIndex(id=>{const c=byId(id);return c&&c.cost===6;});
+    if(ri<0)ri=ids.length-1;
+    ids[ri]=cap;
+  }
+  return ids;
+}
 const Decks={
   editing:null, sel:[], showLocked:false,
   toggleLocked(){
@@ -3255,14 +4034,14 @@ const Decks={
   active(){ return localStorage.getItem('brclash_active'); },
   activeCards(){
     const d=this.load(), a=this.active();
-    const ids=(a&&d[a]&&d[a].length===12)?d[a]:DEFAULT_DECK;
+    const ids=(a&&d[a]&&d[a].length===12)?d[a]:defaultDeckIds();
     return ids.map(byId).filter(Boolean);
   },
   /* abre direto o construtor, carregando o baralho ativo */
   openBuilder(){
     const a=this.active(), d=this.load();
     if(a&&d[a]){ this.editing=a; this.sel=[...d[a]]; $('#deckName').value=a; }
-    else{ this.editing=null; this.sel=[...DEFAULT_DECK]; $('#deckName').value=''; }
+    else{ this.editing=null; this.sel=[...defaultDeckIds()]; $('#deckName').value=''; }
     this.renderBuilder();
     UI.go('builder');
   },
@@ -3413,9 +4192,9 @@ function cardPower(g,card,f,side){
   if(g.fields[f].loc.id==='morumbi'&&g.fields[f].open&&mates.length===1) p+=3;
   if(g.fields[f].loc.id==='vila'&&g.fields[f].open&&card.tag==='CRIA') p+=2;
   if(g.fields[f].loc.id==='loteria'&&g.fields[f].open) p+=(card.cost%2===1?2:-1);
-  // Tokens (ex.: Jogador de Empresário) PODEM ter Poder negativo — entram exatamente com o valor base.
-  // Cartas normais nunca ficam abaixo de 0.
-  return card.token?p:Math.max(0,p);
+  // Poder PODE ficar negativo: cartas nerfadas (ex.: Moça Bonita) continuam perdendo
+  // Poder mesmo depois de chegar a 0. Sem clamp.
+  return p;
 }
 function fieldPower(g,f,side){
   return g.fields[f].cards[side].reduce((t,c)=>t+cardPower(g,c,f,side),0);
@@ -3436,7 +4215,17 @@ function fieldsWon(g,side){
 
 /* ---------------- COMENTÁRIO (discreto) ---------------- */
 const PHRASES_PLAY=['Olha ele aí!','Tá em campo!','Entrou pra jogar!','Vai pra cima!'];
-function say(t){const el=$('#commentary');if(el)el.textContent=t;}
+/* LOG lateral persistente: recebe narração (say) e avisos (toast in-game) */
+function logMsg(t){
+  if(!t)return;
+  const box=$('#gameLog');if(!box)return;
+  if(box.lastChild&&box.lastChild.textContent===t)return; // dedupe consecutivo
+  const line=document.createElement('div');line.className='log-line';line.textContent=t;
+  box.appendChild(line);
+  while(box.childNodes.length>60)box.removeChild(box.firstChild);
+  box.scrollTop=box.scrollHeight; // rola pro mais recente
+}
+function say(t){const el=$('#commentary');if(el)el.textContent=t; if(t)logMsg(t);}
 
 /* ---------------- BANNER DE TURNO ---------------- */
 async function banner(text,sub='',resol=false){
@@ -3459,6 +4248,7 @@ const Game={
     Snd.c();
     const bot=(typeof botArg==='string')?BOTS[botArg]:botArg;
     const botId=(typeof botArg==='string')?botArg:(botArg.id||'cpu');
+    if(!bot.back){const cdk=coachDeck(bot.name);bot.back=cdk.back;bot.deckName=cdk.deck;} // verso/baralho temático do treinador
     const locs=[...LOCS].sort(()=>Math.random()-.5).slice(0,3);
     const myDefs=Decks.activeCards();
     const botDefs=[...CARDS].filter(c=>!c.token).sort(()=>Math.random()-.5).slice(0,12);
@@ -3476,6 +4266,7 @@ const Game={
     for(let s=0;s<2;s++)for(let i=0;i<3;i++) g.hands[s].push(g.decks[s].pop());
     this.sel=null;this.busy=false;
     this._fieldEls=[];this._fieldSigs=[];this._lastStakes=null;$('#fields').innerHTML='';
+    {const lg=$('#gameLog');if(lg)lg.innerHTML='';} // zera o histórico a cada partida
     {const sn=$('#snapNote');if(sn)sn.classList.remove('on');}
     // garante que os botões voltam a funcionar numa nova partida
     $('#btnEnd').disabled=$('#btnRetreat').disabled=false;
@@ -3538,6 +4329,7 @@ const Game={
     const used=g.fields[f].cards[0].length+g.staged.filter(s=>s.f===f).length;
     if(used>=4){Snd.error();UI.toast('Campo lotado! Máximo 4 cartas.');return;}
     if(g.fields[f].loc.id==='portoes'&&g.fields[f].open&&g.turn>=4){Snd.error();UI.toast('🔒 Portões Fechados! Não dá mais pra escalar aqui.');return;}
+    if(g.fields[f].loc.id==='apagao'&&g.fields[f].open){Snd.error();UI.toast('🔌 Apagão! Não dá pra jogar carta neste local.');return;}
     if(this.costOf(card,f)>this.energyLeft()){Snd.error();UI.toast('Sem energia, doutor! ⚡');return;}
     g.staged.push({card,f}); this.sel=null; Snd.card(); vib(12); this.render();
   },
@@ -3549,7 +4341,7 @@ const Game={
     const hand=[...g.hands[1]].sort((a,b)=>b.cost-a.cost||b.pow-a.pow);
     if(B.skill===0) hand.sort(()=>Math.random()-.5);
     for(const card of hand){
-      const open=[0,1,2].filter(i=>g.fields[i].cards[1].length+plays.filter(p=>p.f===i).length<4 && !(g.fields[i].loc.id==='portoes'&&g.fields[i].open&&g.turn>=4));
+      const open=[0,1,2].filter(i=>g.fields[i].cards[1].length+plays.filter(p=>p.f===i).length<4 && !(g.fields[i].loc.id==='portoes'&&g.fields[i].open&&g.turn>=4) && !(g.fields[i].loc.id==='apagao'&&g.fields[i].open));
       if(!open.length)break;
       let f;
       if(B.skill===0) f=rnd(open);
@@ -3607,6 +4399,7 @@ const Game={
     const s=player?0:1;
     if(g.snapped[s])return;
     g.snapped[s]=true; g.snapTurn[s]=g.turn;
+    if(player&&typeof Missions!=='undefined')Missions.event('snap',1); // missão: Mala na mesa
     if(player){
       // IMPACTO no clique (mala cai na mesa), mas a DOBRA dos troféus
       // só passa a valer quando o jogador encerra o turno (com animação de contagem).
@@ -3803,11 +4596,60 @@ const Game={
         g.fields[f].cards[0].concat(g.fields[f].cards[1]).forEach(c=>{if(c.id==='empresario')c._flip=false;});
       }
     }
+    if(loc.id==='transferban'){
+      // ninguém compra no PRÓXIMO turno
+      g.noDrawTurn=g.turn+1;
+      await FX.glowLoc(f,700);
+      this.locEmoji(f,'🚫');
+      const el=document.querySelector(`.field[data-fi="${f}"]`); if(el){el.classList.remove('fx-ban');void el.offsetWidth;el.classList.add('fx-ban');setTimeout(()=>el.classList.remove('fx-ban'),900);}
+      say('TRANSFER BAN! Ninguém reforça o elenco: sem compra de carta no próximo turno. 🚫🃏');
+      UI.toast('🚫 Transfer Ban: sem compra de carta no próximo turno!');
+      await sleep(650);
+    }
+    if(loc.id==='apagao'){
+      await FX.glowLoc(f,700);
+      const el=document.querySelector(`.field[data-fi="${f}"]`); if(el){el.classList.remove('fx-blackout');void el.offsetWidth;el.classList.add('fx-blackout');setTimeout(()=>el.classList.remove('fx-blackout'),1200);}
+      this.locEmoji(f,'💡');
+      say('APAGÃO! As luzes caíram — ninguém joga carta neste local. 🔌');
+      UI.toast('🔌 Apagão: não dá pra escalar cartas aqui!');
+      await sleep(650);
+    }
+    if(loc.id==='emprestimo'){
+      await FX.glowLoc(f,700);
+      this.locEmoji(f,'↩️');
+      say('EMPRÉSTIMO! Cartas jogadas aqui voltam pra mão no fim do turno. 🔁');
+      UI.toast('🔁 Empréstimo: as cartas voltam pra mão no fim do turno (se houver espaço).');
+      await sleep(600);
+    }
+    if(loc.id==='nilton'){
+      await FX.glowLoc(f,700);
+      const el=document.querySelector(`.field[data-fi="${f}"]`); if(el){el.classList.remove('fx-shield');void el.offsetWidth;el.classList.add('fx-shield');setTimeout(()=>el.classList.remove('fx-shield'),1100);}
+      this.locEmoji(f,'🛡️');
+      say('NILTON SANTOS! A Enciclopédia fecha o sistema: nada é destruído aqui. 🛡️');
+      UI.toast('🛡️ Nilton Santos: nenhuma carta pode ser destruída neste local.');
+      await sleep(650);
+    }
+    if(loc.id==='vira_casaca'){
+      await FX.glowLoc(f,700);
+      const el=document.querySelector(`.field[data-fi="${f}"]`); if(el){el.classList.remove('fx-turncoat');void el.offsetWidth;el.classList.add('fx-turncoat');setTimeout(()=>el.classList.remove('fx-turncoat'),1000);}
+      this.locEmoji(f,'🔄');
+      say('VIRA-CASACA! A 1ª carta que cada lado jogar aqui troca de campo. 🔄');
+      UI.toast('🔄 Vira-Casaca: a 1ª carta de cada lado muda de lado!');
+      await sleep(650);
+    }
   },
 
   /* destruição com animação */
   async destroyCard(card,f,s){
     const g=this.g;
+    // Nilton Santos: NENHUMA carta pode ser destruída neste local
+    if(g.fields[f].loc.id==='nilton'&&g.fields[f].open){
+      say('🛡️ NILTON SANTOS blindou o sistema! '+card.name+' não pode ser destruído aqui.');
+      const el=document.querySelector(`.field[data-fi="${f}"]`); if(el){el.classList.remove('fx-shield');void el.offsetWidth;el.classList.add('fx-shield');setTimeout(()=>el.classList.remove('fx-shield'),1000);}
+      this.locEmoji(f,'🛡️');
+      await sleep(500);
+      return;
+    }
     // Fábio defende: suas outras cartas no campo dele não podem ser destruídas
     if(g.fields[f].cards[s].some(x=>x.id==='fabio23'&&!x.destroyed&&x!==card)){
       say('FÁBIO DEFENDEU! '+card.name+' está protegido. 🧤');
@@ -3849,6 +4691,7 @@ const Game={
     g._frozenEnergy=this.energyLeft();
     const myPlays=[...g.staged], botPlays=[...g.botStaged];
     g.staged=[];g.botStaged=[];
+    if(typeof Missions!=='undefined'&&myPlays.length)Missions.event('card',myPlays.length); // missão: cartas escaladas
 
     /* ===== FASE 1: versos na mesa ===== */
     // suas jogadas entram de uma vez (+ cartas que ficaram de costas na Data FIFA)
@@ -4004,6 +4847,33 @@ const Game={
       if(any){say('Sol forte na Moça Bonita: todo mundo aqui perdeu 1 de Poder. ☀️');this.render();FX.flush();await sleep(550);}
     }
 
+    // Empréstimo: cartas jogadas aqui voltam pra mão do dono no fim do turno (se houver espaço).
+    // No turno 6 elas FICAM (valem na contagem final).
+    if(g.turn<6){
+      for(let f=0;f<3;f++){
+        if(g.fields[f].loc.id!=='emprestimo'||!g.fields[f].open)continue;
+        const back=[];
+        for(let s=0;s<2;s++){
+          for(const c of [...g.fields[f].cards[s]]){
+            if(c.destroyed||c.token)continue;            // tokens não voltam pra mão
+            if(g.hands[s].length>=7)continue;            // sem espaço na mão
+            back.push({c,s});
+          }
+        }
+        if(!back.length)continue;
+        this.render();await FX.glowLoc(f,550);this.locEmoji(f,'↩️');
+        for(const {c,s} of back){
+          await FX.recall(c,s);
+          const arr=g.fields[f].cards[s];const ix=arr.indexOf(c);if(ix>-1)arr.splice(ix,1);
+          c.mod=0;                                       // "fim do empréstimo": volta neutra pra mão
+          c._returned=(s===0);
+          g.hands[s].push(c);
+        }
+        say('Fim do empréstimo! '+back.length+' carta'+(back.length>1?'s':'')+' voltaram pra mão. 🔁');
+        this.render();await sleep(450);
+      }
+    }
+
     this.render();
     await sleep(450);
 
@@ -4030,10 +4900,34 @@ const Game={
     if(g.turn===2||g.turn===3){this.render();await FX.revealLoc(g.turn-1);}
     if(stjdField>-1){this.render();await this.applySTJD(stjdField);}
     if(g.turn===2||g.turn===3){await this.applyLocReveal(g.turn-1);}
-    if(g.turn===6&&!g._t6shown){g._t6shown=true;UI.toast('🏆 Última rodada! As Taças DOBRAM quando o turno terminar (não dobra se amarelar).');Snd.whistleFinal();}
-    /* fase de DRAW */
+    if(g.turn===6&&!g._t6shown){g._t6shown=true;UI.toast('🏆 Última rodada! As Taças DOBRAM quando o turno terminar (não dobra se amarelar).');Snd.whistleFinal();
+      // Gabigol: o +3 de turno 6 "ativa" com animação de buff nas cópias já em campo
+      this.render();
+      let gabHit=false;
+      for(let f=0;f<3;f++)for(let s=0;s<2;s++)for(const c of g.fields[f].cards[s]){
+        if(c.id==='gabigol'&&!c.destroyed){FX.glow(c,900);setCtx('Gabigol · decisão (6º turno)');FX.delta(c,3);gabHit=true;}
+      }
+      if(gabHit){FX.flush();say('Gabigol ligou o modo decisão! +3 no sexto turno! 🔥');await sleep(650);}
+      // Maracanã: o +2 de turno 6 ativa com animação (brilho do local + buff em todas as cartas)
+      for(let f=0;f<3;f++){
+        if(g.fields[f].loc.id!=='maraca'||!g.fields[f].open)continue;
+        let any=false;
+        this.render();await FX.glowLoc(f,700);this.locEmoji(f,'🏟️');
+        for(let s=0;s<2;s++)for(const c of g.fields[f].cards[s]){
+          if(!c.destroyed){setCtx('Local: Maracanã · turno 6');FX.delta(c,2);any=true;}
+        }
+        if(any){say('MARACANÃ LOTADO! O caldeirão empurra todo mundo: +2 no sexto turno! 🏟️🔥');FX.flush();await sleep(650);}
+      }
+    }
+    /* fase de DRAW — Transfer Ban: ninguém compra neste turno */
     const drawn=[];
-    for(let s=0;s<2;s++){
+    const skipDraw=(g.noDrawTurn===g.turn);
+    if(skipDraw){
+      for(let f=0;f<3;f++)if(g.fields[f].loc.id==='transferban'&&g.fields[f].open)this.locEmoji(f,'🚫');
+      UI.toast('🚫 Transfer Ban: ninguém compra carta neste turno!');
+      say('Transfer Ban em vigor: sem reforços nesta rodada. 🚫🃏');
+    }
+    for(let s=0;s<2&&!skipDraw;s++){
       if(g.decks[s].length&&g.hands[s].length<7){const c=g.decks[s].pop();c._drawn=(s===0);g.hands[s].push(c);if(s===0)drawn.push(c);}
       for(let f=0;f<3;f++){
         if(g.fields[f].loc.id==='nqa'&&g.fields[f].open){
@@ -4062,13 +4956,30 @@ const Game={
       g.showdown=g.showdown.filter(x=>x.card!==card);
       this.render();return;
     }
-    // remove o verso correspondente e entra virando
+    // remove o verso correspondente e entra no slot
     g.showdown=g.showdown.filter(x=>x.card!==card);
-    card._flip=true;
     g.fields[f].cards[s].push(card);
+    this.render();
+    // ANIMAÇÃO DE REVELAÇÃO: sobe virada (verso), vira perto do centro e CAI no spot (impacto + poeira)
+    await FX.revealDrop(card,s);
     Snd.reveal();
     // debuffs de chegada — só se o campo já foi revelado (o local brilha antes)
     const loc=g.fields[f].loc, locOn=g.fields[f].open;
+    // VIRA CASACA: a 1ª carta de cada lado neste local troca de campo (vai pro adversário)
+    if(locOn&&loc.id==='vira_casaca'){
+      g.fields[f]._turncoat=g.fields[f]._turncoat||[false,false];
+      if(!g.fields[f]._turncoat[s]&&g.fields[f].cards[1-s].length<4){
+        g.fields[f]._turncoat[s]=true;
+        const arr=g.fields[f].cards[s];const ix=arr.indexOf(card);if(ix>-1)arr.splice(ix,1);
+        g.fields[f].cards[1-s].push(card);
+        this.render();
+        await FX.turncoat(card);
+        this.locEmoji(f,'🔄');
+        say('VIRA-CASACA! '+card.name+' trocou de lado e foi jogar pro outro time! 🔄');
+        await sleep(420);
+        s=1-s; // a carta agora pertence ao adversário (o efeito Virar segue para o novo dono)
+      }
+    }
     if(locOn&&loc.id==='dm'){this.render();await FX.glowLoc(f);setCtx('Local: DM');bump(card,-2);}
     if(locOn&&loc.id==='januario'&&g.turn>4){this.render();await FX.glowLoc(f);setCtx('Local: São Januário');bump(card,-2);}
     if(locOn&&card.tag==='CRIA'&&loc.id==='allianz'){this.render();await FX.glowLoc(f);setCtx('Local: Allianz Parque');bump(card,1);}
@@ -4088,15 +4999,16 @@ const Game={
       await FX.discard(dc,s);
     }
     if(!card.immune&&g.fields[f].cards[1-s].some(x=>x.id==='ceni'&&!x.destroyed)){setCtx('Contínuo: Rogério Ceni');bump(card,-1);}
+    if(card.id==='gabigol'&&g.turn>=6){setCtx('Gabigol · decisão (6º turno)');FX.delta(card,3);} // anima o +3 ao entrar no 6º turno
     say((s===0?'Você joga ':g.bot.name+' joga ')+card.name+'! '+rnd(PHRASES_PLAY));
     this.render();FX.flush();
-    card._flip=false;
-    await sleep(620);
+    await sleep(320);
     // Virar
     if(card.onReveal){
       if(locOn&&loc.id==='mesa'){await FX.glowLoc(f);say('Mesa Redonda: muita falação, efeito nenhum.');}
       else if(locOn&&loc.id==='var'){await FX.glowLoc(f);g.pendingVAR.push({card,f,s});say('Checando o lance no VAR... 📺');}
       else{
+        FX.revealBadge(card);          // selo ⚡VIRAR + anel de energia (reforça a animação do efeito)
         await FX.glow(card,1100);
         setCtx('Virar: '+card.name);
         await card.onReveal.call(card,g,card,f,s);
@@ -4168,6 +5080,12 @@ const Game={
   finish(win,retreated,amount){
     const g=this.g;g.over=true;this.busy=true;
     this._roadFrom=this.tacas; // para animar a barra da Jornada
+    // progresso de missões (partida jogada, vitória, locais vencidos)
+    if(typeof Missions!=='undefined'){
+      Missions.event('play',1);
+      if(win===true)Missions.event('win',1);
+      Missions.event('loc',fieldsWon(g,0));
+    }
     Timer.stop();
     vib(win?[60,40,60,40,140]:200);
     const ov=$('#overlay'),t=$('#ovTitle'),x=$('#ovText');
@@ -4247,10 +5165,19 @@ const Game={
         if(Copa.n>=total){
           Copa.active=false;coins+=TIER.reward;champion=true;
           CopaStats.title();
+          // TROFÉUS por título de copa — quantia boa e PROGRESSIVA por série
+          const cupT=TIER.trophy||0;
+          if(cupT){
+            this.tacas+=cupT; this._cupTrophyBonus=cupT;
+            const pm=+localStorage.getItem('brclash_maxtacas')||0;
+            if(this.tacas>pm)localStorage.setItem('brclash_maxtacas',this.tacas);
+            localStorage.setItem('brclash_tacas',this.tacas);
+          }
+          if(typeof Missions!=='undefined')Missions.event('cup',1);
           const wasLocked=CopaStats.load().unlocked<=Copa.tier;
           CopaStats.completeTier(Copa.tier);
           t.textContent='CAMPEÃO DA '+TIER.name.toUpperCase()+'! 🏆🏆🏆';
-          x.textContent='Levantou o caneco! Bônus de '+TIER.reward+' 🎩. '+x.textContent;
+          x.textContent='Levantou o caneco! Bônus de '+TIER.reward+' 🎩'+(cupT?' e +'+cupT+' 🏆':'')+'. '+x.textContent;
           if(wasLocked&&Copa.tier+1<COPA_TIERS.length)x.textContent+=' 🔓 '+COPA_TIERS[Copa.tier+1].name+' liberada!';
           Snd.win();vib([80,40,80,40,80,40,200]);
         }else{
@@ -4300,7 +5227,8 @@ const Game={
     }else{
       const bigT=$('#ovBigTrophy');if(bigT)bigT.classList.remove('champ');
     }
-    const tdelta=win===null?0:win?amount:-amount;
+    let tdelta=win===null?0:win?amount:-amount;
+    if(this._cupTrophyBonus){tdelta+=this._cupTrophyBonus;this._cupTrophyBonus=0;} // soma os troféus do título de copa
     requestAnimationFrame(()=>requestAnimationFrame(()=>this.runEndAnim(tdelta,coins)));
   },
   /* tela de vitória/derrota: troféus saem da mala e alimentam o troféu central;
@@ -4355,19 +5283,22 @@ const Game={
     const cls=['gcard'];if(c.rar==='lenda')cls.push('legend');
     if(c._flip)cls.push('flipin');
     // efeito contínuo em funcionamento: aura pulsante (só em campo, viva)
-    if(g&&!c.destroyed&&(c.text||'').includes('Contínuo'))cls.push('cont');
+    const contActive=g&&!c.destroyed&&(c.text||'').includes('Contínuo');
+    if(contActive)cls.push('cont');
     const p=g?cardPower(g,c,f,s):c.basePow+c.mod;
     const pc=p>c.basePow?'buff':p<c.basePow?'nerf':'';
     return `<div class="${cls.join(' ')}" data-uid="${c.uid||''}" style="--c1:${c.c1};--c2:${c.c2};--cb:${c.cb}">
       ${artHTML(c)}
       <div class="chead"><span class="cost">${c.cost}</span><span class="pow ${pc}">${p}</span></div>
       ${c.tag==='CRIA'?'<span class="cria">🌱</span>':''}
+      ${contActive?'<span class="cont-icon" title="Efeito contínuo ativo">∞</span>':''}
       <div><div class="cname">${c.name}</div><div class="cyear">${c.year}</div></div>
     </div>`;
   },
 
   backHTML(side=0){
-    const skin=side===1?'rival':BackSkin.get();
+    const foeBack=(this.g&&this.g.bot&&this.g.bot.back)||'rival';
+    const skin=side===1?foeBack:BackSkin.get();
     return backCardHTML(skin, side===1?'😈':'⚽');
   },
 
@@ -4466,35 +5397,44 @@ const Game={
       if(this.sel!=null&&!this.busy){
         const used=fl.cards[0].length+stagedHere.length;
         const card=g.hands[0][this.sel];
-        const locked=fl.loc.id==='portoes'&&fl.open&&g.turn>=4;
+        const locked=(fl.loc.id==='portoes'&&fl.open&&g.turn>=4)||(fl.loc.id==='apagao'&&fl.open);
         canTarget=used<4&&!locked&&this.costOf(card,fi)<=this.energyLeft();
       }
       // assinatura do estado visível: se nada mudou, não toca no DOM deste campo
+      const _winr=fieldWinner(g,fi);
       const sig=JSON.stringify([
-        fl.open,fl.loc.id,mp,fp,stg,canTarget,this.sel!=null,sdHere(0).length,sdHere(1).length,
-        fl.cards[0].map(c=>[c.uid,cardPower(g,c,fi,0),c.destroyed,!!c._flip]),
-        fl.cards[1].map(c=>[c.uid,cardPower(g,c,fi,1),c.destroyed,!!c._flip]),
+        fl.open,fl.loc.id,mp,fp,stg,canTarget,this.sel!=null,sdHere(0).length,sdHere(1).length,_winr,
+        fl.cards[0].map(c=>[c.uid,cardPower(g,c,fi,0),c.destroyed,!!c._flip,!!c._movedIn]),
+        fl.cards[1].map(c=>[c.uid,cardPower(g,c,fi,1),c.destroyed,!!c._flip,!!c._movedIn]),
         stagedHere.map(s=>s.card.uid)
       ]);
       if(this._fieldEls[fi]&&this._fieldEls[fi].isConnected&&this._fieldSigs[fi]===sig)return;
 
       const div=document.createElement('div');div.className='field';div.dataset.fi=fi;
       if(canTarget)div.classList.add('targetable');
+      // moldura colorida progressiva pro lado que está vencendo o local
+      div.classList.toggle('lead-me',fl.open&&_winr===0);
+      div.classList.toggle('lead-foe',fl.open&&_winr===1);
       div.onclick=()=>this.stageTo(fi);
 
       const foeRow=document.createElement('div');foeRow.className='slot-row';
       const foeBacks=sdHere(1);
-      // espelhado: a "frente" do adversário é a fileira de BAIXO (junto ao local)
+      // ordem dos slots: cartas assentadas → VIRADAS (versos) → cartas que CHEGARAM por efeito.
+      // Assim a carta movida (ex.: Garrincha) ocupa o próximo spot livre sem empurrar as viradas.
+      const foeContents=[];
+      fl.cards[1].forEach(c=>{ if(!c._movedIn)foeContents.push({card:c}); });
+      foeBacks.forEach(()=>foeContents.push({back:true}));
+      fl.cards[1].forEach(c=>{ if(c._movedIn)foeContents.push({card:c}); });
       const foeCells=[];
       for(let i=0;i<4;i++){
         const sl=document.createElement('div');sl.className='cardslot';
-        const c=fl.cards[1][i];
-        if(c){
+        const it=foeContents[i];
+        if(it&&it.card){
+          const c=it.card;
           sl.innerHTML=this.cardHTML(c,true,g,fi,1);
           sl.onclick=e=>{e.stopPropagation();UI.inspect(c,g,fi,1);};
-        }else{
-          const b=foeBacks[i-fl.cards[1].length];
-          if(b)sl.innerHTML=this.backHTML(1);
+        }else if(it&&it.back){
+          sl.innerHTML=this.backHTML(1);
         }
         foeCells.push(sl);
       }
@@ -4516,24 +5456,27 @@ const Game={
            <span class="fpower me${mp>fp?'leading':''}">${mp}${stg?`<i class="stg">+${stg}</i>`:''}</span>`;
       const meRow=document.createElement('div');meRow.className='slot-row merow';
       const myBacks=sdHere(0);
+      // mesma ordem: assentadas → viradas → chegaram por efeito → escaladas (staged)
+      const meContents=[];
+      fl.cards[0].forEach(c=>{ if(!c._movedIn)meContents.push({card:c}); });
+      myBacks.forEach(()=>meContents.push({back:true}));
+      fl.cards[0].forEach(c=>{ if(c._movedIn)meContents.push({card:c}); });
+      stagedHere.forEach(st=>meContents.push({staged:st}));
       for(let i=0;i<4;i++){
         const sl=document.createElement('div');sl.className='cardslot';
-        const c=fl.cards[0][i];
-        if(c){
+        const it=meContents[i];
+        if(it&&it.card){
+          const c=it.card;
           sl.innerHTML=this.cardHTML(c,true,g,fi,0);
           sl.onclick=e=>{e.stopPropagation();UI.inspect(c,g,fi,0);};
-        }else{
-          const b=myBacks[i-fl.cards[0].length];
-          if(b){ sl.innerHTML=this.backHTML(0); }
-          else{
-            const st=stagedHere[i-fl.cards[0].length-myBacks.length];
-            if(st){
-              sl.innerHTML=this.cardHTML(st.card,true,null);
-              sl.firstElementChild.classList.add('staged');
-              sl.onclick=e=>{e.stopPropagation();};
-              sl.firstElementChild.addEventListener('pointerdown',e=>StagedDrag.down(e,st));
-            }
-          }
+        }else if(it&&it.back){
+          sl.innerHTML=this.backHTML(0);
+        }else if(it&&it.staged){
+          const st=it.staged;
+          sl.innerHTML=this.cardHTML(st.card,true,null);
+          sl.firstElementChild.classList.add('staged');
+          sl.onclick=e=>{e.stopPropagation();};
+          sl.firstElementChild.addEventListener('pointerdown',e=>StagedDrag.down(e,st));
         }
         meRow.appendChild(sl);
       }
@@ -4585,13 +5528,13 @@ function playerLevel(){ const m=maxTacas(); return m>=30?2 : m>=10?1 : 0; }
 
 /* ---------------- DIVISÕES DA COPA (4 dificuldades) ---------------- */
 const COPA_TIERS=[
-  {key:'d',name:'Série D',cls:'tier-d',reward:150,desc:'Semis ida/volta + final (3 jogos).',
+  {key:'d',name:'Série D',cls:'tier-d',reward:150,trophy:10,desc:'Semis ida/volta + final (3 jogos).',
    games:[
      {bot:'dorival',label:'Semifinal · Ida'},
      {bot:'dorival',label:'Semifinal · Volta'},
      {bot:'mano',label:'FINAL'},
    ]},
-  {key:'c',name:'Série C',cls:'tier-c',reward:250,desc:'Quartas + semis + final (5 jogos).',
+  {key:'c',name:'Série C',cls:'tier-c',reward:250,trophy:20,desc:'Quartas + semis + final (5 jogos).',
    games:[
      {bot:'diniz',label:'Quartas · Ida'},
      {bot:'diniz',label:'Quartas · Volta'},
@@ -4599,7 +5542,7 @@ const COPA_TIERS=[
      {bot:'roger',label:'Semifinal · Volta'},
      {bot:'luxa',label:'FINAL'},
    ]},
-  {key:'b',name:'Série B',cls:'tier-b',reward:400,desc:'Oitavas → final (7 jogos).',
+  {key:'b',name:'Série B',cls:'tier-b',reward:400,trophy:35,desc:'Oitavas → final (7 jogos).',
    games:[
      {bot:'mano',label:'Oitavas · Ida'},
      {bot:'mano',label:'Oitavas · Volta'},
@@ -4609,7 +5552,7 @@ const COPA_TIERS=[
      {bot:'felipao',label:'Semifinal · Volta'},
      {bot:'tite',label:'FINAL'},
    ]},
-  {key:'a',name:'Série A',cls:'tier-a',reward:700,desc:'A elite — tudo no nível máximo (7 jogos).',
+  {key:'a',name:'Série A',cls:'tier-a',reward:700,trophy:60,desc:'A elite — tudo no nível máximo (7 jogos).',
    games:[
      {bot:'luxa',label:'Oitavas · Ida'},
      {bot:'luxa',label:'Oitavas · Volta'},
@@ -4884,6 +5827,12 @@ const UI={
       $('#tacasMenu').textContent=Game.tacas;
       $('#recordMenu').textContent=maxTacas();
       $('#coinsMenu').textContent=Coins.get();
+      {const ct=$('#copaTitlesMenu');if(ct)ct.textContent=CopaStats.load().titles;}
+      // cartão do jogador: avatar + nick + subtítulo (divisão pela progressão)
+      {const av=$('#menuAvatar');if(av)av.innerHTML=Profile.avatar()+'<img draggable="false" src="'+ART.avatar('player')+'" alt="" onerror="this.remove()">';}
+      {const nk=$('#menuNick');if(nk)nk.textContent=Profile.nick()||'Craque';}
+      {const sb=$('#menuSub');if(sb){const div=['Várzea','Profissional','Elite'][playerLevel()];sb.textContent=div+' · recorde de '+maxTacas()+' 🏆';}}
+      if(typeof Missions!=='undefined')Missions.badge();
       // seleção rápida de baralho
       const qd=$('#quickDeck');qd.innerHTML='';
       ['Seleção Padrão',...Object.keys(Decks.load())].forEach(n=>{
@@ -5247,6 +6196,8 @@ const UI={
     body.querySelectorAll('.locker-mini').forEach((el,i)=>el.onclick=e=>{e.stopPropagation();$('#lockerModal').classList.remove('on');UI.inspect(m.arr[i]);});
   },
   toast(t){
+    // durante a partida, os avisos vão pro LOG lateral (não no centro-topo)
+    if(typeof Game!=='undefined'&&Game.g&&!Game.g.over){ logMsg(t); return; }
     const el=$('#toast');el.textContent=t;el.style.display='block';
     clearTimeout(this._t);this._t=setTimeout(()=>el.style.display='none',2200);
   },
@@ -5266,6 +6217,22 @@ const UI={
     // lado do jogador: avatar + nick
     $('#drawMeAv').innerHTML=Profile.avatar()+'<img draggable="false" src="'+ART.avatar('player')+'" alt="" onerror="this.remove()">';
     $('#drawMeName').textContent=Profile.nick()||'Você';
+    // baralho ativo do jogador: nome + verso
+    {const dk=$('#drawMeDeck');
+     if(dk){
+       const deckName=Decks.active()||'Seleção Padrão';
+       dk.className='vs-deck';
+       dk.innerHTML='<div class="vs-deck-back">'+backCardHTML(BackSkin.get(),'⚽')+'</div>'+
+                    '<div class="vs-deck-name">🃏 '+deckName+'</div>';
+     }}
+    // baralho do adversário começa como MISTÉRIO (revela ao sortear)
+    {const fd=$('#drawFoeDeck');
+     if(fd){
+       fd.className='vs-deck dp-mystery';
+       fd.innerHTML='<div class="vs-deck-back">'+backCardHTML('rival','❓')+'</div>'+
+                    '<div class="vs-deck-name">🃏 ???</div>';
+     }}
+    {const fc=document.querySelector('#botpick .dp-card.foe');if(fc)fc.classList.remove('locked');}
     lab.textContent='Nível '+(li+1)+' · '+lvl.name+(li<PLAY_LEVELS.length-1?' — ganhe Taças pra subir de nível':'');
     go.style.display='none';
     {const cd=$('#drawCountdown');if(cd)cd.style.display='none';const cc=$('#drawCancel');if(cc)cc.style.display='none';}
@@ -5290,7 +6257,16 @@ const UI={
         foeAv.classList.remove('spin');foeAv.classList.add('landed');
         Snd.drawLand();vib([40,30,140]);
         status.textContent='⚽ Seu adversário será:';
-        const bot={id:'cpu',name:chosen,skill:lvl.skill,snapAggro:lvl.aggro};
+        const cdeck=coachDeck(chosen);
+        const bot={id:'cpu',name:chosen,skill:lvl.skill,snapAggro:lvl.aggro,back:cdeck.back,deckName:cdeck.deck};
+        // revela o baralho do adversário (nome + verso temático)
+        {const fd=$('#drawFoeDeck');
+         if(fd){
+           fd.className='vs-deck';
+           fd.innerHTML='<div class="vs-deck-back">'+backCardHTML(cdeck.back,'😈')+'</div>'+
+                        '<div class="vs-deck-name">🃏 '+cdeck.deck+'</div>';
+         }}
+        {const fc=document.querySelector('#botpick .dp-card.foe');if(fc)fc.classList.add('locked');}
         const cancel=$('#drawCancel'), cdEl=$('#drawCountdown');
         go.style.display='block';
         if(cancel)cancel.style.display='block';
@@ -5446,9 +6422,99 @@ document.addEventListener('click',e=>{
 /* pré-carrega TODOS os sons (e destrava o áudio) no 1º gesto do usuário → sem atraso */
 addEventListener('pointerdown',()=>{try{Snd.c();if(Snd.ctx&&Snd.ctx.state==='suspended')Snd.ctx.resume();}catch(e){}},{once:true});
 
+/* ===================== NOVIDADES / CHANGELOG ===================== */
+const NEWS_VERSION='2026.06.3';
+const News={
+  open(){ const v=$('#newsVer'); if(v)v.textContent='versão '+NEWS_VERSION; const m=$('#newsModal'); if(m)m.classList.add('on'); Snd.card&&Snd.card(); },
+  close(){ const m=$('#newsModal'); if(m)m.classList.remove('on'); localStorage.setItem('brclash_news_seen',NEWS_VERSION); Snd.card&&Snd.card(); },
+  maybeShow(){ if(localStorage.getItem('brclash_news_seen')!==NEWS_VERSION) this.open(); }
+};
+{const nm=$('#newsModal'); if(nm)nm.addEventListener('click',e=>{ if(e.target.id==='newsModal')News.close(); });}
+
+/* ===================== MISSÕES (diárias e semanais) ===================== */
+const MISSION_POOL={
+  daily:[
+    {id:'d_play3', key:'play', target:3,  reward:40, name:'Jogue 3 partidas'},
+    {id:'d_win2',  key:'win',  target:2,  reward:60, name:'Vença 2 partidas'},
+    {id:'d_loc6',  key:'loc',  target:6,  reward:50, name:'Vença 6 locais (no total)'},
+    {id:'d_card20',key:'card', target:20, reward:40, name:'Escale 20 cartas'},
+    {id:'d_snap2', key:'snap', target:2,  reward:45, name:'Ponha a Mala na mesa 2x'},
+    {id:'d_win1',  key:'win',  target:1,  reward:30, name:'Vença 1 partida'},
+  ],
+  weekly:[
+    {id:'w_win10', key:'win',  target:10, reward:220, name:'Vença 10 partidas'},
+    {id:'w_cup1',  key:'cup',  target:1,  reward:300, name:'Seja campeão de uma Copa'},
+    {id:'w_card60',key:'card', target:60, reward:160, name:'Escale 60 cartas'},
+    {id:'w_loc30', key:'loc',  target:30, reward:180, name:'Vença 30 locais'},
+    {id:'w_play15',key:'play', target:15, reward:140, name:'Jogue 15 partidas'},
+  ]
+};
+const Missions={
+  data:null,
+  dayKey(){ const d=new Date(); return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate(); },
+  weekKey(){ const d=new Date(); const j=new Date(d.getFullYear(),0,1); const wk=Math.ceil((((d-j)/86400000)+j.getDay()+1)/7); return d.getFullYear()+'-W'+wk; },
+  pick(pool,key,n){ // seleção determinística: mesmas missões o dia/semana inteiro
+    const seed=[...key].reduce((h,ch)=>(h*31+ch.charCodeAt(0))>>>0,7);
+    return pool.map((m,i)=>({m,r:(seed*(i+13))%9973})).sort((a,b)=>a.r-b.r).slice(0,n)
+      .map(x=>({id:x.m.id,key:x.m.key,target:x.m.target,reward:x.m.reward,name:x.m.name,prog:0,claimed:false}));
+  },
+  load(){ if(this.data)return this.data;
+    let d={};try{d=JSON.parse(localStorage.getItem('brclash_missions')||'{}')||{};}catch(e){d={};}
+    this.data=d; this.refresh(); return this.data;
+  },
+  refresh(){ const d=this.data;
+    if(d.dayKey!==this.dayKey()){ d.dayKey=this.dayKey(); d.daily=this.pick(MISSION_POOL.daily,d.dayKey,3); }
+    if(d.weekKey!==this.weekKey()){ d.weekKey=this.weekKey(); d.weekly=this.pick(MISSION_POOL.weekly,d.weekKey,3); }
+    if(!Array.isArray(d.daily))d.daily=this.pick(MISSION_POOL.daily,d.dayKey||this.dayKey(),3);
+    if(!Array.isArray(d.weekly))d.weekly=this.pick(MISSION_POOL.weekly,d.weekKey||this.weekKey(),3);
+    this.save();
+  },
+  save(){ if(this.data)localStorage.setItem('brclash_missions',JSON.stringify(this.data)); },
+  event(key,n){ if(!n)return; const d=this.load(); let ch=false;
+    [...(d.daily||[]),...(d.weekly||[])].forEach(m=>{ if(m.key===key&&!m.claimed&&m.prog<m.target){m.prog=Math.min(m.target,m.prog+n);ch=true;} });
+    if(ch){ this.save(); this.badge(); const mm=$('#missionsModal'); if(mm&&mm.classList.contains('on'))this.render(); }
+  },
+  unclaimed(){ const d=this.load(); return [...(d.daily||[]),...(d.weekly||[])].filter(m=>m.prog>=m.target&&!m.claimed).length; },
+  badge(){ const b=$('#missBadge'); if(b){ const n=this.unclaimed(); b.textContent=n; b.style.display=n?'inline-flex':'none'; } },
+  claim(id){ const d=this.load(); const m=[...(d.daily||[]),...(d.weekly||[])].find(x=>x.id===id);
+    if(!m||m.claimed||m.prog<m.target)return;
+    m.claimed=true; this.save(); Coins.add(m.reward);
+    UI.toast('🎯 Missão concluída! +'+m.reward+' 🎩'); Snd.coin&&Snd.coin(); vib([30,20,60]);
+    const cm=$('#coinsMenu'); if(cm)cm.textContent=Coins.get();
+    this.badge(); this.render();
+  },
+  ensure(){ if($('#missionsModal'))return;
+    const m=document.createElement('div'); m.id='missionsModal'; m.className='news-modal';
+    m.innerHTML='<div class="news-card panel"><h2 class="news-title">🎯 Missões</h2>'+
+      '<div class="news-ver">Diárias renovam todo dia · Semanais toda semana</div>'+
+      '<div id="missionsBody" class="missions-wrap"></div>'+
+      '<button class="menu-btn" onclick="Missions.close()">← Voltar</button></div>';
+    document.body.appendChild(m);
+    m.addEventListener('click',e=>{ if(e.target.id==='missionsModal')this.close(); });
+  },
+  open(){ this.load(); this.ensure(); $('#missionsModal').classList.add('on'); this.render(); Snd.card&&Snd.card(); },
+  close(){ const mm=$('#missionsModal'); if(mm)mm.classList.remove('on'); Snd.card&&Snd.card(); },
+  render(){ const body=$('#missionsBody'); if(!body)return; const d=this.load();
+    const grp=(title,reset,list)=>{
+      let h='<div class="miss-group"><h3>'+title+' <span class="miss-reset">'+reset+'</span></h3>';
+      (list||[]).forEach(m=>{ const done=m.prog>=m.target;
+        h+='<div class="miss-card'+(done?' done':'')+(m.claimed?' claimed':'')+'">'+
+          '<div class="miss-top"><span class="miss-name">'+m.name+'</span><span class="miss-rew">+'+m.reward+' 🎩</span></div>'+
+          '<div class="miss-bar"><i style="width:'+Math.round(Math.min(1,m.prog/m.target)*100)+'%"></i></div>'+
+          '<div class="miss-foot"><span class="miss-prog">'+Math.min(m.prog,m.target)+' / '+m.target+'</span>'+
+          (m.claimed?'<span class="miss-prog">✔ resgatada</span>':'<button class="miss-claim" '+(done?'':'disabled')+' onclick="Missions.claim(\''+m.id+'\')">'+(done?'Resgatar':'Em progresso')+'</button>')+
+          '</div></div>';
+      });
+      return h+'</div>';
+    };
+    body.innerHTML=grp('📅 Diárias','renova a cada dia',d.daily)+grp('🗓️ Semanais','renova a cada semana',d.weekly);
+  }
+};
+Missions.load(); Missions.badge();
+
 /* primeira vez no jogo: cria o perfil; senão, menu normal */
 if(!Profile.nick())Profile.open();
-else UI.show('menu');
+else { UI.show('menu'); News.maybeShow(); }
 </script>
 </body>
 </html>
